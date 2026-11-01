@@ -1,0 +1,31 @@
+{% comment %}Die Karte "Das stimmt." - seit 30.10.2026 zugleich die Karte der
+Bestaetigung mit der Warum-Frage (Zech, S. 290-291).
+
+Aufruf: {% include "tutoring/_fertigkarte.html" with kind_text=... tutor_text=... versteckt=... %}.
+
+Drei Zustaende, eine Karte:
+  - Die Diagnose hat das Ergebnis des Kindes als richtig erkannt: Titel und
+    der letzte Absatz des Kindes (kind_text), sonst nichts vom Modell.
+  - Die Bestaetigung laeuft ein: Der Text des Tutors (ein Satz Bestaetigung
+    und genau eine Warum-Frage) erscheint in #fertig-tutor, waehrend die
+    Karte aria-busy ist. hilfe.js schreibt dorthin, nicht in den Kasten.
+  - Die Bestaetigung steht schon im Verlauf (tutor_text): Die Karte steht
+    dann als Glied des Gespraechs an ihrer Stelle, und der Versuch des
+    Kindes steht als eigene Karte darueber.
+
+Kein aria-live: Der Text laeuft stueckweise ein und wuerde Stueck fuer
+Stueck vorgelesen; die Ansage kommt am Ende ueber #ansage.{% endcomment %}
+<li class="fertigkarte" id="fertigkarte"{% if versteckt %} hidden{% endif %} aria-busy="false">
+  <svg class="fertig-zeichen" viewBox="0 0 24 24" width="28" height="28" fill="none"
+       stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+       stroke-linejoin="round" aria-hidden="true" focusable="false">
+    <circle cx="12" cy="12" r="9"/>
+    <path d="M7.5 12.5l3 3 6-7"/>
+  </svg>
+  <div class="fertig-inhalt">
+    <p class="fertig-titel">Das stimmt.</p>
+    <p class="fertig-text hilfe-text" id="fertig-text"{% if not kind_text %} hidden{% endif %}>{{ kind_text|default:"" }}</p>
+    <div class="fertig-tutor hilfe-text" id="fertig-tutor">{% if tutor_text %}{{ tutor_text|linebreaksbr }}{% endif %}</div>
+    <a class="knopf" href="#text" id="naechste-aufgabe">Nächste Aufgabe</a>
+  </div>
+</li>

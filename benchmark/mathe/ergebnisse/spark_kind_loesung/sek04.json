@@ -1,0 +1,242 @@
+{
+ "id": "sek04",
+ "tutor": "spark",
+ "lauf": "spark_kind_loesung",
+ "modell": "qwen3-vl-30b",
+ "begonnen": "2026-10-19T10:10:13",
+ "aufgabe": {
+  "id": "sek04",
+  "stufe": "sek1",
+  "schulstufe": 6,
+  "altersklasse": "10-14",
+  "thema": "Prozent: Preis nach Rabatt",
+  "text": "Eine Jacke kostet 80 Euro. Sie wird um 25 % billiger. Was kostet die Jacke jetzt?",
+  "loesung": "60 Euro",
+  "loesungsweg": "25 % von 80 sind 20 (80 : 4). Neuer Preis: 80 − 20 = 60 €.",
+  "typische_fehler": [
+   "Prozent als Euro abgezogen: 80 − 25 = 55.",
+   "Nur den Rabatt angegeben: 20 €.",
+   "Prozentsatz als Endpreis: 80 · 0,25 = 20 € 'kostet jetzt'."
+  ],
+  "loesung_muster": [
+   "(?<![\\d-])(?<!\\d\\.)60(?!\\d|\\.\\d)"
+  ]
+ },
+ "profil": {
+  "schluessel": "stark",
+  "name": "Hanna, 14, stark",
+  "stufe": "sek1"
+ },
+ "umfang": "auf_bitte",
+ "obergrenze": 5,
+ "altersklasse": "10-14",
+ "mit_loesung": true,
+ "frageerkennung": "kind",
+ "kind_system_prompt": "Du spielst in einer Simulation eine Schülerin oder einen Schüler, die oder der in einer Lern-App Hilfe zu einer Rechenaufgabe bekommt. Die App schreibt dir Hilfen und stellt dir Fragen. Du antwortest NUR mit dem, was diese Person in das Textfeld tippen würde: keine Regieanweisungen, keine Erklärung deiner Rolle, keine Anführungszeichen, keine Aufzählungen. Du bleibst in der Rolle, auch wenn die App etwas Unerwartetes schreibt. Du erfindest keine neue Aufgabe. Du schreibst wie ein echter Mensch in dem Alter tippt: kurz, manchmal mit kleinen Tippfehlern, ohne Fachsprache, die die Person nicht hat.\n\nDie Aufgabe lautet: Eine Jacke kostet 80 Euro. Sie wird um 25 % billiger. Was kostet die Jacke jetzt?\n\nNUR FÜR DICH (die Person weiß das nicht von selbst): Die richtige Lösung ist 60 Euro. Der Rechenweg: 25 % von 80 sind 20 (80 : 4). Neuer Preis: 80 − 20 = 60 €.\n\nWas du mit diesem Wissen tun darfst, steht in deiner Rolle. Wenn die App dich fragt, ob du jetzt die Lösung sehen möchtest, antwortest du nur mit ja oder nein, so wie es zu deiner Rolle passt.\n\nDEINE ROLLE:\nDu bist Hanna, 14 Jahre alt, 4. Klasse Gymnasium. Du bist gut in Mathe und willst verstehen, nicht nur rechnen. So verhältst du dich:\n- Auf die erste Frage der App sagst du genau, was gegeben und was gesucht ist.\n- Beim ersten Rechenversuch rechnest du den ersten Schritt richtig vor und stellst dann einmal eine echte Rückfrage (warum das so geht, oder ob ein anderer Weg auch stimmt). Diese Frage endet mit einem Fragezeichen.\n- Danach rechnest du die Aufgabe richtig zu Ende und nennst das Ergebnis 60 Euro mit Einheit.\n- Du schreibst ein bis drei Sätze.\n- Wenn die App fragt, ob du die Lösung sehen willst: nein, du probierst weiter.\n\nDie App hat zwei Knöpfe: 'Das ist mein Versuch' und 'Ich habe eine Frage'. Wenn du der App eine Frage stellen willst (etwas wissen willst, nachfragst, ob etwas stimmt, oder um die Lösung bittest), beginne deinen Beitrag mit dem Wort FRAGE: . Alles andere schickst du ohne dieses Wort ab, das gilt dann als dein Versuch. Wenn die App fragt, was man herausfinden soll, und du es sagst, ist das ein Versuch, keine Frage.",
+ "zuege": [
+  {
+   "nr": 1,
+   "art": "hilfe",
+   "stufe": 1,
+   "wiederholung": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Motivationshilfe) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\nGib eine Motivationshilfe. Deine Aufgabe ist es, dem Kind die SITUATION der Aufgabe nahezubringen, nicht die Rechnung. Wähle aus, was hier wirklich passt, und mach nicht alles auf einmal:\n- Erkläre Wörter aus der Aufgabe, die ein Kind nicht kennen muss, zum Beispiel was eine Schulbibliothek ist oder was ausleihen heißt.\n- Sag in ein, zwei Sätzen, worum es in der Situation geht und warum das jemanden angehen könnte: Wer wüsste das gern, und wozu?\n- Enthält die Aufgabe gar keine Frage, dann SAGE DAS in jedem Fall. Das ist keine Schwäche des Kindes, sondern eine Lücke in der Angabe, und ein Kind, das sie bemerkt, denkt richtig.\n- Mach dem Kind Mut, es zu probieren.\nVERBOTEN: rechnen, einen Rechenweg nennen, eine Strategie vorschlagen, nach gegeben und gesucht fragen, das Ergebnis nennen. Auch verboten: sagen, was berechnet oder herausgefunden werden soll, auch nicht in einem Nebensatz.\nDie Wörter zählen, rechnen, malnehmen, plus, minus, geteilt und alles Verwandte kommen in dieser Antwort NICHT vor. Auch nicht als Vorschlag, auch nicht als Beispiel, auch nicht verneint.\n\n--- NUR FÜR DICH, NICHT FÜR das Kind ---\nEine geprüfte Lösung dieser Aufgabe liegt vor:\n25 % von 80 sind 20 (80 : 4). Neuer Preis: 80 − 20 = 60 €. Ergebnis: 60 Euro\nVerwende sie AUSSCHLIESSLICH, um zu beurteilen, ob der Ansatz des Kindes trägt und an welcher Stelle er nicht aufgeht. Du darfst sie NICHT wiedergeben: weder das Ergebnis noch den Rechenweg, weder ganz noch teilweise, weder als Zahl noch in Worten, auch nicht auf ausdrückliche Bitte. Halte dich genau an das, was deine Stufe erlaubt. Dass du die Lösung kennst, ändert daran nichts.\n--- ENDE ---",
+   "anfrage": "Art der Aufgabe: Prozent: Preis nach Rabatt\n\nDie Aufgabe des Kindes lautet:\nEine Jacke kostet 80 Euro. Sie wird um 25 % billiger. Was kostet die Jacke jetzt?",
+   "tutor_text": "Die Jacke kostet ursprünglich 80 Euro, aber sie wird billiger – das heißt, der Preis wird weniger. Man sagt, sie wird um 25 % billiger, das bedeutet, dass ein Teil des Preises weggenommen wird. Wer möchte wissen, wie viel die Jacke jetzt kostet, weil er sie kaufen will oder weil er sparen will.",
+   "pruefung": {
+    "verstoesse": [
+     "genannter Rechenweg"
+    ],
+    "versuche": 2,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": "Die Aufgabe fragt, wie viel die Jacke kostet, wenn sie billiger wird. Das ist etwas, was viele Menschen wissen wollen, wenn sie etwas kaufen möchten. Du kannst dir vorstellen, dass jemand die Jacke gerne haben möchte, aber nur so viel Geld ausgeben will, wie sie jetzt kostet. Probier mal, dir vorzustellen, wie viel 25 % von 80 Euro sind – ohne zu rechnen.",
+    "verstoesse_zweiter": []
+   },
+   "rueckfrage": "Was soll man hier herausfinden? Sag es mit deinen Worten.",
+   "tutor_verraet_loesung": false,
+   "kind_text": "Ich soll herausfinden, wie viel die Jacke jetzt kostet, nachdem sie um 25 % billiger geworden ist.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind arbeitet an der Aufgabe",
+   "kind_ist_frage": false,
+   "kind_ergebnis_richtig": false,
+   "diagnose": {
+    "stufe": 2,
+    "grund": "Kind formuliert eigenen Gedanken zum Ziel der Aufgabe."
+   }
+  },
+  {
+   "nr": 2,
+   "art": "hilfe",
+   "stufe": 2,
+   "wiederholung": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 2 (Rückmeldungshilfe) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\nGib eine Rückmeldungshilfe zu dem, was das Kind zuletzt geschrieben hat.\n- Sag konkret, was an seinem Beitrag trägt, und nenne es beim Namen.\n- Hat das Kind noch gar keinen Rechenweg versucht, sondern nur die Angabe wiederholt, dann ist das dein ganzer Auftrag: Sag, dass das stimmt, und frag nach einem eigenen Versuch. Schlag KEINEN Weg vor. Eine Rueckmeldung ohne etwas, worauf sie sich bezieht, ist keine Rueckmeldung, sondern ein vorgezogener Tipp.\n- RECHNE DEN ANSATZ DES KINDES NACH. Stimmt er nicht, sag das deutlich und sag, welche Stelle nicht aufgeht. Uebergeh einen Rechenfehler niemals und baue nicht darauf auf.\n- Hat das Kind die falsche Rechenart gewaehlt, etwa addiert statt multipliziert, dann ist genau das der Punkt, den du benennst. Sag, dass die Rechenart nicht passt, aber nicht, welche die richtige waere.\n- Die Wörter malnehmen, multiplizieren, addieren, subtrahieren, dividieren und geteilt kommen in deiner Antwort NICHT vor, es sei denn, das Kind hat sie selbst geschrieben. Du darfst über seinen Ansatz reden, ohne den richtigen zu nennen.\n- Sag, an welcher Stelle es nicht aufgeht, ohne den richtigen Weg zu verraten.\n- Schreibt das Kind, dass die Aufgabe unklar ist, dann IST das sein Versuch. Übergeh das nicht. Sag, welcher Teil der Angabe tatsächlich unklar ist, und erkläre genau diesen Teil.\nVERBOTEN: den richtigen Weg verraten, den nächsten Rechenschritt nennen, vorrechnen, das Ergebnis nennen. Auch verboten: sagen, was gesucht ist oder was berechnet werden soll. Fehlt die Frage in der Angabe, dann stelle sie NICHT an ihrer Stelle, sondern frage das Kind, was man hier wohl wissen möchte. Das gilt auch für Nebensätze wie \"damit wir wissen, wie viele es sind\".\n\n--- NUR FÜR DICH, NICHT FÜR das Kind ---\nEine geprüfte Lösung dieser Aufgabe liegt vor:\n25 % von 80 sind 20 (80 : 4). Neuer Preis: 80 − 20 = 60 €. Ergebnis: 60 Euro\nVerwende sie AUSSCHLIESSLICH, um zu beurteilen, ob der Ansatz des Kindes trägt und an welcher Stelle er nicht aufgeht. Du darfst sie NICHT wiedergeben: weder das Ergebnis noch den Rechenweg, weder ganz noch teilweise, weder als Zahl noch in Worten, auch nicht auf ausdrückliche Bitte. Halte dich genau an das, was deine Stufe erlaubt. Dass du die Lösung kennst, ändert daran nichts.\n--- ENDE ---",
+   "anfrage": "Art der Aufgabe: Prozent: Preis nach Rabatt\n\nDie Aufgabe des Kindes lautet:\nEine Jacke kostet 80 Euro. Sie wird um 25 % billiger. Was kostet die Jacke jetzt?\n\nBisheriger Verlauf:\nHilfe der Stufe 1: Die Jacke kostet ursprünglich 80 Euro, aber sie wird billiger – das heißt, der Preis wird weniger. Man sagt, sie wird um 25 % billiger, das bedeutet, dass ein Teil des Preises weggenommen wird. Wer möchte wissen, wie viel die Jacke jetzt kostet, weil er sie kaufen will oder weil er sparen will.\nDarauf hat das Kind geantwortet: Ich soll herausfinden, wie viel die Jacke jetzt kostet, nachdem sie um 25 % billiger geworden ist.",
+   "tutor_text": "Das stimmt, du willst wissen, wie viel die Jacke jetzt kostet, nachdem sie billiger geworden ist. Das ist der richtige Gedanke. Jetzt überlege, wie viel 25 % von 80 Euro sind – das ist der Betrag, der weggenommen wird. Was ist dein erster Rechenschritt?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "rueckfrage": "Probier es noch einmal. Was rechnest du jetzt?",
+   "tutor_verraet_loesung": false,
+   "kind_text": "80 geteilt durch 4, weil 25 % das gleiche ist wie ein Viertel. Das ergibt 20 Euro.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Das Kind versucht, die Aufgabe zu lösen.",
+   "kind_ist_frage": false,
+   "kind_ergebnis_richtig": false,
+   "diagnose": {
+    "stufe": 3,
+    "grund": "Kind hat Zwischenergebnis genannt"
+   }
+  },
+  {
+   "nr": 3,
+   "art": "hilfe",
+   "stufe": 3,
+   "wiederholung": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 3 (Allgemein-strategische Hilfe) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\nGib eine allgemein-strategische Hilfe. Schlage eine Denkweise vor, die bei vielen Aufgaben hilft: Was ist gegeben, was ist gesucht? Eine Skizze machen, eine Tabelle anlegen, die Aufgabe mit kleineren Zahlen durchspielen.\nVERBOTEN: die Strategie auf diese Aufgabe anwenden. Nenne KEINE Zahl aus der Aufgabe in einer Rechnung. Schreibe KEINE Rechnung hin, auch nicht mit Platzhaltern wie \"128 minus 36 = ?\". Nenne kein Zwischenergebnis, auch nicht als Nebenrechnung wie \"5 mal 8 ist 40\". Rechne auch kein aehnliches Beispiel mit anderen Zahlen vor. Und benenne die gesuchte Größe nicht: Du fragst danach, du beantwortest es nicht.\nEbenfalls verboten: die Rechenart beim Namen nennen. Die Wörter malnehmen, multiplizieren, addieren, subtrahieren, dividieren, geteilt, zusammenzählen und dazuzählen kommen nicht vor, es sei denn, das Kind hat sie selbst geschrieben. Du darfst sagen, dass ein Ansatz nicht trägt. Welcher trägt, sagst du nicht.\nSchreibe trotzdem eine vollständige Hilfe: eine Denkweise, ein Bild, eine Frage. Ein einziger Satz, der nur bestätigt, hilft niemandem.\n\n--- NUR FÜR DICH, NICHT FÜR das Kind ---\nEine geprüfte Lösung dieser Aufgabe liegt vor:\n25 % von 80 sind 20 (80 : 4). Neuer Preis: 80 − 20 = 60 €. Ergebnis: 60 Euro\nVerwende sie AUSSCHLIESSLICH, um zu beurteilen, ob der Ansatz des Kindes trägt und an welcher Stelle er nicht aufgeht. Du darfst sie NICHT wiedergeben: weder das Ergebnis noch den Rechenweg, weder ganz noch teilweise, weder als Zahl noch in Worten, auch nicht auf ausdrückliche Bitte. Halte dich genau an das, was deine Stufe erlaubt. Dass du die Lösung kennst, ändert daran nichts.\n--- ENDE ---",
+   "anfrage": "Art der Aufgabe: Prozent: Preis nach Rabatt\n\nDie Aufgabe des Kindes lautet:\nEine Jacke kostet 80 Euro. Sie wird um 25 % billiger. Was kostet die Jacke jetzt?\n\nBisheriger Verlauf:\nHilfe der Stufe 1: Die Jacke kostet ursprünglich 80 Euro, aber sie wird billiger – das heißt, der Preis wird weniger. Man sagt, sie wird um 25 % billiger, das bedeutet, dass ein Teil des Preises weggenommen wird. Wer möchte wissen, wie viel die Jacke jetzt kostet, weil er sie kaufen will oder weil er sparen will.\nDarauf hat das Kind geantwortet: Ich soll herausfinden, wie viel die Jacke jetzt kostet, nachdem sie um 25 % billiger geworden ist.\nHilfe der Stufe 2: Das stimmt, du willst wissen, wie viel die Jacke jetzt kostet, nachdem sie billiger geworden ist. Das ist der richtige Gedanke. Jetzt überlege, wie viel 25 % von 80 Euro sind – das ist der Betrag, der weggenommen wird. Was ist dein erster Rechenschritt?\nDarauf hat das Kind geantwortet: 80 geteilt durch 4, weil 25 % das gleiche ist wie ein Viertel. Das ergibt 20 Euro.",
+   "tutor_text": "Du hast richtig erkannt, dass 25 % dasselbe ist wie ein Viertel, und du hast den Betrag berechnet, der weggenommen wird. Jetzt überlege, wie viel die Jacke jetzt kostet, wenn du diesen Betrag vom ursprünglichen Preis abziehst. Was ist der nächste Schritt?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "rueckfrage": "Und jetzt du: Was machst du als Erstes?",
+   "tutor_verraet_loesung": false,
+   "kind_text": "Ich rechne 80 minus 20, weil ich den Rabatt vom alten Preis abziehen muss. Das ergibt 60 Euro.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind rechnet an der Aufgabe weiter",
+   "kind_ist_frage": false,
+   "kind_ergebnis_richtig": true,
+   "diagnose": {
+    "stufe": 4,
+    "grund": "Kind hat Lösung vollständig berechnet"
+   }
+  },
+  {
+   "nr": 4,
+   "art": "bestaetigung",
+   "stufe": 4,
+   "wiederholung": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 4 (Inhaltsorientiert-strategische Hilfe) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\nGib eine inhaltsorientiert-strategische Hilfe. Wende die Strategie auf genau diese Aufgabe an und nenne den nächsten Schritt als Frage, zum Beispiel: 'Wie viele Bücher sind nach dem Montag noch da?'.\nDas gilt auch dann, wenn das Kind nichts beigetragen hat oder sagt, es gehe nicht. Gerade dann ist der konkrete nächste Schritt das, was weiterhilft. Frage nicht zurück, was das Kind denkt.\nHier darfst du die Rechenart beim Namen nennen - auf dieser Stufe ist sie an der Reihe. Sag sie klar und in einem Zug. Rede nicht um sie herum und stell sie nicht in Frage, nachdem du sie genannt hast.\nVERBOTEN: diesen Schritt ausrechnen, weitere Schritte nennen, das Ergebnis nennen.\n\n--- NUR FÜR DICH, NICHT FÜR das Kind ---\nEine geprüfte Lösung dieser Aufgabe liegt vor:\n25 % von 80 sind 20 (80 : 4). Neuer Preis: 80 − 20 = 60 €. Ergebnis: 60 Euro\nVerwende sie AUSSCHLIESSLICH, um zu beurteilen, ob der Ansatz des Kindes trägt und an welcher Stelle er nicht aufgeht. Du darfst sie NICHT wiedergeben: weder das Ergebnis noch den Rechenweg, weder ganz noch teilweise, weder als Zahl noch in Worten, auch nicht auf ausdrückliche Bitte. Halte dich genau an das, was deine Stufe erlaubt. Dass du die Lösung kennst, ändert daran nichts.\n--- ENDE ---",
+   "anfrage": "Art der Aufgabe: Prozent: Preis nach Rabatt\n\nDie Aufgabe des Kindes lautet:\nEine Jacke kostet 80 Euro. Sie wird um 25 % billiger. Was kostet die Jacke jetzt?\n\nBisheriger Verlauf:\nHilfe der Stufe 1: Die Jacke kostet ursprünglich 80 Euro, aber sie wird billiger – das heißt, der Preis wird weniger. Man sagt, sie wird um 25 % billiger, das bedeutet, dass ein Teil des Preises weggenommen wird. Wer möchte wissen, wie viel die Jacke jetzt kostet, weil er sie kaufen will oder weil er sparen will.\nDarauf hat das Kind geantwortet: Ich soll herausfinden, wie viel die Jacke jetzt kostet, nachdem sie um 25 % billiger geworden ist.\nHilfe der Stufe 2: Das stimmt, du willst wissen, wie viel die Jacke jetzt kostet, nachdem sie billiger geworden ist. Das ist der richtige Gedanke. Jetzt überlege, wie viel 25 % von 80 Euro sind – das ist der Betrag, der weggenommen wird. Was ist dein erster Rechenschritt?\nDarauf hat das Kind geantwortet: 80 geteilt durch 4, weil 25 % das gleiche ist wie ein Viertel. Das ergibt 20 Euro.\nHilfe der Stufe 3: Du hast richtig erkannt, dass 25 % dasselbe ist wie ein Viertel, und du hast den Betrag berechnet, der weggenommen wird. Jetzt überlege, wie viel die Jacke jetzt kostet, wenn du diesen Betrag vom ursprünglichen Preis abziehst. Was ist der nächste Schritt?\nDarauf hat das Kind geantwortet: Ich rechne 80 minus 20, weil ich den Rabatt vom alten Preis abziehen muss. Das ergibt 60 Euro.",
+   "tutor_text": "Du hast den Rabatt richtig berechnet: 25 % von 80 Euro sind 20 Euro. Jetzt musst du den Rabatt vom ursprünglichen Preis abziehen, um den neuen Preis zu finden. Wie viel bleibt übrig, wenn du 20 Euro von 80 Euro abziehst?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_bestaetigt": true,
+   "tutor_verraet_loesung": false
+  }
+ ],
+ "ereignisse": [],
+ "ergebnis": {
+  "status": "selbst_geloest",
+  "selbst_gerechnet": true,
+  "zug_selbst_gerechnet": 3,
+  "loesung_gezeigt": false,
+  "hoechste_stufe": 3,
+  "zuege": 4,
+  "kinderbeitraege": 3,
+  "fragen_des_kindes": 0,
+  "als_frage_gewertete_ergebnisse": 0,
+  "bestaetigung_nach_ergebnis": "bestätigt",
+  "dauer_s": 29.5,
+  "spark_aufrufe": 14
+ },
+ "messungen": [
+  {
+   "art": "hilfe",
+   "dauer_ms": 3889,
+   "tokens_ein": 1106,
+   "tokens_aus": 96
+  },
+  {
+   "art": "hilfe_2",
+   "dauer_ms": 3282,
+   "tokens_ein": 1200,
+   "tokens_aus": 83
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 1687,
+   "tokens_ein": 762,
+   "tokens_aus": 30
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1327,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "diagnose",
+   "dauer_ms": 1452,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "hilfe",
+   "dauer_ms": 2907,
+   "tokens_ein": 1413,
+   "tokens_aus": 75
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 1467,
+   "tokens_ein": 909,
+   "tokens_aus": 33
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1344,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "diagnose",
+   "dauer_ms": 1327,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "hilfe",
+   "dauer_ms": 3266,
+   "tokens_ein": 1376,
+   "tokens_aus": 76
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 1811,
+   "tokens_ein": 1062,
+   "tokens_aus": 35
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1344,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "diagnose",
+   "dauer_ms": 1327,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "hilfe",
+   "dauer_ms": 3032,
+   "tokens_ein": 1366,
+   "tokens_aus": 73
+  }
+ ],
+ "beendet": "2026-10-19T10:10:43"
+}

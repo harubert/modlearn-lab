@@ -1,0 +1,29 @@
+{% comment %}Der Verlauf eines Kindes im Safe Chat, für die Lehrperson: das
+Gespräch, wie das Kind es sieht, mit denselben Karten, Marken und
+Protokollen (_safechat_zuege.html). Thomas (23.10.2026): Lehrperson und
+Kind sehen dasselbe Protokoll.
+
+Erwartet: chatzuege, sitzung, teilnahme. Auf jedem KI-Zug nach draußen hat
+die Ansicht zug.vorher und zug.entitaeten_text gesetzt.
+
+lehrperson_verlauf.html holt dieses Teilstück alle fünf Sekunden per htmx
+neu. Damit aufgeklappte Protokolle dabei nicht zuklappen, merkt sich
+safechat.js vor jedem Tausch, welche offen waren, und öffnet sie danach
+wieder; der Zustand "alles offen" wird ebenso wieder angewandt. Das Skript
+lädt lehrperson_verlauf.html, außerhalb des getauschten Bereichs; der Knopf
+hier wird über das Dokument bedient und darf deshalb mitgetauscht
+werden.{% endcomment %}
+{% if chatzuege %}
+  <div class="safechat safechat-verlauf">
+    <div class="safechat-werkzeuge">
+      <button type="button" class="protokoll-alle" id="protokoll-alle"
+              aria-controls="chatzuege" aria-pressed="false" hidden>Alles aufklappen</button>
+    </div>
+    <ol class="safechat-zuege" id="chatzuege"
+        aria-label="Was {{ teilnahme.tier_name }} und die KI gesagt haben">
+      {% include "tutoring/_safechat_zuege.html" with zuege=chatzuege fuer_lehrperson=True %}
+    </ol>
+  </div>
+{% else %}
+  <p class="leerhinweis">{{ teilnahme.tier_name }} hat noch nichts geschrieben.</p>
+{% endif %}

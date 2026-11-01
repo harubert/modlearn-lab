@@ -1,0 +1,175 @@
+/* Der Zuschnitt des Fotos, bevor es abgeschickt wird.
+
+   Eigene Datei, weil die Schicht nur in der Fotofunktion vorkommt und
+   app.css schon lang genug ist. Farben, Knoepfe und der Fokusrahmen kommen
+   von dort, hier steht nur das Zusaetzliche.
+
+   Zuerst fuer das Handy entworfen: 360 Pixel Breite sind der Normalfall.
+   Kein Nachladen von aussen, keine Fremdbibliothek. */
+
+.zuschnitt {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background: rgba(8, 12, 20, .78);
+}
+
+/* Die Seite darunter darf nicht mitrutschen: Sonst scrollt beim Ziehen mit
+   dem Finger der Verlauf weg statt des Rahmens. */
+body.zuschnitt-offen { overflow: hidden; }
+
+/* Volle Hoehe, nicht nur so hoch wie der Inhalt: Sonst weiss foto.js beim
+   ersten Oeffnen noch nicht, wie viel Platz fuer das Foto uebrig ist, und
+   zeigt es kleiner, als es sein koennte. Der zusaetzliche Rand unten haelt
+   die Knoepfe bei Geraeten mit abgerundeten Ecken im sichtbaren Bereich. */
+.zuschnitt-karte {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  width: 100%;
+  max-width: 34rem;
+  height: 100%;
+  padding: .7rem;
+  padding-bottom: calc(.7rem + env(safe-area-inset-bottom, 0px));
+  border-radius: 12px;
+  background: var(--grund);
+  color: var(--schrift);
+}
+
+.zuschnitt-titel { margin: 0; font-size: 1.05rem; }
+
+.zuschnitt-hilfe {
+  margin: 0;
+  color: var(--schrift-leise);
+  font-size: .88rem;
+}
+
+/* Die Buehne nimmt den Platz, den Titel, Hinweis und Knoepfe uebrig lassen.
+   min-height: 0 gehoert dazu: Ohne das waechst ein Flex-Kind ueber die Karte
+   hinaus und die Knoepfe rutschen unter den unteren Bildschirmrand. */
+.zuschnitt-buehne {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Diese Flaeche ist genau so gross, wie das Foto zu sehen ist; ihre Groesse
+   setzt foto.js. Das Abschneiden am Rand haelt die Abdunkelung und die
+   Greifecken im Bild. */
+.zuschnitt-flaeche {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  line-height: 0;
+  background: var(--flaeche);
+  touch-action: none;
+}
+
+.zuschnitt-bild { display: block; width: 100%; height: 100%; }
+
+.zuschnitt-rahmen {
+  position: absolute;
+  box-sizing: border-box;
+  border: 2px solid #ffffff;
+  border-radius: 4px;
+  cursor: move;
+  /* Ohne das nimmt der Browser das Ziehen als Wischen und scrollt die
+     Seite, statt den Rahmen zu bewegen. */
+  touch-action: none;
+  /* Ein Schatten, der nach aussen laeuft, dunkelt alles ab, was nicht
+     gewaehlt ist; die Flaeche schneidet ihn am Bildrand ab. So braucht es
+     kein zweites Element ueber dem Foto. Die innere Linie haelt den weissen
+     Rahmen auch auf einem hellen Heftblatt sichtbar. */
+  box-shadow: 0 0 0 9999px rgba(8, 12, 20, .55),
+              inset 0 0 0 1px rgba(8, 12, 20, .85);
+}
+
+/* Der Rahmen ist die Hauptsache dieser Schicht und bekommt beim Oeffnen den
+   Fokus. Bei einem so gesetzten Fokus zeigt :focus-visible nichts an,
+   darum hier :focus. */
+.zuschnitt-rahmen:focus {
+  outline: 3px solid var(--fokus);
+  outline-offset: 2px;
+}
+
+.zuschnitt-rahmen.wird-gezogen { border-color: var(--fokus); }
+
+/* Die Ecken zum Groesser- und Kleinermachen. Die Flaeche zum Antippen ist
+   44 Pixel gross, der sichtbare Winkel viel kleiner: Ein Kinderfinger
+   trifft die Ecke sonst nicht. */
+.zuschnitt-griff {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  touch-action: none;
+}
+
+/* Bei einem kleinen Rahmen decken vier Ecken mit 44 Pixeln die ganze Mitte
+   zu, und dann liesse sich der Rahmen nicht mehr verschieben. */
+.zuschnitt-rahmen.ist-eng .zuschnitt-griff { width: 30px; height: 30px; }
+
+.zuschnitt-griff::before {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 4px solid #ffffff;
+  filter: drop-shadow(0 0 1px rgba(8, 12, 20, .9));
+}
+
+.griff-lo { left: 0; top: 0; cursor: nwse-resize; }
+.griff-ro { right: 0; top: 0; cursor: nesw-resize; }
+.griff-lu { left: 0; bottom: 0; cursor: nesw-resize; }
+.griff-ru { right: 0; bottom: 0; cursor: nwse-resize; }
+
+.griff-lo::before { left: 0; top: 0; border-right: 0; border-bottom: 0; }
+.griff-ro::before { right: 0; top: 0; border-left: 0; border-bottom: 0; }
+.griff-lu::before { left: 0; bottom: 0; border-right: 0; border-top: 0; }
+.griff-ru::before { right: 0; bottom: 0; border-left: 0; border-top: 0; }
+
+.zuschnitt-knoepfe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+/* Zuschneiden ist der Weg, den fast alle nehmen, und steht darum allein in
+   der ersten Zeile. Die beiden anderen teilen sich die zweite. */
+.zuschnitt-knoepfe .knopf {
+  flex: 1 1 8rem;
+  padding: .7rem .7rem;
+  font-size: .92rem;
+}
+
+.zuschnitt-knoepfe .zuschnitt-los {
+  flex: 1 1 100%;
+  padding: .9rem 1.4rem;
+  font-size: 1.05rem;
+}
+
+/* Im Querformat ist die Hoehe knapp, und das Foto ist wichtiger als der
+   Hinweis. Er bleibt im Dokument, damit ein Vorlesewerkzeug ihn weiter
+   findet. */
+@media (max-height: 30rem) {
+  .zuschnitt-hilfe {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .zuschnitt-titel { font-size: .95rem; }
+  .zuschnitt-knoepfe .zuschnitt-los { padding: .7rem 1.4rem; font-size: 1rem; }
+}

@@ -1,0 +1,16 @@
+from django.db import migrations, models
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ("tutoring", "0009_hint_goal_note_hint_goal_reached_task_repeats_and_more"),
+    ]
+
+    operations = [
+        migrations.AddField(
+            model_name="task",
+            name="finished_at",
+            field=models.DateTimeField(blank=True, null=True, verbose_name="Abgeschlossen"),
+        ),
+    ]

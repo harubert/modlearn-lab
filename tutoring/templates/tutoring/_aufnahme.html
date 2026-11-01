@@ -1,0 +1,72 @@
+{% if sprache_moeglich %}
+{% comment %}Die sichtbare Seite der Aufnahme: Pegel, Dauer, drei Knoepfe.
+Sie liegt still da, bis static/js/sprache.js sie aufdeckt.
+
+Die Saeulen des Pegels legt das Skript an. Zwoelf leere Spans waeren hier
+nur Laerm, und ohne Skript koennte sich ohnehin nichts bewegen.
+
+Die Knoepfe sind type="button": Sie stehen im Formular des Verfassers und
+duerfen es nicht abschicken.{% endcomment %}
+<div class="aufnahme" id="aufnahme" role="group" aria-label="Aufnahme"
+     tabindex="-1" hidden>
+  <p class="aufnahme-kopf">
+    <span class="aufnahme-lage">
+      <span class="aufnahme-punkt" aria-hidden="true"></span>
+      <span id="aufnahme-satz">Ich höre zu.</span>
+    </span>
+    <span class="aufnahme-uhr">
+      <span class="nur-fuer-vorlesen">Dauer </span>
+      <span class="aufnahme-zeit" id="aufnahme-zeit">00:00</span>
+      von <span id="aufnahme-grenze">01:00</span>
+    </span>
+  </p>
+
+  {% comment %}Der Pegel ist ein Bild mit festem Namen. Ein Wert, der sich
+  zwanzigmal je Sekunde aendert, hat in einer Vorleseansage nichts zu
+  suchen; die Ansagen laufen ueber #sprachstand.{% endcomment %}
+  <div class="aufnahme-pegel" id="aufnahme-pegel" role="img"
+       aria-label="So laut bist du gerade"></div>
+
+  {% comment %}Fuer alle, die wenig Bewegung wollen: ein ruhiger Balken mit
+  Zahl statt der Saeulen. Umgeschaltet wird in aufnahme.css.{% endcomment %}
+  <p class="aufnahme-ruhe">
+    <span>Lautstärke</span>
+    <span class="aufnahme-ruhe-bahn" aria-hidden="true">
+      <span class="aufnahme-ruhe-fuellung" id="aufnahme-ruhe-fuellung"></span>
+    </span>
+    <span class="aufnahme-ruhe-wert" id="aufnahme-ruhe-wert">0 %</span>
+  </p>
+
+  <p class="aufnahme-hinweis" id="aufnahme-hinweis" hidden></p>
+
+  <div class="aufnahme-knoepfe">
+    <button type="button" class="aufnahme-knopf aufnahme-auf" id="aufnahme-start"
+            aria-label="Weiter aufnehmen">
+      <svg class="aufnahme-zeichen" viewBox="0 0 24 24" width="22" height="22"
+           aria-hidden="true" focusable="false">
+        <circle cx="12" cy="12" r="7" fill="currentColor"/>
+      </svg>
+      <span id="aufnahme-start-wort">Weiter</span>
+    </button>
+
+    <button type="button" class="aufnahme-knopf aufnahme-pause" id="aufnahme-pause"
+            aria-label="Pause, kurz anhalten">
+      <svg class="aufnahme-zeichen" viewBox="0 0 24 24" width="22" height="22"
+           aria-hidden="true" focusable="false">
+        <rect x="8" y="6" width="3.2" height="12" rx="1.1" fill="currentColor"/>
+        <rect x="12.8" y="6" width="3.2" height="12" rx="1.1" fill="currentColor"/>
+      </svg>
+      <span>Pause</span>
+    </button>
+
+    <button type="button" class="aufnahme-knopf aufnahme-stopp" id="aufnahme-stopp"
+            aria-label="Fertig, Aufnahme abschicken">
+      <svg class="aufnahme-zeichen" viewBox="0 0 24 24" width="22" height="22"
+           aria-hidden="true" focusable="false">
+        <rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor"/>
+      </svg>
+      <span>Fertig</span>
+    </button>
+  </div>
+</div>
+{% endif %}

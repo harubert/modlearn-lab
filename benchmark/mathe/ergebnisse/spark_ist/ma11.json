@@ -1,0 +1,290 @@
+{
+ "id": "ma11",
+ "tutor": "spark",
+ "lauf": "spark_ist",
+ "modell": "qwen3-vl-30b",
+ "begonnen": "2026-10-19T09:39:23",
+ "aufgabe": {
+  "id": "ma11",
+  "stufe": "matura",
+  "schulstufe": 11,
+  "altersklasse": "14-19",
+  "grundkompetenz": "FA 5.3",
+  "thema": "Exponentieller Zerfall mit Halbwertszeit",
+  "text": "Ein Medikament wird im Körper abgebaut: Die Menge halbiert sich alle 6 Stunden. Zu Beginn sind 200 mg im Körper. Wie viel mg sind nach 15 Stunden noch vorhanden? Runde auf eine Dezimalstelle.",
+  "loesung": "35,4 mg",
+  "loesungsweg": "N(t) = 200 · 0,5^(t/6). N(15) = 200 · 0,5^2,5 = 200 · 0,1768 ≈ 35,4 mg.",
+  "typische_fehler": [
+   "Linear: 2,5 Halbierungen als 2,5 · 100 mg abgezogen, negatives Ergebnis.",
+   "Auf ganze Halbwertszeiten gerundet: 200 · 0,5² = 50 mg.",
+   "Exponent falsch: 200 · 0,5^15."
+  ],
+  "loesung_muster": [
+   "35[.,]4"
+  ]
+ },
+ "profil": {
+  "schluessel": "mittel",
+  "name": "Felix, 17, mittel",
+  "stufe": "matura"
+ },
+ "umfang": "auf_bitte",
+ "obergrenze": 5,
+ "altersklasse": "14-19",
+ "mit_loesung": false,
+ "frageerkennung": "app",
+ "kind_system_prompt": "Du spielst in einer Simulation eine Schülerin oder einen Schüler, die oder der in einer Lern-App Hilfe zu einer Rechenaufgabe bekommt. Die App schreibt dir Hilfen und stellt dir Fragen. Du antwortest NUR mit dem, was diese Person in das Textfeld tippen würde: keine Regieanweisungen, keine Erklärung deiner Rolle, keine Anführungszeichen, keine Aufzählungen. Du bleibst in der Rolle, auch wenn die App etwas Unerwartetes schreibt. Du erfindest keine neue Aufgabe. Du schreibst wie ein echter Mensch in dem Alter tippt: kurz, manchmal mit kleinen Tippfehlern, ohne Fachsprache, die die Person nicht hat.\n\nDie Aufgabe lautet: Ein Medikament wird im Körper abgebaut: Die Menge halbiert sich alle 6 Stunden. Zu Beginn sind 200 mg im Körper. Wie viel mg sind nach 15 Stunden noch vorhanden? Runde auf eine Dezimalstelle.\n\nNUR FÜR DICH (die Person weiß das nicht von selbst): Die richtige Lösung ist 35,4 mg. Der Rechenweg: N(t) = 200 · 0,5^(t/6). N(15) = 200 · 0,5^2,5 = 200 · 0,1768 ≈ 35,4 mg.\n\nWas du mit diesem Wissen tun darfst, steht in deiner Rolle. Wenn die App dich fragt, ob du jetzt die Lösung sehen möchtest, antwortest du nur mit ja oder nein, so wie es zu deiner Rolle passt.\n\nDEINE ROLLE:\nDu bist Felix, 17 Jahre alt, 7. Klasse AHS. Du arbeitest mit, machst aber einen typischen Fehler. So verhältst du dich:\n- Auf die erste Frage der App sagst du, was gesucht ist und welche Formel oder Methode du ungefähr brauchst.\n- Beim ersten Rechenversuch machst du genau diesen Fehler: Linear: 2,5 Halbierungen als 2,5 · 100 mg abgezogen, negatives Ergebnis. Du schreibst deine Rechnung und dein (falsches) Ergebnis hin.\n- Wenn die App sagt, dass etwas nicht stimmt, und die Stelle nennt, verbesserst du den Fehler und rechnest richtig. Wenn die App nur allgemein redet und deinen Fehler nicht anspricht, bleibst du bei deinem Ergebnis und fragst, ob das stimmt.\n- Wenn du richtig gerechnet hast, nennst du das Ergebnis 35,4 mg.\n- Du schreibst ein bis drei Sätze, knapp, mit mathematischer Schreibweise wie in einem Heft.\n- Wenn die App fragt, ob du die Lösung sehen willst: nein, wenn du gerade eine Idee hast, sonst ja.",
+ "zuege": [
+  {
+   "nr": 1,
+   "art": "hilfe",
+   "stufe": 1,
+   "wiederholung": false,
+   "system": "Du hilfst einer jugendlichen Person zwischen vierzehn und neunzehn Jahren bei einer Rechenaufgabe. Schreib sachlich und knapp: höchstens VIER Sätze. Fachsprache ist erlaubt. Sprich mit Du, aber nicht kindlich. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was die lernende Person zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Motivationshilfe) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die die lernende Person nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt die lernende Person nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\nGib eine Motivationshilfe. Deine Aufgabe ist es, der lernenden Person die SITUATION der Aufgabe nahezubringen, nicht die Rechnung. Wähle aus, was hier wirklich passt, und mach nicht alles auf einmal:\n- Erkläre Wörter aus der Aufgabe, die ein Kind nicht kennen muss, zum Beispiel was eine Schulbibliothek ist oder was ausleihen heißt.\n- Sag in ein, zwei Sätzen, worum es in der Situation geht und warum das jemanden angehen könnte: Wer wüsste das gern, und wozu?\n- Enthält die Aufgabe gar keine Frage, dann SAGE DAS in jedem Fall. Das ist keine Schwäche der lernenden Person, sondern eine Lücke in der Angabe, und ein Kind, das sie bemerkt, denkt richtig.\n- Mach der lernenden Person Mut, es zu probieren.\nVERBOTEN: rechnen, einen Rechenweg nennen, eine Strategie vorschlagen, nach gegeben und gesucht fragen, das Ergebnis nennen. Auch verboten: sagen, was berechnet oder herausgefunden werden soll, auch nicht in einem Nebensatz.\nDie Wörter zählen, rechnen, malnehmen, plus, minus, geteilt und alles Verwandte kommen in dieser Antwort NICHT vor. Auch nicht als Vorschlag, auch nicht als Beispiel, auch nicht verneint.",
+   "anfrage": "Art der Aufgabe: Exponentieller Zerfall mit Halbwertszeit\n\nDie Aufgabe des Kindes lautet:\nEin Medikament wird im Körper abgebaut: Die Menge halbiert sich alle 6 Stunden. Zu Beginn sind 200 mg im Körper. Wie viel mg sind nach 15 Stunden noch vorhanden? Runde auf eine Dezimalstelle.",
+   "tutor_text": "Die Aufgabe beschreibt, wie eine Substanz im Körper abgebaut wird, wobei die Menge alle 6 Stunden um die Hälfte sinkt. Das ist ein typischer Fall von exponentiellem Zerfall. Es geht darum, wie viel von der ursprünglichen Menge nach einer bestimmten Zeit noch übrig ist. Du kannst dir vorstellen, dass jemand wissen möchte, wie viel Medikament noch wirkt, nachdem es einige Zeit im Körper war. Probier es ruhig mit dem, was du weißt.",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "rueckfrage": "Was soll man hier herausfinden? Sag es mit deinen Worten.",
+   "tutor_verraet_loesung": false,
+   "kind_text": "0,5 hoch 2,5 ist 0,1768. Dann rechne ich 200 · 0,1768 = 35,36. Das sind 35,4 mg.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Rechenfehler, aber Arbeit an der Aufgabe",
+   "kind_ist_frage": false,
+   "kind_ergebnis_richtig": true,
+   "diagnose": {
+    "stufe": 2,
+    "grund": "Kind hat Zwischenergebnis genannt, aber nicht berechnet."
+   }
+  },
+  {
+   "nr": 2,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Es soll rauskommen, wie viel Medikament nach 15 Stunden noch im Körper ist, wenn es alle 6 Stunden halbiert wird. Ich glaube, man muss eine Formel für exponentiellen Zerfall benutzen.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind versteht Aufgabe und sucht Lösungsweg",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einer jugendlichen Person zwischen vierzehn und neunzehn Jahren bei einer Rechenaufgabe. Schreib sachlich und knapp: höchstens VIER Sätze. Fachsprache ist erlaubt. Sprich mit Du, aber nicht kindlich. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was die lernende Person zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die die lernende Person nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt die lernende Person nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndie lernende Person arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nEin Medikament wird im Körper abgebaut: Die Menge halbiert sich alle 6 Stunden. Zu Beginn sind 200 mg im Körper. Wie viel mg sind nach 15 Stunden noch vorhanden? Runde auf eine Dezimalstelle.\nHilfe der Stufe 1: Die Aufgabe beschreibt, wie eine Substanz im Körper abgebaut wird, wobei die Menge alle 6 Stunden um die Hälfte sinkt. Das ist ein typischer Fall von exponentiellem Zerfall. Es geht darum, wie viel von der ursprünglichen Menge nach einer bestimmten Zeit noch übrig ist. Du kannst dir vorstellen, dass jemand wissen möchte, wie viel Medikament noch wirkt, nachdem es einige Zeit im Körper war. Probier es ruhig mit dem, was du weißt.\n\nDie Rückfrage lautet:\nEs soll rauskommen, wie viel Medikament nach 15 Stunden noch im Körper ist, wenn es alle 6 Stunden halbiert wird. Ich glaube, man muss eine Formel für exponentiellen Zerfall benutzen.",
+   "tutor_text": "Ja, du hast recht, es handelt sich um exponentiellen Zerfall, und eine Formel ist hier geeignet. Die Aufgabe fragt nach der verbleibenden Menge nach 15 Stunden, ausgehend von 200 mg, wobei sich die Menge alle 6 Stunden halbiert. Was sollst du hier herausfinden?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 3,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich soll rausfinden, wie viel mg Medikament nach 15 Stunden noch im Körper sind, wenn es alle 6 Stunden halbiert wird. Ich glaube, man muss die Formel N(t) = 200 · 0,5^(t/6) benutzen.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind versteht Aufgabe und versucht Lösungsweg",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einer jugendlichen Person zwischen vierzehn und neunzehn Jahren bei einer Rechenaufgabe. Schreib sachlich und knapp: höchstens VIER Sätze. Fachsprache ist erlaubt. Sprich mit Du, aber nicht kindlich. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was die lernende Person zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die die lernende Person nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt die lernende Person nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndie lernende Person arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nEin Medikament wird im Körper abgebaut: Die Menge halbiert sich alle 6 Stunden. Zu Beginn sind 200 mg im Körper. Wie viel mg sind nach 15 Stunden noch vorhanden? Runde auf eine Dezimalstelle.\nHilfe der Stufe 1: Die Aufgabe beschreibt, wie eine Substanz im Körper abgebaut wird, wobei die Menge alle 6 Stunden um die Hälfte sinkt. Das ist ein typischer Fall von exponentiellem Zerfall. Es geht darum, wie viel von der ursprünglichen Menge nach einer bestimmten Zeit noch übrig ist. Du kannst dir vorstellen, dass jemand wissen möchte, wie viel Medikament noch wirkt, nachdem es einige Zeit im Körper war. Probier es ruhig mit dem, was du weißt.\nFrühere Rückfrage: Es soll rauskommen, wie viel Medikament nach 15 Stunden noch im Körper ist, wenn es alle 6 Stunden halbiert wird. Ich glaube, man muss eine Formel für exponentiellen Zerfall benutzen.\nAntwort darauf: Ja, du hast recht, es handelt sich um exponentiellen Zerfall, und eine Formel ist hier geeignet. Die Aufgabe fragt nach der verbleibenden Menge nach 15 Stunden, ausgehend von 200 mg, wobei sich die Menge alle 6 Stunden halbiert. Was sollst du hier herausfinden?\n\nDie Rückfrage lautet:\nIch soll rausfinden, wie viel mg Medikament nach 15 Stunden noch im Körper sind, wenn es alle 6 Stunden halbiert wird. Ich glaube, man muss die Formel N(t) = 200 · 0,5^(t/6) benutzen.",
+   "tutor_text": "Ja, die Formel N(t) = 200 · 0,5^(t/6) ist korrekt, weil sie den exponentiellen Zerfall mit einer Halbwertszeit von 6 Stunden beschreibt. Was musst du jetzt tun, um diesen Wert zu finden?",
+   "pruefung": {
+    "verstoesse": [
+     "genannter Rechenweg"
+    ],
+    "versuche": 2,
+    "gekuerzt": true,
+    "notfall": false,
+    "erster_text": "Ja, die Formel N(t) = 200 · 0,5^(t/6) ist korrekt, weil sie den exponentiellen Zerfall mit der Halbwertszeit von 6 Stunden beschreibt. Du sollst hier die Menge nach 15 Stunden berechnen. Was musst du jetzt in die Formel einsetzen?",
+    "verstoesse_zweiter": [
+     "genannter Rechenweg"
+    ],
+    "zweiter_text": "Ja, die Formel N(t) = 200 · 0,5^(t/6) ist korrekt, weil sie den exponentiellen Zerfall mit einer Halbwertszeit von 6 Stunden beschreibt. Du sollst hier die Menge nach 15 Stunden berechnen, also den Wert von N(15) ermitteln. Was musst du jetzt tun, um diesen Wert zu finden?"
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 4,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich muss t = 15 in die Formel einsetzen und rechnen, wie viel übrig bleibt. Ich rechne 200 · 0,5^(15/6). 15/6 ist 2,5, also 200 · 0,5^2,5. Ich glaube, das ist 200 · 0,1768 = 35,36. Das sind 35,4 mg.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind arbeitet an der Aufgabe mit Rechnung",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": true,
+   "system": "Du hilfst einer jugendlichen Person zwischen vierzehn und neunzehn Jahren bei einer Rechenaufgabe. Schreib sachlich und knapp: höchstens VIER Sätze. Fachsprache ist erlaubt. Sprich mit Du, aber nicht kindlich. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was die lernende Person zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die die lernende Person nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt die lernende Person nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndie lernende Person arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nEin Medikament wird im Körper abgebaut: Die Menge halbiert sich alle 6 Stunden. Zu Beginn sind 200 mg im Körper. Wie viel mg sind nach 15 Stunden noch vorhanden? Runde auf eine Dezimalstelle.\nHilfe der Stufe 1: Die Aufgabe beschreibt, wie eine Substanz im Körper abgebaut wird, wobei die Menge alle 6 Stunden um die Hälfte sinkt. Das ist ein typischer Fall von exponentiellem Zerfall. Es geht darum, wie viel von der ursprünglichen Menge nach einer bestimmten Zeit noch übrig ist. Du kannst dir vorstellen, dass jemand wissen möchte, wie viel Medikament noch wirkt, nachdem es einige Zeit im Körper war. Probier es ruhig mit dem, was du weißt.\nFrühere Rückfrage: Es soll rauskommen, wie viel Medikament nach 15 Stunden noch im Körper ist, wenn es alle 6 Stunden halbiert wird. Ich glaube, man muss eine Formel für exponentiellen Zerfall benutzen.\nAntwort darauf: Ja, du hast recht, es handelt sich um exponentiellen Zerfall, und eine Formel ist hier geeignet. Die Aufgabe fragt nach der verbleibenden Menge nach 15 Stunden, ausgehend von 200 mg, wobei sich die Menge alle 6 Stunden halbiert. Was sollst du hier herausfinden?\nFrühere Rückfrage: Ich soll rausfinden, wie viel mg Medikament nach 15 Stunden noch im Körper sind, wenn es alle 6 Stunden halbiert wird. Ich glaube, man muss die Formel N(t) = 200 · 0,5^(t/6) benutzen.\nAntwort darauf: Ja, die Formel N(t) = 200 · 0,5^(t/6) ist korrekt, weil sie den exponentiellen Zerfall mit einer Halbwertszeit von 6 Stunden beschreibt. Was musst du jetzt tun, um diesen Wert zu finden?\n\nDie Rückfrage lautet:\nIch muss t = 15 in die Formel einsetzen und rechnen, wie viel übrig bleibt. Ich rechne 200 · 0,5^(15/6). 15/6 ist 2,5, also 200 · 0,5^2,5. Ich glaube, das ist 200 · 0,1768 = 35,36. Das sind 35,4 mg.",
+   "tutor_text": "Was ist der Wert von 0,5 hoch 2,5?",
+   "pruefung": {
+    "verstoesse": [
+     "Gleichung mit Ergebnis",
+     "genannter Rechenweg"
+    ],
+    "versuche": 2,
+    "gekuerzt": true,
+    "notfall": false,
+    "erster_text": "Du hast richtig erkannt, dass du t = 15 in die Formel einsetzen musst. Die Berechnung 15/6 = 2,5 ist korrekt, und 0,5^2,5 ist ein Wert, den du berechnen kannst. Was musst du nun tun, um die verbleibende Menge zu finden?",
+    "verstoesse_zweiter": [
+     "Gleichung mit Ergebnis",
+     "genannter Rechenweg"
+    ],
+    "zweiter_text": "Du hast richtig erkannt, dass du t = 15 in die Formel einsetzen musst. Die Berechnung 15/6 = 2,5 ist korrekt, und du musst nun 0,5 hoch 2,5 berechnen. Was ist der Wert von 0,5 hoch 2,5?"
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 5,
+   "art": "bestaetigung",
+   "stufe": 2,
+   "wiederholung": false,
+   "system": "Du hilfst einer jugendlichen Person zwischen vierzehn und neunzehn Jahren bei einer Rechenaufgabe. Schreib sachlich und knapp: höchstens VIER Sätze. Fachsprache ist erlaubt. Sprich mit Du, aber nicht kindlich. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was die lernende Person zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 2 (Rückmeldungshilfe) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die die lernende Person nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt die lernende Person nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\nGib eine Rückmeldungshilfe zu dem, was das Kind zuletzt geschrieben hat.\n- Sag konkret, was an seinem Beitrag trägt, und nenne es beim Namen.\n- Hat die lernende Person noch gar keinen Rechenweg versucht, sondern nur die Angabe wiederholt, dann ist das dein ganzer Auftrag: Sag, dass das stimmt, und frag nach einem eigenen Versuch. Schlag KEINEN Weg vor. Eine Rueckmeldung ohne etwas, worauf sie sich bezieht, ist keine Rueckmeldung, sondern ein vorgezogener Tipp.\n- RECHNE DEN ANSATZ DES KINDES NACH. Stimmt er nicht, sag das deutlich und sag, welche Stelle nicht aufgeht. Uebergeh einen Rechenfehler niemals und baue nicht darauf auf.\n- Hat das Kind die falsche Rechenart gewaehlt, etwa addiert statt multipliziert, dann ist genau das der Punkt, den du benennst. Sag, dass die Rechenart nicht passt, aber nicht, welche die richtige waere.\n- Die Wörter malnehmen, multiplizieren, addieren, subtrahieren, dividieren und geteilt kommen in deiner Antwort NICHT vor, es sei denn, das Kind hat sie selbst geschrieben. Du darfst über seinen Ansatz reden, ohne den richtigen zu nennen.\n- Sag, an welcher Stelle es nicht aufgeht, ohne den richtigen Weg zu verraten.\n- Schreibt die lernende Person, dass die Aufgabe unklar ist, dann IST das sein Versuch. Übergeh das nicht. Sag, welcher Teil der Angabe tatsächlich unklar ist, und erkläre genau diesen Teil.\nVERBOTEN: den richtigen Weg verraten, den nächsten Rechenschritt nennen, vorrechnen, das Ergebnis nennen. Auch verboten: sagen, was gesucht ist oder was berechnet werden soll. Fehlt die Frage in der Angabe, dann stelle sie NICHT an ihrer Stelle, sondern frage die lernende Person, was man hier wohl wissen möchte. Das gilt auch für Nebensätze wie \"damit wir wissen, wie viele es sind\".",
+   "anfrage": "Art der Aufgabe: Exponentieller Zerfall mit Halbwertszeit\n\nDie Aufgabe des Kindes lautet:\nEin Medikament wird im Körper abgebaut: Die Menge halbiert sich alle 6 Stunden. Zu Beginn sind 200 mg im Körper. Wie viel mg sind nach 15 Stunden noch vorhanden? Runde auf eine Dezimalstelle.\n\nBisheriger Verlauf:\nHilfe der Stufe 1: Die Aufgabe beschreibt, wie eine Substanz im Körper abgebaut wird, wobei die Menge alle 6 Stunden um die Hälfte sinkt. Das ist ein typischer Fall von exponentiellem Zerfall. Es geht darum, wie viel von der ursprünglichen Menge nach einer bestimmten Zeit noch übrig ist. Du kannst dir vorstellen, dass jemand wissen möchte, wie viel Medikament noch wirkt, nachdem es einige Zeit im Körper war. Probier es ruhig mit dem, was du weißt.\nDarauf hat das Kind geantwortet: 0,5 hoch 2,5 ist 0,1768. Dann rechne ich 200 · 0,1768 = 35,36. Das sind 35,4 mg.",
+   "tutor_text": "Dein Ansatz, die Halbwertszeit in Exponenten zu nutzen, ist richtig – du hast die Zeit in Anzahl der Halbwertszeiten umgerechnet. Du hast die Aufgabe fast vollständig gelöst. Überprüfe noch einmal, ob die Rundung auf eine Dezimalstelle stimmt.",
+   "pruefung": {
+    "verstoesse": [
+     "genannte Rechenart"
+    ],
+    "versuche": 2,
+    "gekuerzt": true,
+    "notfall": false,
+    "erster_text": "Dein Ansatz, die Halbwertszeit in Exponenten umzurechnen, ist richtig. Du hast 15 Stunden durch 6 Stunden geteilt und erhältst 2,5, was den Exponenten für die Halbierung darstellt. Die Rechnung 0,5 hoch 2,5 ist korrekt, und auch die Multiplikation mit 200 ergibt einen sinnvollen Wert. Du hast den richtigen Weg gewählt, um den Anteil der ursprünglichen Menge nach 15 Stunden zu bestimmen. Überprüfe jetzt noch einmal, ob die Rechnung 0,5 hoch 2,5 tatsächlich 0,1768 ergibt, und ob die Multiplikation mit 200 stimmt.",
+    "verstoesse_zweiter": [
+     "genannte Rechenart"
+    ],
+    "zweiter_text": "Dein Ansatz, die Halbwertszeit in Exponenten zu nutzen, ist richtig – du hast die Zeit in Anzahl der Halbwertszeiten umgerechnet. Die Rechnung 0,5 hoch 2,5 ist korrekt, und die Multiplikation mit 200 ergibt ebenfalls den richtigen Wert. Du hast die Aufgabe fast vollständig gelöst. Überprüfe noch einmal, ob die Rundung auf eine Dezimalstelle stimmt."
+   },
+   "tutor_bestaetigt": true,
+   "tutor_verraet_loesung": false
+  }
+ ],
+ "ereignisse": [],
+ "ergebnis": {
+  "status": "selbst_geloest",
+  "selbst_gerechnet": true,
+  "zug_selbst_gerechnet": 1,
+  "loesung_gezeigt": false,
+  "hoechste_stufe": 1,
+  "zuege": 5,
+  "kinderbeitraege": 4,
+  "fragen_des_kindes": 3,
+  "als_frage_gewertete_ergebnisse": 1,
+  "bestaetigung_nach_ergebnis": "bestätigt",
+  "dauer_s": 54.3,
+  "spark_aufrufe": 17
+ },
+ "messungen": [
+  {
+   "art": "hilfe",
+   "dauer_ms": 4733,
+   "tokens_ein": 965,
+   "tokens_aus": 121
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 2484,
+   "tokens_ein": 834,
+   "tokens_aus": 54
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1515,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 3812,
+   "tokens_ein": 1067,
+   "tokens_aus": 81
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 2828,
+   "tokens_ein": 1006,
+   "tokens_aus": 67
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1421,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 3608,
+   "tokens_ein": 1223,
+   "tokens_aus": 81
+  },
+  {
+   "art": "nachfrage_2",
+   "dauer_ms": 4188,
+   "tokens_ein": 1316,
+   "tokens_aus": 94
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 4406,
+   "tokens_ein": 1175,
+   "tokens_aus": 107
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1436,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 3500,
+   "tokens_ein": 1403,
+   "tokens_aus": 82
+  },
+  {
+   "art": "nachfrage_2",
+   "dauer_ms": 3250,
+   "tokens_ein": 1496,
+   "tokens_aus": 77
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 2218,
+   "tokens_ein": 1335,
+   "tokens_aus": 52
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1453,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "diagnose",
+   "dauer_ms": 1891,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "hilfe",
+   "dauer_ms": 7077,
+   "tokens_ein": 1334,
+   "tokens_aus": 176
+  },
+  {
+   "art": "hilfe_2",
+   "dauer_ms": 4452,
+   "tokens_ein": 1432,
+   "tokens_aus": 108
+  }
+ ],
+ "beendet": "2026-10-19T09:40:18"
+}

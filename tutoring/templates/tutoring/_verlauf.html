@@ -1,0 +1,278 @@
+{% comment %}Der Verlauf eines Kindes, je Betriebsart (Thomas, 22.10.2026:
+in jeder Betriebsart muss der Chat zu sehen sein). Trainer, Sprechcoach und
+Musikstunde haben eigene Teilvorlagen; darunter die Aufgabenhilfe mit
+Aufgaben, Hilfen, Versuchen und Diagnose.
+
+Seit 30.10.2026 (Hilfe nach Diagnose) ist nicht jeder Zug des Tutors eine
+Stufe. Die Zuege stehen zeitlich (Hint.Meta.ordering), und die Vorlage
+zeigt sie nach ihrer Art: die Stufe mit Nummer, Bezeichnung und Form
+(direkt oder indirekt, weit oder eng); die Nachfrage als eigene Karte ohne
+Stufe; der Auftakt nur als Beitrag des Kindes ("Erster Versuch, vor jeder
+Hilfe"); die Bestaetigung mit der Warum-Frage; der Nachsatz. Unter jedem
+Beitrag die Diagnose: Ergebnis, Fehler, Lage, Absicht und die Hilfe, die die
+Anwendung danach gewaehlt hat.{% endcomment %}
+{% comment %}Der Weg nach draussen, in jeder Betriebsart (Thomas,
+1.11.2026: "Wenn das Frontier-Modell mitarbeitet, ist auch die
+Kommunikation zwischen Frontier-Modell und lokaler KI sichtbar. Falls
+nicht, bau das ein, und zwar in allen Stundentypen. Also auch bei
+Musik."). Die Zeilen sind die Anfragen nach draussen aus dem
+Forschungsprotokoll (Interaction, Weg cloud) fuer dieses Kind; den
+Wortlaut tragen sie ab Protokollstufe 2. Wo keine externe KI mitarbeitet,
+steht das als Satz.{% endcomment %}
+<section class="aussenweg" aria-labelledby="aussenweg-{{ teilnahme.pk }}">
+  <h2 id="aussenweg-{{ teilnahme.pk }}" class="aussenweg-titel">Der Weg nach draußen</h2>
+  <p class="qs-notiz">{{ aussenweg.satz }}</p>
+  {% for z in aussenzuege %}
+    <details class="qsblock protokollzeile{% if z.leak_check == "blockiert" %} ist-gesperrt{% endif %} ist-cloud">
+      <summary>
+        <span class="protokoll-zeit">{{ z.created_at|time:"H:i:s" }}</span>
+        <span class="marke-chip">{{ z.weg_text }}</span>
+        <span class="protokoll-kurz">{{ z.model_name|default:"Modell unbekannt" }} &middot; {{ z.leak_text }} &middot; {{ z.duration_ms }} ms &middot; {{ z.tokens_in }} / {{ z.tokens_out }} Token &middot; {{ z.kosten_euro|floatformat:5 }} &euro;{% if z.outcome != "ok" %} &middot; {{ z.outcome }}{% endif %}{% if z.error_kind %} ({{ z.error_kind }}){% endif %}</span>
+      </summary>
+      <dl class="qs-zahlen">
+        <dt>Ersetzt vor dem Senden</dt><dd>{{ z.entitaeten_text|default:"nichts" }}</dd>
+        <dt>Aufzeichnung</dt><dd>Stufe {{ z.research_level }}</dd>
+      </dl>
+      {% if z.instruction %}
+        <details class="protokoll-anweisung">
+          <summary class="qs-kopf">Anweisung an die Gegenstelle</summary>
+          <blockquote class="qs-text">{{ z.instruction|linebreaksbr }}</blockquote>
+        </details>
+      {% endif %}
+      {% if z.leak_check == "blockiert" %}
+        <p class="qs-grund">Nichts hinausgegangen{% if z.error_kind %}: {{ z.error_kind }}{% endif %}</p>
+      {% elif z.inhalte_aufgezeichnet %}
+        <h4 class="qs-kopf">Das ist hinausgegangen</h4>
+        <blockquote class="qs-text qs-raus">{{ z.masked_input|linebreaksbr }}</blockquote>
+        <h4 class="qs-kopf">Das kam zurück</h4>
+        <blockquote class="qs-text qs-rein">{{ z.masked_output|linebreaksbr }}</blockquote>
+      {% else %}
+        <p class="qs-notiz">Nur Zahlen: Diese Zeile ist auf Stufe 1 (Betrieb) entstanden. Der Wortlaut steht unten bei der Aufgabe oder im Chat.</p>
+      {% endif %}
+    </details>
+  {% endfor %}
+</section>
+
+{% if sitzung.ist_trainer %}
+  {% include "tutoring/_verlauf_trainer.html" %}
+{% elif sitzung.ist_sprechcoach %}
+  {% include "tutoring/_verlauf_sprech.html" %}
+{% elif sitzung.ist_musik %}
+  {% include "tutoring/_verlauf_musik.html" %}
+{% elif sitzung.ist_safechat %}
+  {% include "tutoring/_verlauf_safechat.html" %}
+{% elif aufgaben %}
+  {% for aufgabe in aufgaben %}
+    <section class="verlaufsaufgabe" aria-labelledby="aufgabe-{{ aufgabe.pk }}">
+      <h2 id="aufgabe-{{ aufgabe.pk }}">
+        Aufgabe {{ forloop.counter }}
+        <span class="verlauf-zeit">{{ aufgabe.created_at|time:"H:i" }}</span>
+        {% if aufgabe.ist_abgeschlossen %}
+          <span class="erledigtmarke">abgeschlossen {{ aufgabe.finished_at|time:"H:i" }}</span>
+        {% else %}
+          <span class="erledigtmarke">läuft noch</span>
+        {% endif %}
+      </h2>
+      {% comment %}Der Eigenanteil (Thomas, 1.11.2026): eine grobe
+      Einschaetzung aus den Hilfestufen vor dem richtigen Ergebnis
+      (klassenbild.eigenanteil). Steht nur, wenn die Aufgabe ein Ergebnis
+      hat oder die Loesung gezeigt wurde.{% endcomment %}
+      {% with anteil=aufgabe.eigenanteil %}{% if anteil %}
+        <p class="anteilnotiz"><strong>Eigenanteil, grobe Einschätzung:</strong>
+          {{ anteil.text }}{% if anteil.stand == "geloest" and anteil.hilfen %}; stärkste Hilfe Stufe {{ anteil.hoechste }}, {{ anteil.hilfen }} Stufenhilfe{{ anteil.hilfen|pluralize:"n" }} vor dem Ergebnis{% endif %}.</p>
+      {% endif %}{% endwith %}
+      {% if aufgabe.rating %}
+        <p class="anteilnotiz"><strong>Note des Kindes für die Hilfe:</strong> {{ aufgabe.rating }} ({{ aufgabe.rated_at|time:"H:i" }}).</p>
+      {% endif %}
+
+      {% if aufgabe.image_data_url %}
+        <img class="aufgabenfoto" src="{{ aufgabe.image_data_url }}"
+             alt="Foto, das {{ teilnahme.tier_name }} hochgeladen hat">
+      {% endif %}
+      <blockquote class="aufgabentext ampelrand-{{ aufgabe.flag }}">
+        {{ aufgabe.text|linebreaksbr }}
+        <span class="herkunft">{{ aufgabe.get_source_display }}</span>
+      </blockquote>
+      {% if aufgabe.flag != "gruen" %}
+        <p class="ampelnotiz">
+          <span class="ampelpunkt ampelpunkt-{{ aufgabe.flag }}" aria-hidden="true"></span>
+          Eingestuft als {{ aufgabe.flag }}{% if aufgabe.flag_reason %}: {{ aufgabe.flag_reason }}{% endif %}
+        </p>
+      {% endif %}
+
+      {% comment %}Der Weg nach draussen, eingeklappt. Er gehoert in den
+      Verlauf, weil die Hilfen sich darauf stuetzen; aufgeklappt waere er
+      aber laenger als das Gespraech selbst.{% endcomment %}
+      {% if aufgabe.hat_qualitaetssicherung %}
+        <details class="qsblock{% if aufgabe.checked_blocked %} ist-gesperrt{% endif %}">
+          <summary>
+            Qualitätssicherung:
+            {% if aufgabe.checked_blocked %}
+              nicht gelaufen
+            {% else %}
+              Austausch mit {{ aufgabe.checked_model|default:"der externen KI" }}
+            {% endif %}
+          </summary>
+
+          {% if aufgabe.checked_blocked %}
+            <p class="qs-grund">{{ aufgabe.checked_blocked }}</p>
+            <p class="qs-notiz">
+              Es ist nichts hinausgegangen. Die Hilfen dieser Aufgabe sind
+              ausschließlich am Spark entstanden.
+            </p>
+            {% include "tutoring/_qs_bild.html" with gesperrt=True %}
+          {% else %}
+            <dl class="qs-zahlen">
+              <dt>Ersetzt vor dem Senden</dt>
+              <dd>
+                {% if aufgabe.checked_ersetzt %}{{ aufgabe.checked_ersetzt }}
+                {% elif aufgabe.checked_rewritten %}nichts mehr – die Umformulierung hatte schon keine Person
+                {% else %}nichts zu ersetzen{% endif %}
+              </dd>
+              <dt>Token</dt>
+              <dd class="zahl">{{ aufgabe.checked_tokens_in }} ein, {{ aufgabe.checked_tokens_out }} aus</dd>
+              <dt>Dauer</dt>
+              <dd class="zahl">{{ aufgabe.checked_ms }} ms</dd>
+              <dt>Kosten</dt>
+              <dd class="zahl">{{ aufgabe.checked_kosten_euro|floatformat:5 }} €</dd>
+            </dl>
+
+            {% include "tutoring/_qs_bild.html" %}
+
+            {% if aufgabe.checked_rewritten %}
+              <h4 class="qs-kopf">So hat der Spark die Aufgabe neu formuliert</h4>
+              <blockquote class="qs-text">{{ aufgabe.checked_rewritten|linebreaksbr }}</blockquote>
+            {% endif %}
+
+            <h4 class="qs-kopf">Das ist hinausgegangen</h4>
+            <blockquote class="qs-text qs-raus">{{ aufgabe.checked_sent|linebreaksbr }}</blockquote>
+
+            <h4 class="qs-kopf">Das kam zurück</h4>
+            <blockquote class="qs-text qs-rein">{{ aufgabe.checked_received|linebreaksbr }}</blockquote>
+
+            <h4 class="qs-kopf">Daraus wurde lokal, mit eingesetzten Werten</h4>
+            <blockquote class="qs-text">{{ aufgabe.checked_solution|linebreaksbr }}</blockquote>
+
+            {% comment %}Der dritte Schritt (Thomas, 1.11.2026): wie der
+            Spark die Antwort der externen KI bekommen hat. Wortlaut aus
+            levels.geprueftes_wissen, derselbe wie im Systemprompt.{% endcomment %}
+            <h4 class="qs-kopf">So hat der Spark sie bekommen</h4>
+            <p class="qs-notiz">
+              Dieser Abschnitt stand im Systemprompt jeder Stufenhilfe dieser
+              Aufgabe; die Diagnose bekam dazu die Anweisung, das Ergebnis des
+              Kindes gegen diese Lösung zu prüfen und ihr Endergebnis zu
+              übernehmen. Das Kind hat die Lösung nie gesehen.
+            </p>
+            <blockquote class="qs-text qs-spark">{{ aufgabe.geprueftes_wissen_text|linebreaksbr }}</blockquote>
+          {% endif %}
+        </details>
+      {% endif %}
+
+      {% for hilfe in aufgabe.hints.all %}
+        {% if hilfe.art == "auftakt" %}
+          {% comment %}Der Auftakt ist ein leerer Zug: Nur der Versuch des
+          Kindes steht da, unten als Beitrag.{% endcomment %}
+        {% elif hilfe.ist_hilfe %}
+          <article class="hilfe">
+            <h3 class="hilfe-kopf">
+              <span class="hilfe-stufe">Stufe {{ hilfe.level }}</span> {{ hilfe.bezeichnung }}
+              {% if hilfe.form %}<span class="hilfe-form">{{ hilfe.form }}{% if hilfe.weite %}, {{ hilfe.weite }}{% endif %}</span>{% endif %}
+              <span class="verlauf-zeit">{{ hilfe.created_at|time:"H:i" }}</span>
+            </h3>
+            <div class="hilfe-text">{{ hilfe.text|linebreaksbr }}</div>
+          </article>
+        {% else %}
+          {% comment %}Nachfrage, Bestaetigung, Nachsatz: ein Zug ohne Stufe.
+          Die Bezeichnung kommt aus levels.ART_BEZEICHNUNGEN.{% endcomment %}
+          <article class="hilfe hilfe-zug hilfe-{{ hilfe.art }}">
+            <h3 class="hilfe-kopf">
+              {{ hilfe.bezeichnung }}
+              <span class="verlauf-zeit">{{ hilfe.created_at|time:"H:i" }}</span>
+            </h3>
+            <div class="hilfe-text">{{ hilfe.text|linebreaksbr }}</div>
+          </article>
+        {% endif %}
+
+        {% if hilfe.response or hilfe.response_image_data_url %}
+          <article class="eigenerversuch ampelrand-{{ hilfe.response_flag }}">
+            <h3 class="versuch-kopf">
+              {% if hilfe.art == "auftakt" %}{{ hilfe.bezeichnung }}{% elif hilfe.art == "bestaetigung" %}Antwort des Kindes auf die Warum-Frage{% elif hilfe.art == "nachfrage" %}Antwort des Kindes auf die Nachfrage{% else %}Antwort des Kindes{% endif %}
+              <span class="verlauf-zeit">{{ hilfe.responded_at|time:"H:i" }}</span>
+            </h3>
+            {% if hilfe.response_image_data_url %}
+              <img class="aufgabenfoto" src="{{ hilfe.response_image_data_url }}"
+                   alt="Foto zum Versuch">
+            {% endif %}
+            <div class="hilfe-text">{{ hilfe.response|linebreaksbr }}
+              <span class="herkunft">{{ hilfe.get_response_source_display }}</span>
+            </div>
+            {% if hilfe.response_flag != "gruen" %}
+              <p class="ampelnotiz">
+                <span class="ampelpunkt ampelpunkt-{{ hilfe.response_flag }}" aria-hidden="true"></span>
+                Eingestuft als {{ hilfe.response_flag }}{% if hilfe.response_flag_reason %}: {{ hilfe.response_flag_reason }}{% endif %}
+              </p>
+            {% endif %}
+            {% comment %}Die Diagnose: was die Anwendung aus dem Beitrag
+            geschlossen hat, und welche Hilfe sie danach gewaehlt hat. Das
+            ist die Zeile, die der Lehrperson in der Erklaerung versprochen
+            wird - ohne sie waere "gewaehlt, nicht gezaehlt" eine
+            Behauptung. Zuerst das Ergebnis der Pruefung (richtig, oder der
+            Fehler im Klartext), dann Lage und Absicht in Worten, dann die
+            Wahl: "erst nachfragen" (next_level 0) oder die Stufe, neutral
+            benannt, denn sie kann seit 30.10.2026 um mehr als eine Stufe
+            springen; dazu die Form. Nach einem richtigen Ergebnis kommt
+            keine Hilfe mehr, also kein "Danach". Die Antwort auf die
+            Warum-Frage wird nicht beurteilt und hat keine Zeile.{% endcomment %}
+            {% if hilfe.art != "bestaetigung" %}
+              {% if hilfe.result or hilfe.next_level is not None %}
+                <p class="diagnosenotiz">
+                  {% if hilfe.result == "richtig" %}<strong>Das stimmt.</strong>{% elif hilfe.result == "falsch" %}<strong>Fehler:</strong> {{ hilfe.error|default:"Ergebnis falsch" }}.{% elif hilfe.result == "offen" %}<strong>Noch kein Ergebnis.</strong>{% endif %}
+                  {% if hilfe.lage_text or hilfe.absicht_text %}
+                    {# "Lage unklar" heisst hinter dem Wort "Lage:" nur "unklar". #}
+                    <span class="diagnose-einschaetzung">{% if hilfe.lage_text %}<strong>Lage:</strong> {{ hilfe.lage_text|cut:"Lage " }}.{% endif %}{% if hilfe.absicht_text %} <strong>Absicht:</strong> {{ hilfe.absicht_text }}.{% endif %}</span>
+                  {% endif %}
+                  {% if hilfe.result != "richtig" and hilfe.next_level is not None %}
+                    <strong>Danach:</strong>
+                    {% if hilfe.next_level == 0 %}erst nachfragen{% else %}Stufe {{ hilfe.next_level }}{% if hilfe.ist_hilfe %}{% if hilfe.next_level > hilfe.level %}, stärker{% elif hilfe.next_level == hilfe.level %}, noch einmal anders{% else %}, zurück{% endif %}{% endif %}{% if hilfe.next_form %}, {{ hilfe.next_form }}{% endif %}{% endif %}{% if hilfe.goal_note %}{% if hilfe.next_level != 0 or "nachfragen" not in hilfe.goal_note %} – {{ hilfe.goal_note }}{% endif %}{% endif %}
+                  {% endif %}
+                </p>
+              {% endif %}
+            {% endif %}
+          </article>
+        {% elif hilfe.wartet_auf_antwort %}
+          <p class="wartehinweis">
+            <span class="pulspunkt" aria-hidden="true"></span>
+            {{ teilnahme.tier_name }} ist dran und hat noch nicht geantwortet.
+          </p>
+        {% elif hilfe.art == "bestaetigung" %}
+          <p class="wartehinweis wartehinweis-still">
+            Die Warum-Frage ist freiwillig; {{ teilnahme.tier_name }} hat nicht geantwortet.
+          </p>
+        {% endif %}
+      {% endfor %}
+
+      {% for frage in aufgabe.questions.all %}
+        <article class="eigenerversuch ampelrand-{{ frage.flag }}">
+          <h3 class="versuch-kopf">
+            Rückfrage
+            <span class="verlauf-zeit">{{ frage.created_at|time:"H:i" }}</span>
+          </h3>
+          {% if frage.image_data_url %}
+            <img class="aufgabenfoto" src="{{ frage.image_data_url }}" alt="Foto zur Frage">
+          {% endif %}
+          <div class="hilfe-text">{{ frage.text|linebreaksbr }}
+            <span class="herkunft">{{ frage.get_source_display }}</span>
+          </div>
+        </article>
+        {% if frage.answer %}
+          <article class="hilfe">
+            <h3 class="hilfe-kopf">Antwort auf die Rückfrage</h3>
+            <div class="hilfe-text">{{ frage.answer|linebreaksbr }}</div>
+          </article>
+        {% endif %}
+      {% endfor %}
+    </section>
+  {% endfor %}
+{% else %}
+  <p class="leerhinweis">{{ teilnahme.tier_name }} hat noch keine Aufgabe gestellt.</p>
+{% endif %}

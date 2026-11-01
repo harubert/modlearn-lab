@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titel %}Gebucht und gebraucht{% endblock %}
+
+{% block kopf_extra %}
+  <link rel="stylesheet" href="{% static 'css/plan.css' %}">
+{% endblock %}
+
+{% block inhalt %}
+<div class="seitenkopf">
+  <h1>Gebucht und gebraucht</h1>
+  <p class="seitenkopf-zusatz">die letzten {{ tage }} Tage</p>
+</div>
+
+{% comment %}Der Zweck dieser Seite in einem Satz: Eine Kapazitaetszahl, die
+niemand nachprueft, ist geraten.{% endcomment %}
+<p class="hervorgehoben">
+  Links steht, wie viele Plätze gebucht waren. Rechts, wie viele Anfragen
+  tatsächlich gleichzeitig liefen. Die beiden Zahlen messen nicht dasselbe:
+  Eine Anfrage dauert rund vier Sekunden, und niemand drückt pausenlos –
+  fünfundzwanzig Kinder erzeugen im Schnitt gut <strong>eine</strong>
+  gleichzeitige Anfrage. Die Spalte rechts zeigt also die Last, nicht den
+  Andrang.
+</p>
+
+<dl class="qs-zahlen">
+  <dt>Plätze insgesamt</dt>
+  <dd class="zahl">{{ plaetze_gesamt }}</dd>
+  <dt>Höchste gemessene Gleichzeitigkeit</dt>
+  <dd class="zahl">{{ spitze_bisher }}</dd>
+</dl>
+
+{% if zeilen %}
+  <div class="tabellenrahmen">
+  <table class="rueckblick">
+    <thead>
+      <tr>
+        <th scope="col">Tag</th>
+        <th scope="col">gebucht</th>
+        <th scope="col">wofür</th>
+        <th scope="col">gleichzeitig</th>
+        <th scope="col">Anfragen</th>
+        <th scope="col">Abstand</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for z in zeilen %}
+        <tr>
+          <th scope="row">{{ z.tag|date:"D, d.m." }}</th>
+          <td class="zahl">{{ z.gebucht }}</td>
+          {% comment %}Das Konzept der groessten Buchung des Tages: 120
+          Plaetze fuer eine Modellschulung und 120 fuer vier Klassen sehen
+          in der Spalte links gleich aus, bedeuten fuer die gemessene Spitze
+          aber etwas ganz anderes.{% endcomment %}
+          <td class="rueckblick-konzept">
+            {% if z.konzept_name %}
+              {% include "plan/_konzeptsymbol.html" with symbol=z.konzept_symbol %} {{ z.konzept_name }}
+            {% else %}
+              –
+            {% endif %}
+          </td>
+          <td class="zahl">{{ z.spitze }}</td>
+          <td class="zahl">{{ z.anfragen }}</td>
+          <td class="zahl">
+            {% if z.ueberschaetzt %}
+              <span class="abstand-hoch">{{ z.ueberschaetzt }} zu viel</span>
+            {% else %}
+              –
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+
+  <p class="leerhinweis">
+    „{{ summe_gebucht }} zu {{ summe_genutzt }}“ über alle Tage. Wer immer zu
+    hoch bucht, nimmt anderen Platz weg, der nie gebraucht wurde – das ist
+    keine Note, sondern die Auskunft, mit der sich beim nächsten Mal besser
+    schätzen lässt.
+  </p>
+{% else %}
+  <p class="leerhinweis">
+    In diesem Zeitraum wurde weder gebucht noch gearbeitet.
+  </p>
+{% endif %}
+
+<p><a class="knopf" href="{% url 'plan:tag' %}">Zurück zum Tagesplan</a></p>
+{% endblock %}

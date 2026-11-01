@@ -1,0 +1,47 @@
+{% comment %}Der Verlauf eines Kindes im Trainer: das Gespraech, wie das
+Kind es gesehen hat. Trainerzuege links, Beitraege des Kindes rechts, mit
+denselben Klassen wie in der Aufgabenhilfe (hilfe, eigenerversuch), damit
+die Lehrperson in jedem Fach dasselbe Bild liest. Thomas (22.10.2026): In
+jeder Betriebsart muss der Chat des Kindes zu sehen sein.{% endcomment %}
+{% if laeufe %}
+  {% for lauf in laeufe %}
+    <section class="verlaufsaufgabe" aria-labelledby="lauf-{{ lauf.pk }}">
+      <h2 id="lauf-{{ lauf.pk }}">
+        {{ lauf.topic|default:"Ohne Thema" }}
+        <span class="verlauf-zeit">{{ lauf.created_at|time:"H:i" }}</span>
+        <span class="erledigtmarke">
+          {% if lauf.finished_at %}abgeschlossen {{ lauf.finished_at|time:"H:i" }}
+          {% else %}Schritt {{ lauf.step_no }}{% if lauf.tasks_given %} &middot; {{ lauf.tasks_right }} von {{ lauf.tasks_given }} Aufgaben richtig{% endif %}{% endif %}
+        </span>
+      </h2>
+      {% for zug in lauf.zuege.all %}
+        {% if zug.role == "trainer" %}
+          <article class="hilfe">
+            <h3 class="hilfe-kopf">Trainer <span class="verlauf-zeit">{{ zug.created_at|time:"H:i" }}</span></h3>
+            <div class="hilfe-text">{{ zug.text|linebreaksbr }}</div>
+            {% if zug.question %}<p class="hilfe-text verlauf-frage">{{ zug.question }}</p>{% endif %}
+          </article>
+        {% else %}
+          <article class="eigenerversuch ampelrand-{{ zug.flag }}">
+            <h3 class="versuch-kopf">{{ teilnahme.tier_name }} <span class="verlauf-zeit">{{ zug.created_at|time:"H:i" }}</span></h3>
+            {% if zug.image_data_url %}
+              <img class="aufgabenfoto" src="{{ zug.image_data_url }}" alt="Foto zum Beitrag">
+            {% endif %}
+            <div class="hilfe-text">{{ zug.text|linebreaksbr }}</div>
+            {% if zug.verdict %}
+              <p class="diagnosenotiz"><strong>{{ zug.urteil_text }}</strong>{% if zug.error_kind %} – {{ zug.error_kind }}{% endif %}</p>
+            {% endif %}
+            {% if zug.flag != "gruen" %}
+              <p class="ampelnotiz">
+                <span class="ampelpunkt ampelpunkt-{{ zug.flag }}" aria-hidden="true"></span>
+                Eingestuft als {{ zug.flag }}{% if zug.flag_reason %}: {{ zug.flag_reason }}{% endif %}
+              </p>
+            {% endif %}
+          </article>
+        {% endif %}
+      {% endfor %}
+    </section>
+  {% endfor %}
+{% else %}
+  <p class="leerhinweis">{{ teilnahme.tier_name }} hat noch nicht angefangen.</p>
+{% endif %}

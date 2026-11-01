@@ -1,0 +1,75 @@
+{% comment %}Der Rueckblick (Regel 6, zweiter Teil): am Ende die zwei bis
+drei wichtigsten Punkte, die auch die Lehrperson sieht. Gebaut hat sie der
+Server (sprechablauf.rueckblick), einmal, ohne Modell; hier werden sie nur
+gezeigt.
+
+Deutsch erklaert, englisch gezeigt. Keine Note, keine Zahl, kein Rot: Was
+noch nicht sass, steht als "So sagt man es" da und nicht als Fehler. In der
+Volksschule nur Gelungenes plus EIN Punkt, und ohne den Satz des Kindes
+daneben.
+
+Die beiden Zeichen sind kleine Inline-SVG mit aria-hidden: Die Bedeutung
+traegt der deutsche Satz, nicht das Bild.{% endcomment %}
+<section class="coach-rueckblick{% if volksschule %} ist-gross{% endif %}" aria-labelledby="rueckblick-titel">
+  <h2 class="coach-rueckblick-titel" id="rueckblick-titel">Rückblick</h2>
+  {% if not ist_frei %}
+    <p class="coach-rueckblick-aufgabe">Deine Aufgabe war:
+      <span lang="en">{{ aufgabe.ziel }}</span></p>
+  {% endif %}
+
+  {% if lauf.review %}
+    <ul class="rueckblick-liste">
+      {% for p in lauf.review %}
+        <li class="rueckblick-punkt rueckblick-{{ p.art }}">
+          {% if p.art == "gut" %}
+            <svg class="rueckblick-zeichen" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor"
+                    stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          {% else %}
+            <svg class="rueckblick-zeichen" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M5 12h13M13 6.5l5.5 5.5-5.5 5.5" fill="none" stroke="currentColor"
+                    stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          {% endif %}
+          <div class="rueckblick-inhalt">
+            <p class="rueckblick-deutsch">{{ p.deutsch }}</p>
+            {% if p.vorher %}
+              <p class="rueckblick-vorher">Du hast gesagt:
+                <span lang="en">{{ p.vorher }}</span></p>
+            {% endif %}
+            <p class="rueckblick-englisch" lang="en">{{ p.englisch }}</p>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="coach-rueckblick-leer">Diesmal gab es noch nichts zum Zurückschauen.</p>
+  {% endif %}
+
+  {% if reflexionsfrage %}
+    <p class="coach-reflexion">{{ reflexionsfrage }} Denk kurz darüber nach.</p>
+  {% endif %}
+
+  <p class="coach-rueckblick-fuss">
+    Das ist keine Note. Es sind die Sätze, die du dir für das nächste Mal
+    merken kannst.
+  </p>
+
+  <details class="coach-nachlesen">
+    <summary>Euer Gespräch noch einmal lesen</summary>
+    <ol class="coach-nachlesen-liste">
+      {% for zug in zuege %}
+        <li class="{% if zug.ist_coach %}nachlesen-coach{% else %}nachlesen-du{% endif %}">
+          <span class="nachlesen-wer">{% if zug.ist_coach %}Coach{% else %}Du{% endif %}:</span>
+          <span lang="{{ lauf.sprache_code }}">{{ zug.text }}</span>
+        </li>
+      {% endfor %}
+    </ol>
+  </details>
+
+  <form method="post" action="{{ neu_url }}" class="coach-rueckblick-form">
+    {% csrf_token %}
+    <button type="submit" class="knopf">Noch ein Gespräch</button>
+  </form>
+</section>

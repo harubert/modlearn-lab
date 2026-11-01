@@ -1,0 +1,417 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titel %}Sprechcoach{% endblock %}
+
+{% block kopf_extra %}
+  {% comment %}Ein eigener Stilbogen, wie beim Trainer: Der Sprechcoach ist
+     eine dritte, in sich geschlossene Oberflaeche. Alle Farben kommen aus
+     app.css, darum stimmt der dunkle Modus hier von selbst.
+
+     aufnahme.css wird hier NICHT mehr eingebunden, und _aufnahme.html auch
+     nicht. Jene Tafel gehoert zu sprache.js: dort ist das Aufnehmen eine
+     Zugabe neben dem Textfeld, mit Start, Pause und Fertig als drei
+     gleichberechtigten Knoepfen. Hier ist das Zuhoeren der Ruhezustand, eine
+     Pause beendet den Beitrag von selbst, und es gibt keinen Knopf fuer das
+     Gespraech -- nur den einen Tipp am Anfang. Das Brauchbare daraus -- die
+     ruhige Fassung fuer prefers-reduced-motion, die WAV-Erzeugung mit 16 kHz
+     in mono -- ist in sprechcoach.css und sprechcoach.js uebernommen. Chat
+     und Trainer benutzen die alte Tafel weiter, also bleibt sie
+     unberuehrt.{% endcomment %}
+  <link rel="stylesheet" href="{% static 'css/sprechcoach.css' %}">
+{% endblock %}
+
+{% block kopf_aktion %}
+<p class="tierabzeichen" aria-label="Du bist {{ teilnahme.tier_name }}">
+  {% include "tutoring/_tierabzeichen.html" %}
+  <span class="tier-name">{{ teilnahme.tier_name }}</span>
+</p>
+{% endblock %}
+
+{% block inhalt %}
+<div class="sitzungsleiste">
+  <p class="sitzungstitel">{{ sitzung.title }}</p>
+</div>
+
+{% comment %}Eine Huelle um alles, damit die Textbreite an genau einer Stelle
+steht. Der Gespraechsverlauf darf nicht ueber etwa 70 Zeichen breit werden --
+darueber verliert das Auge beim Ruecksprung die Zeile, und in einer fremden
+Sprache liest man ohnehin Buchstabe fuer Buchstabe.{% endcomment %}
+<div class="coach-seite">
+{% comment %}Der Ablauf (Regel 12 des Berichts): Planen, Gespraech, Noch
+einmal, Rueckblick. Welche Ansicht kommt, entscheidet lauf.phase, und die
+setzt nur der Server. Planen und Rueckblick sind eigene, ruhige Ansichten
+ohne Mikrofon; das Gespraech darunter ist die bisherige Seite, mit Ziel und
+Redemitteln obendrauf.{% endcomment %}
+{% include "tutoring/_sprech_phasen.html" %}
+
+{% if lauf.ist_planen %}
+  {% include "tutoring/_sprech_planen.html" %}
+{% elif lauf.ist_rueckblick %}
+  {% include "tutoring/_sprech_rueckblick.html" %}
+{% else %}
+{% comment %}Die Zahl der Beitraege wird zweimal gebraucht, und jedes
+lauf.zuege.count waere eine eigene Abfrage. Also einmal holen.{% endcomment %}
+{% with anzahl=lauf.zuege.count %}
+
+  <section class="coach-leiste" aria-label="Worüber du sprichst">
+    <div class="coach-lage">
+      <p class="coach-sprachzeile">
+        <span class="coach-sprache">{{ lauf.sprache_name }}</span>
+        <span class="coach-niveau">Niveau {{ lauf.niveau }}</span>
+      </p>
+      <p class="coach-thema" {% if not lauf.thema or not ist_frei %}hidden{% endif %}>Dein Thema: {{ lauf.thema }}</p>
+      <p class="coach-stand" id="coach-stand">{% if anzahl == 1 %}1 Beitrag im Gespräch{% elif anzahl %}{{ anzahl }} Beiträge im Gespräch{% else %}Das Gespräch fängt gerade an{% endif %}</p>
+    </div>
+
+    {% comment %}Die Stimmenwahl bleibt erreichbar, steht aber nicht im
+    Hauptweg: Rueckmeldung aus dem Betrieb war "schlechtes
+    MaschinenEnglisch", und welche Stimme auf welchem Geraet gut klingt,
+    weiss nur die Person davor. Zugeklappt, weil im Gespraech niemand eine
+    Stimme auswaehlt, sondern spricht. Das Skript deckt den Kasten erst auf,
+    wenn es wirklich mehr als eine Stimme gefunden hat -- ein Aufklapper, in
+    dem nichts steht, ist ein Versprechen, das die Seite nicht haelt.{% endcomment %}
+    <details class="coach-stimmwahl" id="coach-stimmwahl" hidden>
+      <summary>Stimme</summary>
+      <div class="coach-stimmwahl-inhalt">
+        <label for="stimme">Welche Stimme spricht</label>
+        <select id="stimme" name="stimme"></select>
+        <p class="coach-stimmhinweis">
+          Klingt die Stimme blechern, nimm eine andere aus der Liste. Stimmen
+          mit „über das Netz“ klingen meist besser; dafür schickt dein Gerät
+          den Text des Coaches zum Hersteller des Browsers. <strong>Deine
+          eigene Stimme geht nie dorthin</strong> – sie bleibt beim Rechner
+          der Hochschule.
+        </p>
+      </div>
+    </details>
+  </section>
+
+  {% comment %}Das Ziel bleibt waehrend des ganzen Gespraechs sichtbar (Regel
+  11: ein konvergentes Ziel, das das Kind kennt). Die Redemittel sind
+  zugeklappt: In der Planung standen sie offen da, im Gespraech sind sie
+  Stuetze und nicht Vorlage zum Ablesen. <details> kann das ohne
+  Skript.{% endcomment %}
+  {% if not ist_frei %}
+    <section class="coach-ziel" aria-labelledby="coach-ziel-marke">
+      <p class="coach-ziel-marke" id="coach-ziel-marke">Your goal</p>
+      <p class="coach-ziel-text" lang="en">{{ aufgabe.ziel }}</p>
+      <details class="coach-redemittel">
+        <summary>Wendungen, die helfen</summary>
+        <ul class="coach-redemittel-liste" lang="en">
+          {% for r in aufgabe.redemittel %}<li>{{ r }}</li>{% endfor %}
+        </ul>
+      </details>
+    </section>
+  {% endif %}
+
+  {% comment %}Findet das Skript keine Stimme in der Zielsprache, sagt diese
+  Zeile, woran man ist. Sie steht im Dokument und wird nur aufgedeckt: Ein
+  Satz, der erst gebaut wird, schiebt beim Erscheinen das Gespraech nach
+  unten.{% endcomment %}
+  <p class="coach-stumm" id="coach-stumm" hidden>
+    Dieses Gerät hat keine Stimme für {{ lauf.sprache_name }}. Vorgelesen wird
+    deshalb nichts – der Text bleibt, du kannst ihn lesen und laut
+    mitsprechen.
+  </p>
+
+  {% comment %}Der erste Gruss erklaert die Bedienung in zwei Saetzen. Keine
+  Taste, kein Knopf: Seit dem Gespraechsmodus genuegt eine Pause, und die
+  Antwort kommt von selbst. Der eine Tipp am Anfang steht in der Tafel, wo
+  das Skript weiss, ob er noetig ist.{% endcomment %}
+  {% if not anzahl %}
+    <div class="coach-willkommen">
+      <p>Hier wird gesprochen. Ich bin dein Gesprächspartner auf
+        {{ lauf.sprache_name }}, auf Niveau {{ lauf.niveau }}.</p>
+      <p>Sprich einfach los. Wenn du eine Pause machst, antworte ich – du
+        musst nichts drücken. Es ist ein Gespräch, keine Prüfung: Es gibt
+        hier nichts falsch zu machen.</p>
+    </div>
+  {% endif %}
+
+  <ol class="coach-verlauf" id="coach-verlauf" data-sprache="{{ lauf.sprache_code }}"
+      data-sprachname="{{ lauf.sprache_name }}"
+      aria-label="Euer Gespräch" aria-busy="false">
+    {% for zug in lauf.zuege.all %}
+      <li class="zug {% if zug.ist_coach %}zug-coach{% else %}zug-lernend{% endif %}{% if zug.nicht_verstanden %} zug-nachfrage{% endif %}">
+        <p class="zug-kopf">
+          <span class="zug-wer">{% if zug.ist_coach %}Coach{% else %}Du{% endif %}</span>
+          <span class="zug-sprachmarke">{{ lauf.sprache_name }}</span>
+        </p>
+
+        {% comment %}lang gehoert an den Text, nicht an die Seite: Ohne das
+        Attribut liest ein deutsches Vorlesewerkzeug den englischen Satz
+        deutsch, und dann ist er unverstaendlich. Auch der eigene Zug traegt
+        es -- hier wird in der Zielsprache geantwortet, nicht auf Deutsch.
+
+        Kein linebreaksbr: .zug-text bricht mit white-space: pre-wrap um. So
+        steht im Dokument genau der Text, den auch die Sprachausgabe
+        spricht.{% endcomment %}
+        <div class="zug-text" lang="{{ lauf.sprache_code }}">{{ zug.text }}</div>
+
+        {% comment %}Die Sprachsperre. Der Coach TUT, als verstehe er kein
+        Deutsch -- das ist eine Lehrmethode und kein Fehler. Also kein Rot,
+        kein Warndreieck, keine Meldungsrolle: Das ist ein gewoehnlicher
+        Gespraechsbeitrag, nur mit einer deutschen Fussnote daneben, damit
+        niemand glaubt, das Geraet sei kaputt. Der Hinweis zeigt auf den
+        Ausweg, denn eine Sperre ohne Ausweg ist eine verschlossene
+        Tuer.{% endcomment %}
+        {% if zug.nicht_verstanden %}
+          <p class="zug-nachfrage-hinweis">
+            Der Coach versteht nur {{ lauf.sprache_name }} – das ist Absicht.
+            Sag es noch einmal auf {{ lauf.sprache_name }}; wenn dir das Wort
+            fehlt, hilft dir „Ich komme nicht weiter“.
+          </p>
+        {% endif %}
+
+        {% comment %}Die Fusszeile des Zuges. Den Knopf "nochmal hoeren"
+        setzt das Skript hinein, und nur bei Coach-Zuegen und nur, wenn es
+        eine Stimme gibt. Die Uebersetzung steht zugeklappt da: Wer sie
+        sofort sieht, liest sie statt zuzuhoeren. <details> kann das von sich
+        aus, also auch ohne JavaScript.{% endcomment %}
+        <div class="zug-fuss">
+          {% if zug.uebersetzung %}
+            <details class="zug-uebersetzung">
+              <summary>Auf Deutsch</summary>
+              <p class="zug-uebersetzung-text">{{ zug.uebersetzung }}</p>
+            </details>
+          {% endif %}
+        </div>
+
+        {% comment %}Die Korrektur ist beiläufig: eine Wendung, richtig
+        wiederholt. Darum klein, in der leisen Schriftfarbe und ohne Rot --
+        eine Fehlermeldung wuerde aus dem Gespraech eine Pruefung
+        machen.{% endcomment %}
+        {% if zug.korrektur %}
+          <p class="zug-korrektur">
+            <span class="korrektur-marke">So sagt man es</span>
+            <span class="korrektur-text" lang="{{ lauf.sprache_code }}">{{ zug.korrektur }}</span>
+          </p>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ol>
+
+  {% comment %}Eine einzige Ansage fuer Vorlesewerkzeuge. Zwei Bereiche, die
+  gleichzeitig sprechen, reden einander tot; darum tragen die sichtbaren
+  Kaesten keine eigene Meldungsrolle -- auch der Zustandsanzeiger nicht, der
+  sich im Gespraech dauernd aendert. Den fremdsprachigen Teil setzt das
+  Skript in ein eigenes span mit lang.{% endcomment %}
+  <p class="nur-fuer-vorlesen" role="status" id="coach-ansage"></p>
+
+  {% comment %}Der stille Ausweg, zweiter Teil: Hier kommt an, was die
+  Ansicht auf hilfe_url liefert -- eine deutsche Erklaerung und ein
+  Beispielsatz in der Zielsprache. Der Kasten steht im Dokument und wird nur
+  aufgedeckt, damit beim Erscheinen nichts springt.{% endcomment %}
+  {% comment %}Ohne JavaScript liefert die Ansicht die Seite mit "hilfe" im
+  Kontext zurueck; dann steht der Kasten von Anfang an offen und gefuellt.
+  Mit JavaScript bleibt er leer und verborgen, bis das Skript ihn fuellt.
+  {% endcomment %}
+  <div class="coach-hilfe" id="coach-hilfe"{% if not hilfe %} hidden{% endif %}>
+    <p class="coach-hilfe-kopf">Kleine Hilfe – auf Deutsch</p>
+    <p class="coach-hilfe-text" id="coach-hilfe-text">{% if hilfe %}{{ hilfe.erklaerung }}{% endif %}</p>
+    <p class="coach-hilfe-beispiel" id="coach-hilfe-beispiel"{% if not hilfe.beispiel %} hidden{% endif %}>
+      <span class="coach-hilfe-marke">So könntest du es sagen</span>
+      <span class="coach-hilfe-satz" id="coach-hilfe-satz"
+            lang="{{ lauf.sprache_code }}">{% if hilfe %}{{ hilfe.beispiel }}{% endif %}</span>
+    </p>
+    <div class="coach-hilfe-fuss">
+      <button type="button" class="werkzeug coach-hilfe-hoeren" id="coach-hilfe-hoeren" hidden>
+        Beispiel hören
+      </button>
+      <button type="button" class="werkzeug coach-hilfe-zu" id="coach-hilfe-zu">
+        Passt, weiter
+      </button>
+    </div>
+  </div>
+
+  {% comment %}Der Zustandsanzeiger: der Ring und das grosse Wort. Er klebt
+  mit position: sticky an einer festen Stelle: Im Gespraech wird hierher
+  geschaut, nicht gescrollt. Drei Zustaende traegt er -- "Ich hoere zu",
+  "Ich denke nach", "Ich spreche" -- und keinen Knopf fuer das Gespraech
+  selbst; nur den einen Tipp am Anfang. Ohne JavaScript steht hier nur der
+  Satz "Tipp deine Antwort" -- dann ist das Formular weiter unten der ganze
+  Weg, und ein Ring, der nichts hoert, waere eine Luege.{% endcomment %}
+  <div class="coach-steuerung">
+    {% comment %}data-erkennen ist zugleich die Auskunft, dass der Rechner der
+    Schule gerade abschreiben kann: Fehlt die Adresse, versucht das Skript
+    kein Mikrofon und laesst das Tippen offen. Die Adresse ist die eigene des
+    Sprechcoaches (hoeren_url), nicht die der Aufgabenhilfe: Sie meldet auch,
+    ob ueberhaupt gesprochen wurde und ob der Satz fertig klingt.
+    data-worklet ist der Sammler im Klangfaden; fehlt er dem Browser, nimmt
+    das Skript den alten Weg.{% endcomment %}
+    <div class="coach-tafel" id="coach-tafel"{% if spracheingabe_moeglich %} data-erkennen="{{ hoeren_url }}" data-worklet="{% static 'js/sprechcoach_worklet.js' %}"{% endif %}>
+      {% if spracheingabe_moeglich %}
+        {% comment %}Der Ring ist der Beweis, dass das Geraet zuhoert: Er
+        atmet mit dem Pegel (CSS-Variable --pegel, vom Skript gesetzt), dreht
+        sich beim Nachdenken und pulst beim Sprechen. Reines CSS, kein Bild.
+        Ein Wert, der sich zwanzigmal je Sekunde aendert, hat in einer
+        Vorleseansage nichts zu suchen -- aria-hidden, die Ansagen laufen
+        ueber #coach-ansage und das Wort darunter.{% endcomment %}
+        <div class="coach-ring" id="coach-ring" aria-hidden="true">
+          <span class="coach-ring-hof"></span>
+          <span class="coach-ring-kern"></span>
+        </div>
+      {% endif %}
+
+      <p class="coach-zustand">
+        <span class="coach-zustand-wort" id="coach-zustand-wort">Tipp deine Antwort</span>
+      </p>
+      <p class="coach-zustand-zusatz" id="coach-zustand-zusatz">
+        Auf {{ lauf.sprache_name }}, einzelne Wörter zählen auch.
+      </p>
+
+      {% if spracheingabe_moeglich %}
+        {% comment %}Fuer alle, die wenig Bewegung wollen: ein ruhiger Balken
+        mit Zahl statt des atmenden Rings. Umgeschaltet wird in
+        sprechcoach.css, das hidden-Attribut setzt das Skript.{% endcomment %}
+        <p class="coach-pegel-ruhig" id="coach-pegel-ruhig" hidden>
+          <span>Lautstärke</span>
+          <span class="coach-ruhebahn" aria-hidden="true">
+            <span class="coach-ruhefuellung" id="coach-ruhefuellung"></span>
+          </span>
+          <span class="coach-ruhewert" id="coach-ruhewert">0 %</span>
+        </p>
+
+        {% comment %}Der eine Tipp. Browser geben Mikrofon, Klangraum und
+        Stimme erst nach einer Beruehrung her (iOS immer). Danach verschwindet
+        der Knopf; er kommt nur wieder, wenn das Fenster weg war oder das
+        Mikrofon verweigert wurde. Er startet verborgen, weil erst das Skript
+        weiss, ob dieses Geraet ein Mikrofon hergibt.{% endcomment %}
+        <button type="button" class="coach-funk" id="coach-funk" hidden>
+          <span class="coach-funk-wort" id="coach-funk-wort">Gespräch starten</span>
+        </button>
+      {% endif %}
+
+      <p class="coach-tafelhinweis" id="coach-tafelhinweis" hidden></p>
+    </div>
+
+    {% comment %}Die Nebenwege, leise und immer da. Der Ausweg steht hier und
+    nicht in der Tafel: Er muss auch auf einem Geraet ohne Mikrofon sichtbar
+    sein.
+
+    Ohne JavaScript ist das ein gewoehnliches Formular an hilfe_url; mit
+    JavaScript fragt sprechcoach.js an derselben Adresse nach und zeigt die
+    Hilfe im Kasten darueber.{% endcomment %}
+    <div class="coach-nebenwege">
+      <form class="coach-ausweg-form" id="coach-ausweg-form" method="post"
+            action="{{ hilfe_url }}">
+        {% csrf_token %}
+        <button type="submit" class="coach-nebenknopf coach-ausweg" id="coach-ausweg">
+          Ich komme nicht weiter
+        </button>
+      </form>
+
+      {% comment %}Vorlesen ist der Normalfall, nicht ein Schalter, den man
+      findet: Beim Sprachenlernen ist das Hoeren der Kern. Aber 25 Geraete in
+      einem Zimmer brauchen den Weg zum Abschalten, und zwar schnell -- darum
+      steht er hier und nicht im Aufklapper. Verborgen startet er und wird vom
+      Skript gezeigt, sobald es eine Stimme gefunden hat: Ein Knopf, der
+      bloss schweigt, waere schlimmer als kein Knopf.{% endcomment %}
+      <button type="button" class="coach-nebenknopf coach-ton ist-an" id="coach-ton"
+              data-standard="{% if vorlesen_an %}an{% else %}aus{% endif %}"
+              aria-pressed="true" hidden>
+        <svg class="coach-ton-zeichen" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M4 9.5h3L11 6v12l-4-3.5H4a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1Z"
+                fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+          <path d="M15 9a4 4 0 0 1 0 6M17.8 6.2a8 8 0 0 1 0 11.6" fill="none"
+                stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+        </svg>
+        <span class="coach-ton-wort" id="coach-ton-wort">Vorlesen an</span>
+      </button>
+    </div>
+  </div>
+
+  {% comment %}lauf.ist_fertig: Nach Antwort mit "fertig": true deckt das
+  Skript diesen Kasten auf und nimmt Tafel und Formular weg.{% endcomment %}
+  <div class="coach-fertig" id="coach-fertig" {% if not lauf.ist_fertig %}hidden{% endif %}>
+    <p>Das war ein gutes Gespräch. Du hast in {{ lauf.sprache_name }} gesprochen –
+      genau darum geht es.</p>
+  </div>
+
+  {% comment %}Der einzige rote Kasten der Seite, und er bleibt den Faellen
+  vorbehalten, in denen wirklich etwas schiefgegangen ist: Der Beitrag ist
+  nicht angekommen, die Sitzung ist zu. Was ein neuer Anlauf richtet ("zu
+  kurz", "nichts gehoert"), steht leise in der Tafel.
+
+  Dass der Coach nicht verstanden hat, kommt NIE hier an: Das ist ein Zug im
+  Gespraech und kein Fehler. `fehler` wird fuer den Weg ohne JavaScript
+  gebraucht -- dort rendert die Ansicht die Seite neu, statt JSON zu
+  schicken.{% endcomment %}
+  <p class="meldung meldung-fehler" id="coach-fehler" role="alert"
+     {% if not fehler %}hidden{% endif %}>{{ fehler }}</p>
+
+  {% comment %}Die Rueckfallebene: ein Geraet ohne Mikrofon, ein kaputtes
+  Mikrofon, ein lautes Zimmer. Nicht der Hauptweg, aber erreichbar und ohne
+  Scham -- darum "oder tippen" in leiser Schrift und kein "Achtung, Mikrofon
+  nicht verfuegbar".
+
+  Offen ist der Startzustand, nicht zu: Ohne JavaScript ist dieses Formular
+  der einzige Weg, und es darf nicht hinter einem Aufklapper liegen. Das
+  Skript klappt es zu, sobald es weiss, dass dieses Geraet aufnehmen kann.
+  Solange es offen ist, hoert das Geraet nicht zu -- sonst liefe das Mikrofon
+  mit, waehrend jemand tippt.{% endcomment %}
+  <details class="coach-tippen" id="coach-tippen" open>
+    <summary>oder tippen</summary>
+
+    <form class="coach-form" id="coach-form" method="post"
+          action="{% url 'tutoring:sprechcoach_zug' %}"
+          {% if lauf.ist_fertig %}hidden{% endif %}>
+      {% csrf_token %}
+      <input type="hidden" name="herkunft" id="herkunftfeld" value="tippen">
+
+      {% comment %}Die Zielsprache reist mit, damit der Weg ohne JavaScript
+      dieselben Felder schickt wie das Skript. Entscheiden tut sie nichts:
+      Welche Sprache gilt, steht an der Sitzung, und beim Hoeren bestimmt
+      Whisper die Sprache selbst -- sonst koennte die Sprachsperre nicht
+      wissen, OB in der Zielsprache gesprochen wurde.{% endcomment %}
+      <input type="hidden" name="sprache" id="sprachefeld" value="{{ lauf.sprache_code }}">
+
+      <label for="text" class="coach-label">Deine Antwort auf {{ lauf.sprache_name }}</label>
+      <p class="feld-hilfe" id="coach-hilfetext">Einzelne Wörter zählen auch. Es muss
+        nicht richtig sein – der Coach versteht dich.</p>
+
+      <div class="coach-zeile">
+        {% comment %}lang am Feld, damit die Bildschirmtastatur die richtige
+        Sprache vorschlaegt und nicht jedes zweite Wort deutsch verbessert.
+
+        required, damit der Browser selbst abfaengt, wenn ohne JavaScript ein
+        leeres Feld abgeschickt wird. Mit JavaScript kommt es nicht so weit,
+        ohne waere die Antwort der Ansicht nackter JSON-Text.{% endcomment %}
+        <textarea id="text" name="text" rows="2" maxlength="2000" required
+                  lang="{{ lauf.sprache_code }}" spellcheck="true"
+                  aria-describedby="coach-hilfetext"
+                  placeholder="Schreib deine Antwort …"></textarea>
+        <button type="submit" class="knopf" id="senden">Antworten</button>
+      </div>
+    </form>
+  </details>
+
+  {% comment %}Aufhoeren darf man. Leise und ganz unten, damit es niemand
+  aus Versehen trifft; der Server fuehrt in den Rueckblick und vermerkt beim
+  laufenden Durchgang "Ziel nicht erreicht". Ohne Skript ein gewoehnliches
+  Formular.{% endcomment %}
+  <form class="coach-aufhoeren" method="post" action="{{ weiter_url }}">
+    {% csrf_token %}
+    <button type="submit" class="coach-nebenknopf">
+      {% if ist_frei %}Gespräch beenden{% else %}Ich höre hier auf{% endif %}
+    </button>
+  </form>
+{% endwith %}
+{% endif %}
+</div>
+{% endblock %}
+
+{% block skripte %}
+{% comment %}Das Skript gehoert zum Gespraech. Beim Planen und im Rueckblick
+hoert niemand zu, also wird es dort gar nicht geladen - dann fragt auch kein
+Browser nach dem Mikrofon.{% endcomment %}
+{% if not lauf.ist_planen and not lauf.ist_rueckblick %}
+{% comment %}Nur diese eine Datei. sprache.js wird hier absichtlich NICHT
+geladen: Es sucht beim Laden seinen eigenen Knopf und seine eigene Tafel und
+baut das Aufnehmen als Zugabe neben dem Textfeld. Beim Sprechcoach ist das
+Zuhoeren der Ruhezustand -- zwei Skripte am selben Mikrofon waeren zwei
+Erlaubnisfragen und zwei Zustaende.{% endcomment %}
+<script src="{% static 'js/sprechcoach.js' %}" defer></script>
+{% endif %}
+{% endblock %}

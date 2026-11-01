@@ -1,0 +1,81 @@
+{% load static %}<!DOCTYPE html>
+<html lang="de-AT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>{% block titel %}AI LAB{% endblock %} – PH Vorarlberg</title>
+<link rel="stylesheet" href="{% static 'css/app.css' %}">
+<link rel="icon" href="{% static 'img/ph-vorarlberg.svg' %}">
+<script src="{% static 'js/htmx.min.js' %}" defer></script>
+{% block kopf_extra %}{% endblock %}
+</head>
+<body>
+<a class="sprungmarke" href="#inhalt">Zum Inhalt springen</a>
+
+<header class="kopf">
+  <div class="kopf-innen">
+    <a class="marke" href="{% url 'start' %}">
+      <img class="marke-logo" src="{% static 'img/ph-vorarlberg.svg' %}"
+           alt="Pädagogische Hochschule Vorarlberg" width="84" height="42">
+      <span class="marke-text">
+        <span class="marke-name">AI LAB</span>
+        <span class="marke-zusatz">ModLearn Technology Lab</span>
+      </span>
+    </a>
+    {% block kopf_aktion %}
+      {% comment %}Der Chat des Kindes ueberschreibt diesen Block mit dem
+      Tier. Kinder sehen den Weg zur Anmeldung also nicht.{% endcomment %}
+      {% if user.is_authenticated %}
+        <div class="angemeldet">
+          <span class="angemeldet-name">
+            <span class="angemeldet-zeichen" aria-hidden="true">{{ user.username|first|upper }}</span>
+            <span class="nur-fuer-vorlesen">Angemeldet als</span>
+            {{ user.get_full_name|default:user.username }}
+          </span>
+          <a class="kopfweg" href="{% url 'tutoring:lehrperson_uebersicht' %}">Sitzungen</a>
+          <a class="kopfweg" href="{% url 'tutoring:lehrperson_protokolle' %}">Protokolle</a>
+          <a class="kopfweg" href="{% url 'plan:tag' %}">Platz buchen</a>
+          <form class="abmelden" method="post" action="{% url 'abmelden' %}">
+            {% csrf_token %}
+            <button type="submit" class="kopfweg knopf-als-weg">Abmelden</button>
+          </form>
+        </div>
+      {% else %}
+        <a class="kopfweg" href="{% url 'anmelden' %}">Für Lehrpersonen</a>
+      {% endif %}
+    {% endblock %}
+  </div>
+</header>
+
+<main class="inhalt" id="inhalt" tabindex="-1">
+{% block inhalt %}{% endblock %}
+</main>
+
+<footer class="fuss">
+  <div class="fuss-innen">
+    <p class="fuss-zusage">
+      Alles bleibt auf einem Rechner der PH Vorarlberg. Kein Konto, kein Name.
+      Mit dem Ende der Sitzung ist alles gelöscht.
+    </p>
+    <nav class="fuss-wege" aria-label="Rechtliches und Anmeldung">
+      <a href="{% url 'projekt' %}">Über das Projekt</a>
+      <a href="{% url 'stufen' %}">Die fünf Stufen</a>
+      <a href="{% url 'datenschutz' %}">Datenschutzerklärung</a>
+      <a href="{% url 'barrierefreiheit' %}">Barrierefreiheitserklärung</a>
+      {% if not user.is_authenticated %}
+        <a href="{% url 'anmelden' %}">Anmeldung für Lehrpersonen</a>
+      {% endif %}
+    </nav>
+    <div class="fuss-foerderung">
+      <picture>
+        <source srcset="{% static 'img/eu-kofinanziert.avif' %}" type="image/avif">
+        <img src="{% static 'img/eu-kofinanziert.png' %}"
+             alt="Kofinanziert von der Europäischen Union" width="256" height="57">
+      </picture>
+    </div>
+  </div>
+</footer>
+{% block skripte %}{% endblock %}
+</body>
+</html>

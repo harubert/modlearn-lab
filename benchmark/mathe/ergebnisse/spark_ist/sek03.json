@@ -1,0 +1,396 @@
+{
+ "id": "sek03",
+ "tutor": "spark",
+ "lauf": "spark_ist",
+ "modell": "qwen3-vl-30b",
+ "begonnen": "2026-10-19T09:31:07",
+ "aufgabe": {
+  "id": "sek03",
+  "stufe": "sek1",
+  "schulstufe": 6,
+  "altersklasse": "10-14",
+  "thema": "Dezimalzahlen addieren",
+  "text": "Rechne: 3,6 + 0,45 + 12",
+  "loesung": "16,05",
+  "loesungsweg": "Kommas untereinander: 3,60 + 0,45 = 4,05. 4,05 + 12,00 = 16,05.",
+  "typische_fehler": [
+   "Dezimalstellen aneinandergehängt: 3,6 + 0,45 = 3,105.",
+   "Rechtsbündig statt kommagerecht: 3,6 + 0,45 = 0,81 oder 12 als 1,2 behandelt.",
+   "Ganze Zahl 12 als 0,12 oder 1,2 eingeordnet: 5,25."
+  ],
+  "loesung_muster": [
+   "16[.,]05"
+  ]
+ },
+ "profil": {
+  "schluessel": "mittel",
+  "name": "Leon, 12, mittel",
+  "stufe": "sek1"
+ },
+ "umfang": "auf_bitte",
+ "obergrenze": 5,
+ "altersklasse": "10-14",
+ "mit_loesung": false,
+ "frageerkennung": "app",
+ "kind_system_prompt": "Du spielst in einer Simulation eine Schülerin oder einen Schüler, die oder der in einer Lern-App Hilfe zu einer Rechenaufgabe bekommt. Die App schreibt dir Hilfen und stellt dir Fragen. Du antwortest NUR mit dem, was diese Person in das Textfeld tippen würde: keine Regieanweisungen, keine Erklärung deiner Rolle, keine Anführungszeichen, keine Aufzählungen. Du bleibst in der Rolle, auch wenn die App etwas Unerwartetes schreibt. Du erfindest keine neue Aufgabe. Du schreibst wie ein echter Mensch in dem Alter tippt: kurz, manchmal mit kleinen Tippfehlern, ohne Fachsprache, die die Person nicht hat.\n\nDie Aufgabe lautet: Rechne: 3,6 + 0,45 + 12\n\nNUR FÜR DICH (die Person weiß das nicht von selbst): Die richtige Lösung ist 16,05. Der Rechenweg: Kommas untereinander: 3,60 + 0,45 = 4,05. 4,05 + 12,00 = 16,05.\n\nWas du mit diesem Wissen tun darfst, steht in deiner Rolle. Wenn die App dich fragt, ob du jetzt die Lösung sehen möchtest, antwortest du nur mit ja oder nein, so wie es zu deiner Rolle passt.\n\nDEINE ROLLE:\nDu bist Leon, 12 Jahre alt, 2. Klasse Mittelschule. Du arbeitest mit, machst aber einen typischen Fehler. So verhältst du dich:\n- Auf die erste Frage der App sagst du mit deinen Worten, was gesucht ist.\n- Beim ersten Rechenversuch machst du genau diesen Fehler: Dezimalstellen aneinandergehängt: 3,6 + 0,45 = 3,105. Du schreibst deine Rechnung und dein (falsches) Ergebnis hin.\n- Wenn die App sagt, dass etwas nicht stimmt, und die Stelle nennt, verbesserst du den Fehler und rechnest richtig. Wenn die App nur allgemein redet und deinen Fehler nicht anspricht, bleibst du bei deinem Ergebnis und fragst, ob das stimmt.\n- Wenn du richtig gerechnet hast, nennst du das Ergebnis 16,05.\n- Du schreibst ein bis zwei kurze Sätze, so wie ein Jugendlicher tippt.\n- Wenn die App fragt, ob du die Lösung sehen willst: nein, wenn du gerade eine Idee hast, sonst ja.",
+ "zuege": [
+  {
+   "nr": 1,
+   "art": "hilfe",
+   "stufe": 1,
+   "wiederholung": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Motivationshilfe) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\nGib eine Motivationshilfe. Deine Aufgabe ist es, dem Kind die SITUATION der Aufgabe nahezubringen, nicht die Rechnung. Wähle aus, was hier wirklich passt, und mach nicht alles auf einmal:\n- Erkläre Wörter aus der Aufgabe, die ein Kind nicht kennen muss, zum Beispiel was eine Schulbibliothek ist oder was ausleihen heißt.\n- Sag in ein, zwei Sätzen, worum es in der Situation geht und warum das jemanden angehen könnte: Wer wüsste das gern, und wozu?\n- Enthält die Aufgabe gar keine Frage, dann SAGE DAS in jedem Fall. Das ist keine Schwäche des Kindes, sondern eine Lücke in der Angabe, und ein Kind, das sie bemerkt, denkt richtig.\n- Mach dem Kind Mut, es zu probieren.\nVERBOTEN: rechnen, einen Rechenweg nennen, eine Strategie vorschlagen, nach gegeben und gesucht fragen, das Ergebnis nennen. Auch verboten: sagen, was berechnet oder herausgefunden werden soll, auch nicht in einem Nebensatz.\nDie Wörter zählen, rechnen, malnehmen, plus, minus, geteilt und alles Verwandte kommen in dieser Antwort NICHT vor. Auch nicht als Vorschlag, auch nicht als Beispiel, auch nicht verneint.",
+   "anfrage": "Art der Aufgabe: Dezimalzahlen addieren\n\nHinweis für dich: Diese Angabe enthält keine Frage. Das Kind kann also gar nicht wissen, was es ausrechnen soll. Sprich das an, aber erst, nachdem du auf das eingegangen bist, was das Kind geschrieben hat. Eine Verständnisfrage des Kindes hat immer Vorrang.\n\nDie Aufgabe des Kindes lautet:\nRechne: 3,6 + 0,45 + 12",
+   "tutor_text": "Du hast geschrieben: „Rechne: 3,6 + 0,45 + 12“. Das ist ein guter Anfang, weil du die Zahlen genau hingeschrieben hast. Aber: In dieser Aufgabe steht keine Frage. Das heißt, wir wissen nicht, was wir eigentlich herausfinden sollen. Vielleicht will jemand wissen, wie viel das alles zusammen ist? Weil es keine Frage gibt, ist es schwer zu wissen, was genau gemeint ist. Aber du kannst trotzdem anfangen, die Zahlen zu betrachten – das ist schon mal ein guter Schritt.",
+   "pruefung": {
+    "verstoesse": [
+     "genannter Rechenweg"
+    ],
+    "versuche": 2,
+    "gekuerzt": true,
+    "notfall": false,
+    "erster_text": "Du hast geschrieben: „Rechne: 3,6 + 0,45 + 12“. Das ist ein guter Anfang, weil du die Zahlen genau hingeschrieben hast. Aber: In dieser Aufgabe steht keine Frage. Das heißt, es ist nicht klar, was du damit machen sollst – ob du etwas herausfinden, vergleichen oder berechnen sollst. Das ist kein Fehler, sondern einfach eine Lücke in der Aufgabe. Vielleicht will jemand wissen, wie viel das zusammen ist? Oder ob die Zahlen sich auf etwas beziehen? Probier einfach mal, was du damit machen könntest.",
+    "verstoesse_zweiter": [
+     "neue Zahl"
+    ],
+    "zweiter_text": "Du hast geschrieben: „Rechne: 3,6 + 0,45 + 12“. Das ist ein guter Anfang, weil du die Zahlen genau hingeschrieben hast. Aber: In dieser Aufgabe steht keine Frage. Das heißt, wir wissen nicht, was wir eigentlich herausfinden sollen. Vielleicht will jemand wissen, wie viel das alles zusammen ist? Oder ob die Zahlen mehr oder weniger als 15 sind? Weil es keine Frage gibt, ist es schwer zu wissen, was genau gemeint ist. Aber du kannst trotzdem anfangen, die Zahlen zu betrachten – das ist schon mal ein guter Schritt."
+   },
+   "rueckfrage": "Was soll man hier herausfinden? Sag es mit deinen Worten.",
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 2,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich glaub, man soll die Summe ausrechnen. Also wie viel das alles zusammen ist.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind versucht, die Aufgabe zu verstehen",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndas Kind arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nRechne: 3,6 + 0,45 + 12\nHilfe der Stufe 1: Du hast geschrieben: „Rechne: 3,6 + 0,45 + 12“. Das ist ein guter Anfang, weil du die Zahlen genau hingeschrieben hast. Aber: In dieser Aufgabe steht keine Frage. Das heißt, wir wissen nicht, was wir eigentlich herausfinden sollen. Vielleicht will jemand wissen, wie viel das alles zusammen ist? Weil es keine Frage gibt, ist es schwer zu wissen, was genau gemeint ist. Aber du kannst trotzdem anfangen, die Zahlen zu betrachten – das ist schon mal ein guter Schritt.\n\nDie Rückfrage lautet:\nIch glaub, man soll die Summe ausrechnen. Also wie viel das alles zusammen ist.",
+   "tutor_text": "Du hast recht, das ist eine gute Idee: Man könnte meinen, dass gesucht ist, wie viel die drei Zahlen zusammen ergeben. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht genau, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?",
+   "pruefung": {
+    "verstoesse": [
+     "genannter Rechenweg"
+    ],
+    "versuche": 2,
+    "gekuerzt": true,
+    "notfall": false,
+    "erster_text": "Du hast recht, das ist eine gute Vermutung: Wenn keine Frage steht, ist es oft sinnvoll, die Summe zu berechnen. Das heißt, du sollst die drei Zahlen addieren. Aber: Die Aufgabe sagt nicht explizit „Berechne die Summe“. Deshalb ist es wichtig, dass du weißt, was du tun sollst. Was sollst du hier herausfinden?",
+    "verstoesse_zweiter": [
+     "genannter Rechenweg"
+    ],
+    "zweiter_text": "Du hast recht, das ist eine gute Idee: Man könnte meinen, dass gesucht ist, wie viel die drei Zahlen zusammen ergeben. Das nennt man die **Summe** – das ist die Zahl, die herauskommt, wenn man alle addiert. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht genau, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?"
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 3,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch klar, oder?",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind versucht, Aufgabe zu verstehen",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndas Kind arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nRechne: 3,6 + 0,45 + 12\nHilfe der Stufe 1: Du hast geschrieben: „Rechne: 3,6 + 0,45 + 12“. Das ist ein guter Anfang, weil du die Zahlen genau hingeschrieben hast. Aber: In dieser Aufgabe steht keine Frage. Das heißt, wir wissen nicht, was wir eigentlich herausfinden sollen. Vielleicht will jemand wissen, wie viel das alles zusammen ist? Weil es keine Frage gibt, ist es schwer zu wissen, was genau gemeint ist. Aber du kannst trotzdem anfangen, die Zahlen zu betrachten – das ist schon mal ein guter Schritt.\nFrühere Rückfrage: Ich glaub, man soll die Summe ausrechnen. Also wie viel das alles zusammen ist.\nAntwort darauf: Du hast recht, das ist eine gute Idee: Man könnte meinen, dass gesucht ist, wie viel die drei Zahlen zusammen ergeben. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht genau, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?\n\nDie Rückfrage lautet:\nIch glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch klar, oder?",
+   "tutor_text": "Du hast recht, es könnte die Summe gemeint sein – das ist eine plausible Interpretation. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht sicher, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 4,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch logisch, oder?",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind versucht, die Aufgabe zu verstehen",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndas Kind arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nRechne: 3,6 + 0,45 + 12\nHilfe der Stufe 1: Du hast geschrieben: „Rechne: 3,6 + 0,45 + 12“. Das ist ein guter Anfang, weil du die Zahlen genau hingeschrieben hast. Aber: In dieser Aufgabe steht keine Frage. Das heißt, wir wissen nicht, was wir eigentlich herausfinden sollen. Vielleicht will jemand wissen, wie viel das alles zusammen ist? Weil es keine Frage gibt, ist es schwer zu wissen, was genau gemeint ist. Aber du kannst trotzdem anfangen, die Zahlen zu betrachten – das ist schon mal ein guter Schritt.\nFrühere Rückfrage: Ich glaub, man soll die Summe ausrechnen. Also wie viel das alles zusammen ist.\nAntwort darauf: Du hast recht, das ist eine gute Idee: Man könnte meinen, dass gesucht ist, wie viel die drei Zahlen zusammen ergeben. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht genau, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?\nFrühere Rückfrage: Ich glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch klar, oder?\nAntwort darauf: Du hast recht, es könnte die Summe gemeint sein – das ist eine plausible Interpretation. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht sicher, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?\n\nDie Rückfrage lautet:\nIch glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch logisch, oder?",
+   "tutor_text": "Aber: In der Aufgabe steht keine Frage, also wissen wir nicht genau, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?",
+   "pruefung": {
+    "verstoesse": [
+     "genannter Rechenweg"
+    ],
+    "versuche": 2,
+    "gekuerzt": true,
+    "notfall": false,
+    "erster_text": "Du hast recht, es ist logisch, dass man die Zahlen zusammenzählen will – das nennt man die Summe. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht genau, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?",
+    "verstoesse_zweiter": [
+     "genannter Rechenweg"
+    ],
+    "zweiter_text": "Du hast recht, es ist logisch, dass man die Zahlen zusammenzählen könnte – das ist eine plausible Idee. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht genau, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?"
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 5,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch klar, oder?",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind versucht, Aufgabe zu lösen",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndas Kind arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nRechne: 3,6 + 0,45 + 12\nHilfe der Stufe 1: Du hast geschrieben: „Rechne: 3,6 + 0,45 + 12“. Das ist ein guter Anfang, weil du die Zahlen genau hingeschrieben hast. Aber: In dieser Aufgabe steht keine Frage. Das heißt, wir wissen nicht, was wir eigentlich herausfinden sollen. Vielleicht will jemand wissen, wie viel das alles zusammen ist? Weil es keine Frage gibt, ist es schwer zu wissen, was genau gemeint ist. Aber du kannst trotzdem anfangen, die Zahlen zu betrachten – das ist schon mal ein guter Schritt.\nFrühere Rückfrage: Ich glaub, man soll die Summe ausrechnen. Also wie viel das alles zusammen ist.\nAntwort darauf: Du hast recht, das ist eine gute Idee: Man könnte meinen, dass gesucht ist, wie viel die drei Zahlen zusammen ergeben. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht genau, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?\nFrühere Rückfrage: Ich glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch klar, oder?\nAntwort darauf: Du hast recht, es könnte die Summe gemeint sein – das ist eine plausible Interpretation. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht sicher, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?\nFrühere Rückfrage: Ich glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch logisch, oder?\nAntwort darauf: Aber: In der Aufgabe steht keine Frage, also wissen wir nicht genau, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?\n\nDie Rückfrage lautet:\nIch glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch klar, oder?",
+   "tutor_text": "Du hast recht, es könnte die Summe gemeint sein – das ist eine plausible Interpretation. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht sicher, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 6,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch logisch, oder?",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Das Kind versucht, die Aufgabe zu lösen.",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndas Kind arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nRechne: 3,6 + 0,45 + 12\nHilfe der Stufe 1: Du hast geschrieben: „Rechne: 3,6 + 0,45 + 12“. Das ist ein guter Anfang, weil du die Zahlen genau hingeschrieben hast. Aber: In dieser Aufgabe steht keine Frage. Das heißt, wir wissen nicht, was wir eigentlich herausfinden sollen. Vielleicht will jemand wissen, wie viel das alles zusammen ist? Weil es keine Frage gibt, ist es schwer zu wissen, was genau gemeint ist. Aber du kannst trotzdem anfangen, die Zahlen zu betrachten – das ist schon mal ein guter Schritt.\nFrühere Rückfrage: Ich glaub, man soll die Summe ausrechnen. Also wie viel das alles zusammen ist.\nAntwort darauf: Du hast recht, das ist eine gute Idee: Man könnte meinen, dass gesucht ist, wie viel die drei Zahlen zusammen ergeben. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht genau, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?\nFrühere Rückfrage: Ich glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch klar, oder?\nAntwort darauf: Du hast recht, es könnte die Summe gemeint sein – das ist eine plausible Interpretation. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht sicher, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?\nFrühere Rückfrage: Ich glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch logisch, oder?\nAntwort darauf: Aber: In der Aufgabe steht keine Frage, also wissen wir nicht genau, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?\nFrühere Rückfrage: Ich glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch klar, oder?\nAntwort darauf: Du hast recht, es könnte die Summe gemeint sein – das ist eine plausible Interpretation. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht sicher, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?\n\nDie Rückfrage lautet:\nIch glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch logisch, oder?",
+   "tutor_text": "Du hast recht, es könnte die Summe gemeint sein – das ist eine plausible Interpretation. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht sicher, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 7,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch klar, oder?",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind versucht, Aufgabe zu lösen",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndas Kind arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nRechne: 3,6 + 0,45 + 12\nHilfe der Stufe 1: Du hast geschrieben: „Rechne: 3,6 + 0,45 + 12“. Das ist ein guter Anfang, weil du die Zahlen genau hingeschrieben hast. Aber: In dieser Aufgabe steht keine Frage. Das heißt, wir wissen nicht, was wir eigentlich herausfinden sollen. Vielleicht will jemand wissen, wie viel das alles zusammen ist? Weil es keine Frage gibt, ist es schwer zu wissen, was genau gemeint ist. Aber du kannst trotzdem anfangen, die Zahlen zu betrachten – das ist schon mal ein guter Schritt.\nFrühere Rückfrage: Ich glaub, man soll die Summe ausrechnen. Also wie viel das alles zusammen ist.\nAntwort darauf: Du hast recht, das ist eine gute Idee: Man könnte meinen, dass gesucht ist, wie viel die drei Zahlen zusammen ergeben. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht genau, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?\nFrühere Rückfrage: Ich glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch klar, oder?\nAntwort darauf: Du hast recht, es könnte die Summe gemeint sein – das ist eine plausible Interpretation. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht sicher, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?\nFrühere Rückfrage: Ich glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch logisch, oder?\nAntwort darauf: Aber: In der Aufgabe steht keine Frage, also wissen wir nicht genau, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?\nFrühere Rückfrage: Ich glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch klar, oder?\nAntwort darauf: Du hast recht, es könnte die Summe gemeint sein – das ist eine plausible Interpretation. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht sicher, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?\nFrühere Rückfrage: Ich glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch logisch, oder?\nAntwort darauf: Du hast recht, es könnte die Summe gemeint sein – das ist eine plausible Interpretation. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht sicher, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?\n\nDie Rückfrage lautet:\nIch glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch klar, oder?",
+   "tutor_text": "Du hast recht, es könnte die Summe gemeint sein – das ist eine plausible Interpretation. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht sicher, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 8,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch logisch, oder?",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Das Kind versucht, die Aufgabe zu lösen.",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndas Kind arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nRechne: 3,6 + 0,45 + 12\nHilfe der Stufe 1: Du hast geschrieben: „Rechne: 3,6 + 0,45 + 12“. Das ist ein guter Anfang, weil du die Zahlen genau hingeschrieben hast. Aber: In dieser Aufgabe steht keine Frage. Das heißt, wir wissen nicht, was wir eigentlich herausfinden sollen. Vielleicht will jemand wissen, wie viel das alles zusammen ist? Weil es keine Frage gibt, ist es schwer zu wissen, was genau gemeint ist. Aber du kannst trotzdem anfangen, die Zahlen zu betrachten – das ist schon mal ein guter Schritt.\nFrühere Rückfrage: Ich glaub, man soll die Summe ausrechnen. Also wie viel das alles zusammen ist.\nAntwort darauf: Du hast recht, das ist eine gute Idee: Man könnte meinen, dass gesucht ist, wie viel die drei Zahlen zusammen ergeben. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht genau, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?\nFrühere Rückfrage: Ich glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch klar, oder?\nAntwort darauf: Du hast recht, es könnte die Summe gemeint sein – das ist eine plausible Interpretation. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht sicher, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?\nFrühere Rückfrage: Ich glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch logisch, oder?\nAntwort darauf: Aber: In der Aufgabe steht keine Frage, also wissen wir nicht genau, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?\nFrühere Rückfrage: Ich glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch klar, oder?\nAntwort darauf: Du hast recht, es könnte die Summe gemeint sein – das ist eine plausible Interpretation. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht sicher, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?\nFrühere Rückfrage: Ich glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch logisch, oder?\nAntwort darauf: Du hast recht, es könnte die Summe gemeint sein – das ist eine plausible Interpretation. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht sicher, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?\nFrühere Rückfrage: Ich glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch klar, oder?\nAntwort darauf: Du hast recht, es könnte die Summe gemeint sein – das ist eine plausible Interpretation. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht sicher, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?\n\nDie Rückfrage lautet:\nIch glaub, es soll die Summe sein. Also 3,6 + 0,45 + 12. Das ist doch logisch, oder?",
+   "tutor_text": "Du hast recht, es könnte die Summe gemeint sein – das ist eine plausible Interpretation. Aber: In der Aufgabe steht keine Frage, also wissen wir nicht sicher, ob das gemeint ist. Du kannst jetzt überlegen: Was könnte man hier eigentlich herausfinden? Was passt zu den Zahlen?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_verraet_loesung": false
+  }
+ ],
+ "ereignisse": [],
+ "ergebnis": {
+  "status": "abgebrochen_zuege",
+  "selbst_gerechnet": false,
+  "zug_selbst_gerechnet": null,
+  "loesung_gezeigt": false,
+  "hoechste_stufe": 1,
+  "zuege": 8,
+  "kinderbeitraege": 7,
+  "fragen_des_kindes": 7,
+  "als_frage_gewertete_ergebnisse": 0,
+  "bestaetigung_nach_ergebnis": null,
+  "dauer_s": 61.7,
+  "spark_aufrufe": 25
+ },
+ "messungen": [
+  {
+   "art": "hilfe",
+   "dauer_ms": 5438,
+   "tokens_ein": 972,
+   "tokens_aus": 140
+  },
+  {
+   "art": "hilfe_2",
+   "dauer_ms": 5514,
+   "tokens_ein": 1065,
+   "tokens_aus": 143
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 1438,
+   "tokens_ein": 772,
+   "tokens_aus": 23
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1311,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 3719,
+   "tokens_ein": 993,
+   "tokens_aus": 92
+  },
+  {
+   "art": "nachfrage_2",
+   "dauer_ms": 3984,
+   "tokens_ein": 1086,
+   "tokens_aus": 102
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 2000,
+   "tokens_ein": 908,
+   "tokens_aus": 35
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1327,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2813,
+   "tokens_ein": 1112,
+   "tokens_aus": 66
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 1766,
+   "tokens_ein": 1046,
+   "tokens_aus": 36
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1344,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 3046,
+   "tokens_ein": 1222,
+   "tokens_aus": 73
+  },
+  {
+   "art": "nachfrage_2",
+   "dauer_ms": 3140,
+   "tokens_ein": 1315,
+   "tokens_aus": 72
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 1827,
+   "tokens_ein": 1165,
+   "tokens_aus": 35
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1469,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2891,
+   "tokens_ein": 1311,
+   "tokens_aus": 66
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 1827,
+   "tokens_ein": 1303,
+   "tokens_aus": 36
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1452,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 3063,
+   "tokens_ein": 1421,
+   "tokens_aus": 66
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 1920,
+   "tokens_ein": 1442,
+   "tokens_aus": 35
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1266,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2983,
+   "tokens_ein": 1530,
+   "tokens_aus": 66
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 1829,
+   "tokens_ein": 1580,
+   "tokens_aus": 36
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1452,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2812,
+   "tokens_ein": 1640,
+   "tokens_aus": 66
+  }
+ ],
+ "beendet": "2026-10-19T09:32:09"
+}

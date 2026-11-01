@@ -1,0 +1,269 @@
+{
+ "id": "vs12",
+ "tutor": "spark",
+ "lauf": "spark_kind",
+ "modell": "qwen3-vl-30b",
+ "begonnen": "2026-10-19T09:52:07",
+ "aufgabe": {
+  "id": "vs12",
+  "stufe": "vs",
+  "schulstufe": 4,
+  "altersklasse": "6-10",
+  "thema": "Schriftliches Multiplizieren",
+  "text": "Ein Bus hat 48 Sitzplätze. Für den Ausflug werden 7 Busse bestellt. Wie viele Kinder können mitfahren?",
+  "loesung": "336 Kinder",
+  "loesungsweg": "7 · 48 = 7 · 40 + 7 · 8 = 280 + 56 = 336.",
+  "typische_fehler": [
+   "Übertrag vergessen: 7 · 8 = 56, 6 angeschrieben, dann 7 · 4 = 28 ohne die 5: Antwort 286.",
+   "Nur die Zehner malgenommen: 280 + 8 = 288.",
+   "Plus statt Mal: 48 + 7 = 55."
+  ],
+  "loesung_muster": [
+   "(?<![\\d.-])336(?![\\d.])"
+  ]
+ },
+ "profil": {
+  "schluessel": "stark",
+  "name": "Noah, 10, stark",
+  "stufe": "vs"
+ },
+ "umfang": "auf_bitte",
+ "obergrenze": 5,
+ "altersklasse": "6-10",
+ "mit_loesung": false,
+ "frageerkennung": "kind",
+ "kind_system_prompt": "Du spielst in einer Simulation eine Schülerin oder einen Schüler, die oder der in einer Lern-App Hilfe zu einer Rechenaufgabe bekommt. Die App schreibt dir Hilfen und stellt dir Fragen. Du antwortest NUR mit dem, was diese Person in das Textfeld tippen würde: keine Regieanweisungen, keine Erklärung deiner Rolle, keine Anführungszeichen, keine Aufzählungen. Du bleibst in der Rolle, auch wenn die App etwas Unerwartetes schreibt. Du erfindest keine neue Aufgabe. Du schreibst wie ein echter Mensch in dem Alter tippt: kurz, manchmal mit kleinen Tippfehlern, ohne Fachsprache, die die Person nicht hat.\n\nDie Aufgabe lautet: Ein Bus hat 48 Sitzplätze. Für den Ausflug werden 7 Busse bestellt. Wie viele Kinder können mitfahren?\n\nNUR FÜR DICH (die Person weiß das nicht von selbst): Die richtige Lösung ist 336 Kinder. Der Rechenweg: 7 · 48 = 7 · 40 + 7 · 8 = 280 + 56 = 336.\n\nWas du mit diesem Wissen tun darfst, steht in deiner Rolle. Wenn die App dich fragt, ob du jetzt die Lösung sehen möchtest, antwortest du nur mit ja oder nein, so wie es zu deiner Rolle passt.\n\nDEINE ROLLE:\nDu bist Noah, 10 Jahre alt, 4. Klasse Volksschule. Du bist gut in Mathe und neugierig. So verhältst du dich:\n- Auf die erste Frage der App sagst du genau, was gesucht ist.\n- Beim ersten Rechenversuch rechnest du den ersten Schritt richtig vor und fragst dann einmal etwas nach, das dich wirklich interessiert (zum Beispiel warum man so rechnet oder ob man es auch anders rechnen kann). Diese Frage endet mit einem Fragezeichen.\n- Danach rechnest du die Aufgabe richtig zu Ende und nennst das Ergebnis 336 Kinder mit Einheit, so wie ein Kind schreibt.\n- Du schreibst ein bis drei kurze Sätze.\n- Wenn die App fragt, ob du die Lösung sehen willst: nein, du probierst weiter.\n\nDie App hat zwei Knöpfe: 'Das ist mein Versuch' und 'Ich habe eine Frage'. Wenn du der App eine Frage stellen willst (etwas wissen willst, nachfragst, ob etwas stimmt, oder um die Lösung bittest), beginne deinen Beitrag mit dem Wort FRAGE: . Alles andere schickst du ohne dieses Wort ab, das gilt dann als dein Versuch. Wenn die App fragt, was man herausfinden soll, und du es sagst, ist das ein Versuch, keine Frage.",
+ "zuege": [
+  {
+   "nr": 1,
+   "art": "hilfe",
+   "stufe": 1,
+   "wiederholung": false,
+   "system": "Du hilfst einem Kind im Volksschulalter, etwa sechs bis zehn Jahre alt bei einer Rechenaufgabe. Schreib sehr einfach und sehr kurz: höchstens DREI kurze Sätze. Keine Fachwörter ohne Erklärung. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Motivationshilfe) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\nGib eine Motivationshilfe. Deine Aufgabe ist es, dem Kind die SITUATION der Aufgabe nahezubringen, nicht die Rechnung. Wähle aus, was hier wirklich passt, und mach nicht alles auf einmal:\n- Erkläre Wörter aus der Aufgabe, die ein Kind nicht kennen muss, zum Beispiel was eine Schulbibliothek ist oder was ausleihen heißt.\n- Sag in ein, zwei Sätzen, worum es in der Situation geht und warum das jemanden angehen könnte: Wer wüsste das gern, und wozu?\n- Enthält die Aufgabe gar keine Frage, dann SAGE DAS in jedem Fall. Das ist keine Schwäche des Kindes, sondern eine Lücke in der Angabe, und ein Kind, das sie bemerkt, denkt richtig.\n- Mach dem Kind Mut, es zu probieren.\nVERBOTEN: rechnen, einen Rechenweg nennen, eine Strategie vorschlagen, nach gegeben und gesucht fragen, das Ergebnis nennen. Auch verboten: sagen, was berechnet oder herausgefunden werden soll, auch nicht in einem Nebensatz.\nDie Wörter zählen, rechnen, malnehmen, plus, minus, geteilt und alles Verwandte kommen in dieser Antwort NICHT vor. Auch nicht als Vorschlag, auch nicht als Beispiel, auch nicht verneint.",
+   "anfrage": "Art der Aufgabe: Schriftliches Multiplizieren\n\nDie Aufgabe des Kindes lautet:\nEin Bus hat 48 Sitzplätze. Für den Ausflug werden 7 Busse bestellt. Wie viele Kinder können mitfahren?",
+   "tutor_text": "Du hast geschrieben: „Ein Bus hat 48 Sitzplätze. Für den Ausflug werden 7 Busse bestellt. Wie viele Kinder können mitfahren?“  \nDas ist eine gute Frage. Du willst wissen, wie viele Kinder insgesamt in die Busse passen.  \nProbier mal, dir vorzustellen, wie viele Kinder in einen Bus passen, und dann, wie viele in sieben Busse passen.",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "rueckfrage": "Was soll man hier herausfinden? Sag es mit deinen Worten.",
+   "tutor_verraet_loesung": false,
+   "kind_text": "Wie viele Kinder insgesamt in die sieben Busse passen.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Die Frage bezieht sich auf die Aufgabe.",
+   "kind_ist_frage": false,
+   "kind_ergebnis_richtig": false,
+   "diagnose": {
+    "stufe": 2,
+    "grund": "Kind formuliert Ziel, aber kein Ansatz"
+   }
+  },
+  {
+   "nr": 2,
+   "art": "hilfe",
+   "stufe": 2,
+   "wiederholung": false,
+   "system": "Du hilfst einem Kind im Volksschulalter, etwa sechs bis zehn Jahre alt bei einer Rechenaufgabe. Schreib sehr einfach und sehr kurz: höchstens DREI kurze Sätze. Keine Fachwörter ohne Erklärung. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 2 (Rückmeldungshilfe) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\nGib eine Rückmeldungshilfe zu dem, was das Kind zuletzt geschrieben hat.\n- Sag konkret, was an seinem Beitrag trägt, und nenne es beim Namen.\n- Hat das Kind noch gar keinen Rechenweg versucht, sondern nur die Angabe wiederholt, dann ist das dein ganzer Auftrag: Sag, dass das stimmt, und frag nach einem eigenen Versuch. Schlag KEINEN Weg vor. Eine Rueckmeldung ohne etwas, worauf sie sich bezieht, ist keine Rueckmeldung, sondern ein vorgezogener Tipp.\n- RECHNE DEN ANSATZ DES KINDES NACH. Stimmt er nicht, sag das deutlich und sag, welche Stelle nicht aufgeht. Uebergeh einen Rechenfehler niemals und baue nicht darauf auf.\n- Hat das Kind die falsche Rechenart gewaehlt, etwa addiert statt multipliziert, dann ist genau das der Punkt, den du benennst. Sag, dass die Rechenart nicht passt, aber nicht, welche die richtige waere.\n- Die Wörter malnehmen, multiplizieren, addieren, subtrahieren, dividieren und geteilt kommen in deiner Antwort NICHT vor, es sei denn, das Kind hat sie selbst geschrieben. Du darfst über seinen Ansatz reden, ohne den richtigen zu nennen.\n- Sag, an welcher Stelle es nicht aufgeht, ohne den richtigen Weg zu verraten.\n- Schreibt das Kind, dass die Aufgabe unklar ist, dann IST das sein Versuch. Übergeh das nicht. Sag, welcher Teil der Angabe tatsächlich unklar ist, und erkläre genau diesen Teil.\nVERBOTEN: den richtigen Weg verraten, den nächsten Rechenschritt nennen, vorrechnen, das Ergebnis nennen. Auch verboten: sagen, was gesucht ist oder was berechnet werden soll. Fehlt die Frage in der Angabe, dann stelle sie NICHT an ihrer Stelle, sondern frage das Kind, was man hier wohl wissen möchte. Das gilt auch für Nebensätze wie \"damit wir wissen, wie viele es sind\".",
+   "anfrage": "Art der Aufgabe: Schriftliches Multiplizieren\n\nDie Aufgabe des Kindes lautet:\nEin Bus hat 48 Sitzplätze. Für den Ausflug werden 7 Busse bestellt. Wie viele Kinder können mitfahren?\n\nBisheriger Verlauf:\nHilfe der Stufe 1: Du hast geschrieben: „Ein Bus hat 48 Sitzplätze. Für den Ausflug werden 7 Busse bestellt. Wie viele Kinder können mitfahren?“  \nDas ist eine gute Frage. Du willst wissen, wie viele Kinder insgesamt in die Busse passen.  \nProbier mal, dir vorzustellen, wie viele Kinder in einen Bus passen, und dann, wie viele in sieben Busse passen.\nDarauf hat das Kind geantwortet: Wie viele Kinder insgesamt in die sieben Busse passen.",
+   "tutor_text": "Das ist richtig, du willst wissen, wie viele Kinder insgesamt in die sieben Busse passen.  \nAber du musst jetzt noch zeigen, wie du das berechnest.  \nProbier mal, dir vorzustellen, wie viele Kinder in einen Bus passen, und dann, wie viele in sieben Busse passen.",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "rueckfrage": "Probier es noch einmal. Was rechnest du jetzt?",
+   "tutor_verraet_loesung": false,
+   "kind_text": "7 mal 48. Aber wie rechnet man das am besten?",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Fragt nach einer Rechenmethode",
+   "kind_ist_frage": false,
+   "kind_ergebnis_richtig": false,
+   "diagnose": {
+    "stufe": 3,
+    "grund": "Kind nennt Rechenansatz, aber keine Strategie"
+   }
+  },
+  {
+   "nr": 3,
+   "art": "hilfe",
+   "stufe": 3,
+   "wiederholung": false,
+   "system": "Du hilfst einem Kind im Volksschulalter, etwa sechs bis zehn Jahre alt bei einer Rechenaufgabe. Schreib sehr einfach und sehr kurz: höchstens DREI kurze Sätze. Keine Fachwörter ohne Erklärung. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 3 (Allgemein-strategische Hilfe) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\nGib eine allgemein-strategische Hilfe. Schlage eine Denkweise vor, die bei vielen Aufgaben hilft: Was ist gegeben, was ist gesucht? Eine Skizze machen, eine Tabelle anlegen, die Aufgabe mit kleineren Zahlen durchspielen.\nVERBOTEN: die Strategie auf diese Aufgabe anwenden. Nenne KEINE Zahl aus der Aufgabe in einer Rechnung. Schreibe KEINE Rechnung hin, auch nicht mit Platzhaltern wie \"128 minus 36 = ?\". Nenne kein Zwischenergebnis, auch nicht als Nebenrechnung wie \"5 mal 8 ist 40\". Rechne auch kein aehnliches Beispiel mit anderen Zahlen vor. Und benenne die gesuchte Größe nicht: Du fragst danach, du beantwortest es nicht.\nEbenfalls verboten: die Rechenart beim Namen nennen. Die Wörter malnehmen, multiplizieren, addieren, subtrahieren, dividieren, geteilt, zusammenzählen und dazuzählen kommen nicht vor, es sei denn, das Kind hat sie selbst geschrieben. Du darfst sagen, dass ein Ansatz nicht trägt. Welcher trägt, sagst du nicht.\nSchreibe trotzdem eine vollständige Hilfe: eine Denkweise, ein Bild, eine Frage. Ein einziger Satz, der nur bestätigt, hilft niemandem.",
+   "anfrage": "Art der Aufgabe: Schriftliches Multiplizieren\n\nDie Aufgabe des Kindes lautet:\nEin Bus hat 48 Sitzplätze. Für den Ausflug werden 7 Busse bestellt. Wie viele Kinder können mitfahren?\n\nBisheriger Verlauf:\nHilfe der Stufe 1: Du hast geschrieben: „Ein Bus hat 48 Sitzplätze. Für den Ausflug werden 7 Busse bestellt. Wie viele Kinder können mitfahren?“  \nDas ist eine gute Frage. Du willst wissen, wie viele Kinder insgesamt in die Busse passen.  \nProbier mal, dir vorzustellen, wie viele Kinder in einen Bus passen, und dann, wie viele in sieben Busse passen.\nDarauf hat das Kind geantwortet: Wie viele Kinder insgesamt in die sieben Busse passen.\nHilfe der Stufe 2: Das ist richtig, du willst wissen, wie viele Kinder insgesamt in die sieben Busse passen.  \nAber du musst jetzt noch zeigen, wie du das berechnest.  \nProbier mal, dir vorzustellen, wie viele Kinder in einen Bus passen, und dann, wie viele in sieben Busse passen.\nDarauf hat das Kind geantwortet: 7 mal 48. Aber wie rechnet man das am besten?",
+   "tutor_text": "Du hast recht, 7 mal 48 ist die richtige Rechnung.  \nAber wie rechnest du das am besten?  \nVersuch mal, dir vorzustellen, wie viele Kinder in sieben Busse passen, wenn du weißt, wie viele in einem sitzen.",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "rueckfrage": "Und jetzt du: Was machst du als Erstes?",
+   "tutor_verraet_loesung": false,
+   "kind_text": "Ich rechne 7 mal 40, weil 48 ist ja 40 plus 8.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Das Kind versucht, die Aufgabe zu lösen.",
+   "kind_ist_frage": false,
+   "kind_ergebnis_richtig": false,
+   "diagnose": {
+    "stufe": 4,
+    "grund": "Kind beginnt Rechnung zu zerlegen"
+   }
+  },
+  {
+   "nr": 4,
+   "art": "hilfe",
+   "stufe": 4,
+   "wiederholung": false,
+   "system": "Du hilfst einem Kind im Volksschulalter, etwa sechs bis zehn Jahre alt bei einer Rechenaufgabe. Schreib sehr einfach und sehr kurz: höchstens DREI kurze Sätze. Keine Fachwörter ohne Erklärung. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 4 (Inhaltsorientiert-strategische Hilfe) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\nGib eine inhaltsorientiert-strategische Hilfe. Wende die Strategie auf genau diese Aufgabe an und nenne den nächsten Schritt als Frage, zum Beispiel: 'Wie viele Bücher sind nach dem Montag noch da?'.\nDas gilt auch dann, wenn das Kind nichts beigetragen hat oder sagt, es gehe nicht. Gerade dann ist der konkrete nächste Schritt das, was weiterhilft. Frage nicht zurück, was das Kind denkt.\nHier darfst du die Rechenart beim Namen nennen - auf dieser Stufe ist sie an der Reihe. Sag sie klar und in einem Zug. Rede nicht um sie herum und stell sie nicht in Frage, nachdem du sie genannt hast.\nVERBOTEN: diesen Schritt ausrechnen, weitere Schritte nennen, das Ergebnis nennen.",
+   "anfrage": "Art der Aufgabe: Schriftliches Multiplizieren\n\nDie Aufgabe des Kindes lautet:\nEin Bus hat 48 Sitzplätze. Für den Ausflug werden 7 Busse bestellt. Wie viele Kinder können mitfahren?\n\nBisheriger Verlauf:\nHilfe der Stufe 1: Du hast geschrieben: „Ein Bus hat 48 Sitzplätze. Für den Ausflug werden 7 Busse bestellt. Wie viele Kinder können mitfahren?“  \nDas ist eine gute Frage. Du willst wissen, wie viele Kinder insgesamt in die Busse passen.  \nProbier mal, dir vorzustellen, wie viele Kinder in einen Bus passen, und dann, wie viele in sieben Busse passen.\nDarauf hat das Kind geantwortet: Wie viele Kinder insgesamt in die sieben Busse passen.\nHilfe der Stufe 2: Das ist richtig, du willst wissen, wie viele Kinder insgesamt in die sieben Busse passen.  \nAber du musst jetzt noch zeigen, wie du das berechnest.  \nProbier mal, dir vorzustellen, wie viele Kinder in einen Bus passen, und dann, wie viele in sieben Busse passen.\nDarauf hat das Kind geantwortet: 7 mal 48. Aber wie rechnet man das am besten?\nHilfe der Stufe 3: Du hast recht, 7 mal 48 ist die richtige Rechnung.  \nAber wie rechnest du das am besten?  \nVersuch mal, dir vorzustellen, wie viele Kinder in sieben Busse passen, wenn du weißt, wie viele in einem sitzen.\nDarauf hat das Kind geantwortet: Ich rechne 7 mal 40, weil 48 ist ja 40 plus 8.",
+   "tutor_text": "Du hast recht, 48 ist 40 plus 8.  \nJetzt rechne 7 mal 40 und 7 mal 8.  \nWas musst du dann tun, um die Gesamtzahl zu bekommen?",
+   "pruefung": {
+    "verstoesse": [
+     "ausgeschriebene Rechnung"
+    ],
+    "versuche": 2,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": "Du hast recht, 48 ist 40 plus 8.  \nJetzt rechne 7 · 40. Wie viel ist das?",
+    "verstoesse_zweiter": []
+   },
+   "rueckfrage": "Rechne das aus. Was kommt heraus?",
+   "tutor_verraet_loesung": false,
+   "kind_text": "7 mal 40 ist 280, und 7 mal 8 ist 56. Dann muss man 280 plus 56 rechnen. Das sind 336 Kinder.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Rechnung ist falsch, aber Arbeit an Aufgabe",
+   "kind_ist_frage": false,
+   "kind_ergebnis_richtig": true,
+   "diagnose": {
+    "stufe": 5,
+    "grund": "Kind hat Zwischenergebnisse und finale Lösung genannt."
+   }
+  }
+ ],
+ "ereignisse": [],
+ "ergebnis": {
+  "status": "selbst_geloest",
+  "selbst_gerechnet": true,
+  "zug_selbst_gerechnet": 4,
+  "loesung_gezeigt": false,
+  "hoechste_stufe": 4,
+  "zuege": 4,
+  "kinderbeitraege": 4,
+  "fragen_des_kindes": 0,
+  "als_frage_gewertete_ergebnisse": 0,
+  "bestaetigung_nach_ergebnis": "keine (Stufe aus oder Lösung wäre dran)",
+  "dauer_s": 31.0,
+  "spark_aufrufe": 17
+ },
+ "messungen": [
+  {
+   "art": "hilfe",
+   "dauer_ms": 3953,
+   "tokens_ein": 917,
+   "tokens_aus": 96
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 1094,
+   "tokens_ein": 785,
+   "tokens_aus": 16
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1250,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "diagnose",
+   "dauer_ms": 1250,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "hilfe",
+   "dauer_ms": 3125,
+   "tokens_ein": 1223,
+   "tokens_aus": 75
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 1187,
+   "tokens_ein": 918,
+   "tokens_aus": 17
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1375,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "diagnose",
+   "dauer_ms": 1515,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "hilfe",
+   "dauer_ms": 2827,
+   "tokens_ein": 1170,
+   "tokens_aus": 65
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 1516,
+   "tokens_ein": 1044,
+   "tokens_aus": 25
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1531,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "diagnose",
+   "dauer_ms": 1422,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "hilfe",
+   "dauer_ms": 1750,
+   "tokens_ein": 1139,
+   "tokens_aus": 34
+  },
+  {
+   "art": "hilfe_2",
+   "dauer_ms": 2343,
+   "tokens_ein": 1230,
+   "tokens_aus": 51
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 2172,
+   "tokens_ein": 1159,
+   "tokens_aus": 46
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1311,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "diagnose",
+   "dauer_ms": 1343,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  }
+ ],
+ "beendet": "2026-10-19T09:52:38"
+}

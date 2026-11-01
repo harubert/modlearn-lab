@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block titel %}Hilfe beim Rechnen{% endblock %}
+
+{% block inhalt %}
+<h1 class="gross">Hilfe beim Rechnen</h1>
+
+{% if fehler %}
+  <p class="meldung meldung-fehler" role="alert" id="code-fehler">{{ fehler }}</p>
+{% endif %}
+
+<section class="einstieg" aria-labelledby="code-titel">
+  <h2 id="code-titel">Du hast einen Code?</h2>
+  <p class="einstieg-text">
+    Deine Lehrerin oder dein Lehrer zeigt dir sechs Zahlen.
+    Tipp sie hier ein.
+  </p>
+
+  <form method="post" action="{% url 'tutoring:beitreten' %}" class="code-formular">
+    {% csrf_token %}
+    <label for="code">Dein Code</label>
+    <input type="text" id="code" name="code" value="{{ code|default:'' }}"
+           inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="off"
+           required autofocus class="code-eingabe" placeholder="123456"
+           aria-describedby="{% if fehler %}code-fehler{% endif %}">
+    <button type="submit" class="knopf knopf-gross">Los geht’s</button>
+  </form>
+  <p class="knopf-hilfe"><a href="{% url 'projekt' %}">Was ist das hier?</a></p>
+</section>
+
+<section class="ablauf" aria-labelledby="ablauf-titel">
+  <h2 id="ablauf-titel">So geht das</h2>
+  <ol class="ablaufliste">
+    <li>
+      <span class="ablauf-nr" aria-hidden="true">1</span>
+      <span>Du schreibst deine Aufgabe auf. Oder du machst ein Foto davon.
+        Oder du sprichst sie einfach.</span>
+    </li>
+    <li>
+      <span class="ablauf-nr" aria-hidden="true">2</span>
+      <span>Du bekommst einen Tipp. Nicht die Lösung, sondern einen Tipp.</span>
+    </li>
+    <li>
+      <span class="ablauf-nr" aria-hidden="true">3</span>
+      <span>Jetzt bist du dran. Du probierst es und schreibst, was du
+        herausgefunden hast.</span>
+    </li>
+    <li>
+      <span class="ablauf-nr" aria-hidden="true">4</span>
+      <span>Reicht das noch nicht? Dann gibt es den nächsten Tipp.</span>
+    </li>
+  </ol>
+  <p class="ablauf-nachsatz">
+    Wie viele Tipps du bekommst, stellt deine Lehrerin oder dein Lehrer ein.
+  </p>
+</section>
+
+<section class="ruhig" aria-labelledby="ruhig-titel">
+  <h2 id="ruhig-titel">Keine Sorge</h2>
+  <p>
+    Was du hier schreibst, bleibt in der Schule. Es geht an keine fremde Firma.
+    Du musst deinen Namen nicht sagen. Du suchst dir ein Tier aus, und so
+    weiß deine Lehrerin oder dein Lehrer, wer du bist.
+  </p>
+</section>
+
+<section class="lehrbereich" aria-labelledby="lehr-titel">
+  <h2 id="lehr-titel">Sie sind Lehrperson?</h2>
+  <p>
+    Melden Sie sich an, um eine Sitzung zu starten. Sie legen fest, wie weit die
+    Hilfe gehen darf, für welche Altersgruppe sie gedacht ist und was für die
+    Forschung aufgezeichnet wird. Die Kinder brauchen nur den Code.
+  </p>
+  <p class="lehrbereich-wege">
+    <a class="knopf" href="{% url 'anmelden' %}">Anmelden</a>
+    <a href="{% url 'stufen' %}">Die fünf Stufen, fachlich erklärt</a>
+  </p>
+</section>
+{% endblock %}

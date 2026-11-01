@@ -1,0 +1,385 @@
+{
+ "id": "sek16",
+ "tutor": "spark",
+ "lauf": "spark_ist",
+ "modell": "qwen3-vl-30b",
+ "begonnen": "2026-10-19T09:34:53",
+ "aufgabe": {
+  "id": "sek16",
+  "stufe": "sek1",
+  "schulstufe": 7,
+  "altersklasse": "10-14",
+  "thema": "Mittelwert und Median",
+  "text": "Max hat in Mathematik die Noten 2, 3, 1, 4, 2. Berechne den Mittelwert und gib den Median an.",
+  "loesung": "Mittelwert 2,4; Median 2",
+  "loesungsweg": "Summe 2 + 3 + 1 + 4 + 2 = 12, durch 5 Noten: 2,4. Sortiert 1, 2, 2, 3, 4: die mittlere Note ist 2.",
+  "typische_fehler": [
+   "Summe nicht durch die Anzahl geteilt: 12.",
+   "Durch die falsche Anzahl geteilt: 12 : 4 = 3.",
+   "Median aus der unsortierten Liste: 1 (die Zahl in der Mitte der Angabe)."
+  ],
+  "loesung_muster": [
+   "2[.,]4",
+   "median[^\\d]{0,15}2(?![\\d.])|(?<![\\d.,])2(?![\\d.])[^\\d]{0,15}median"
+  ]
+ },
+ "profil": {
+  "schluessel": "stark",
+  "name": "Hanna, 14, stark",
+  "stufe": "sek1"
+ },
+ "umfang": "auf_bitte",
+ "obergrenze": 5,
+ "altersklasse": "10-14",
+ "mit_loesung": false,
+ "frageerkennung": "app",
+ "kind_system_prompt": "Du spielst in einer Simulation eine Schülerin oder einen Schüler, die oder der in einer Lern-App Hilfe zu einer Rechenaufgabe bekommt. Die App schreibt dir Hilfen und stellt dir Fragen. Du antwortest NUR mit dem, was diese Person in das Textfeld tippen würde: keine Regieanweisungen, keine Erklärung deiner Rolle, keine Anführungszeichen, keine Aufzählungen. Du bleibst in der Rolle, auch wenn die App etwas Unerwartetes schreibt. Du erfindest keine neue Aufgabe. Du schreibst wie ein echter Mensch in dem Alter tippt: kurz, manchmal mit kleinen Tippfehlern, ohne Fachsprache, die die Person nicht hat.\n\nDie Aufgabe lautet: Max hat in Mathematik die Noten 2, 3, 1, 4, 2. Berechne den Mittelwert und gib den Median an.\n\nNUR FÜR DICH (die Person weiß das nicht von selbst): Die richtige Lösung ist Mittelwert 2,4; Median 2. Der Rechenweg: Summe 2 + 3 + 1 + 4 + 2 = 12, durch 5 Noten: 2,4. Sortiert 1, 2, 2, 3, 4: die mittlere Note ist 2.\n\nWas du mit diesem Wissen tun darfst, steht in deiner Rolle. Wenn die App dich fragt, ob du jetzt die Lösung sehen möchtest, antwortest du nur mit ja oder nein, so wie es zu deiner Rolle passt.\n\nDEINE ROLLE:\nDu bist Hanna, 14 Jahre alt, 4. Klasse Gymnasium. Du bist gut in Mathe und willst verstehen, nicht nur rechnen. So verhältst du dich:\n- Auf die erste Frage der App sagst du genau, was gegeben und was gesucht ist.\n- Beim ersten Rechenversuch rechnest du den ersten Schritt richtig vor und stellst dann einmal eine echte Rückfrage (warum das so geht, oder ob ein anderer Weg auch stimmt). Diese Frage endet mit einem Fragezeichen.\n- Danach rechnest du die Aufgabe richtig zu Ende und nennst das Ergebnis Mittelwert 2,4; Median 2 mit Einheit.\n- Du schreibst ein bis drei Sätze.\n- Wenn die App fragt, ob du die Lösung sehen willst: nein, du probierst weiter.",
+ "zuege": [
+  {
+   "nr": 1,
+   "art": "hilfe",
+   "stufe": 1,
+   "wiederholung": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Motivationshilfe) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\nGib eine Motivationshilfe. Deine Aufgabe ist es, dem Kind die SITUATION der Aufgabe nahezubringen, nicht die Rechnung. Wähle aus, was hier wirklich passt, und mach nicht alles auf einmal:\n- Erkläre Wörter aus der Aufgabe, die ein Kind nicht kennen muss, zum Beispiel was eine Schulbibliothek ist oder was ausleihen heißt.\n- Sag in ein, zwei Sätzen, worum es in der Situation geht und warum das jemanden angehen könnte: Wer wüsste das gern, und wozu?\n- Enthält die Aufgabe gar keine Frage, dann SAGE DAS in jedem Fall. Das ist keine Schwäche des Kindes, sondern eine Lücke in der Angabe, und ein Kind, das sie bemerkt, denkt richtig.\n- Mach dem Kind Mut, es zu probieren.\nVERBOTEN: rechnen, einen Rechenweg nennen, eine Strategie vorschlagen, nach gegeben und gesucht fragen, das Ergebnis nennen. Auch verboten: sagen, was berechnet oder herausgefunden werden soll, auch nicht in einem Nebensatz.\nDie Wörter zählen, rechnen, malnehmen, plus, minus, geteilt und alles Verwandte kommen in dieser Antwort NICHT vor. Auch nicht als Vorschlag, auch nicht als Beispiel, auch nicht verneint.",
+   "anfrage": "Art der Aufgabe: Mittelwert und Median\n\nDie Aufgabe des Kindes lautet:\nMax hat in Mathematik die Noten 2, 3, 1, 4, 2. Berechne den Mittelwert und gib den Median an.",
+   "tutor_text": "Max hat fünf Noten in Mathematik, die er in einer Liste hat. Der Median ist die Note, die genau in der Mitte steht, wenn man die Noten der Größe nach ordnet. Jemand könnte das wissen wollen, um zu sehen, wie gut Max im Durchschnitt ist oder ob er überall etwa gleich gut ist. Du kannst jetzt versuchen, die Noten in der richtigen Reihenfolge zu schreiben.",
+   "pruefung": {
+    "verstoesse": [
+     "genannter Rechenweg"
+    ],
+    "versuche": 2,
+    "gekuerzt": true,
+    "notfall": false,
+    "erster_text": "Die Aufgabe fragt nach zwei Zahlen, die aus Max’ Noten berechnet werden. Eine davon zeigt, wie die Noten im Durchschnitt liegen, die andere, welche Note in der Mitte steht, wenn man sie der Größe nach ordnet. Das ist interessant, weil man so besser sieht, wie gut Max in Mathe ist. Du kannst jetzt versuchen, die Noten der Größe nach zu ordnen.",
+    "verstoesse_zweiter": [
+     "genannter Rechenweg"
+    ],
+    "zweiter_text": "Max hat fünf Noten in Mathematik, die er in einer Liste hat. Der Mittelwert ist die durchschnittliche Note, wenn man alle Noten zusammenzählt und durch die Anzahl der Noten teilt. Der Median ist die Note, die genau in der Mitte steht, wenn man die Noten der Größe nach ordnet. Jemand könnte das wissen wollen, um zu sehen, wie gut Max im Durchschnitt ist oder ob er überall etwa gleich gut ist. Du kannst jetzt versuchen, die Noten in der richtigen Reihenfolge zu schreiben."
+   },
+   "rueckfrage": "Was soll man hier herausfinden? Sag es mit deinen Worten.",
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 2,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Das Kind arbeitet an der Aufgabe.",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndas Kind arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nMax hat in Mathematik die Noten 2, 3, 1, 4, 2. Berechne den Mittelwert und gib den Median an.\nHilfe der Stufe 1: Max hat fünf Noten in Mathematik, die er in einer Liste hat. Der Median ist die Note, die genau in der Mitte steht, wenn man die Noten der Größe nach ordnet. Jemand könnte das wissen wollen, um zu sehen, wie gut Max im Durchschnitt ist oder ob er überall etwa gleich gut ist. Du kannst jetzt versuchen, die Noten in der richtigen Reihenfolge zu schreiben.\n\nDie Rückfrage lautet:\nIch soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.",
+   "tutor_text": "Du sollst zwei Dinge berechnen: den Mittelwert und den Median der Noten. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?",
+   "pruefung": {
+    "verstoesse": [
+     "genannter Rechenweg"
+    ],
+    "versuche": 2,
+    "gekuerzt": true,
+    "notfall": false,
+    "erster_text": "Du sollst zwei Dinge berechnen: den Mittelwert und den Median. Der Mittelwert ist die durchschnittliche Note, die du erhältst, wenn du alle Noten addierst und durch die Anzahl der Noten teilst. Der Median ist die Note, die genau in der Mitte steht, wenn du die Noten der Größe nach ordnest. Beginne damit, die Noten 2, 3, 1, 4, 2 in der richtigen Reihenfolge zu schreiben.",
+    "verstoesse_zweiter": [
+     "genannter Rechenweg"
+    ],
+    "zweiter_text": "Du sollst zwei Dinge berechnen: den Mittelwert und den Median der Noten. Der Mittelwert ist die durchschnittliche Note, die du erhältst, wenn du alle Noten addierst und durch die Anzahl der Noten teilst. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?"
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 3,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind arbeitet an der Aufgabe",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndas Kind arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nMax hat in Mathematik die Noten 2, 3, 1, 4, 2. Berechne den Mittelwert und gib den Median an.\nHilfe der Stufe 1: Max hat fünf Noten in Mathematik, die er in einer Liste hat. Der Median ist die Note, die genau in der Mitte steht, wenn man die Noten der Größe nach ordnet. Jemand könnte das wissen wollen, um zu sehen, wie gut Max im Durchschnitt ist oder ob er überall etwa gleich gut ist. Du kannst jetzt versuchen, die Noten in der richtigen Reihenfolge zu schreiben.\nFrühere Rückfrage: Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.\nAntwort darauf: Du sollst zwei Dinge berechnen: den Mittelwert und den Median der Noten. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?\n\nDie Rückfrage lautet:\nIch soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.",
+   "tutor_text": "Du sollst zwei Dinge berechnen: den Mittelwert und den Median. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 4,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Das Kind arbeitet an der Aufgabe.",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndas Kind arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nMax hat in Mathematik die Noten 2, 3, 1, 4, 2. Berechne den Mittelwert und gib den Median an.\nHilfe der Stufe 1: Max hat fünf Noten in Mathematik, die er in einer Liste hat. Der Median ist die Note, die genau in der Mitte steht, wenn man die Noten der Größe nach ordnet. Jemand könnte das wissen wollen, um zu sehen, wie gut Max im Durchschnitt ist oder ob er überall etwa gleich gut ist. Du kannst jetzt versuchen, die Noten in der richtigen Reihenfolge zu schreiben.\nFrühere Rückfrage: Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.\nAntwort darauf: Du sollst zwei Dinge berechnen: den Mittelwert und den Median der Noten. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?\nFrühere Rückfrage: Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.\nAntwort darauf: Du sollst zwei Dinge berechnen: den Mittelwert und den Median. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?\n\nDie Rückfrage lautet:\nIch soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.",
+   "tutor_text": "Du sollst zwei Dinge berechnen: den Mittelwert und den Median. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 5,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind arbeitet an der Aufgabe",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndas Kind arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nMax hat in Mathematik die Noten 2, 3, 1, 4, 2. Berechne den Mittelwert und gib den Median an.\nHilfe der Stufe 1: Max hat fünf Noten in Mathematik, die er in einer Liste hat. Der Median ist die Note, die genau in der Mitte steht, wenn man die Noten der Größe nach ordnet. Jemand könnte das wissen wollen, um zu sehen, wie gut Max im Durchschnitt ist oder ob er überall etwa gleich gut ist. Du kannst jetzt versuchen, die Noten in der richtigen Reihenfolge zu schreiben.\nFrühere Rückfrage: Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.\nAntwort darauf: Du sollst zwei Dinge berechnen: den Mittelwert und den Median der Noten. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?\nFrühere Rückfrage: Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.\nAntwort darauf: Du sollst zwei Dinge berechnen: den Mittelwert und den Median. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?\nFrühere Rückfrage: Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.\nAntwort darauf: Du sollst zwei Dinge berechnen: den Mittelwert und den Median. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?\n\nDie Rückfrage lautet:\nIch soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.",
+   "tutor_text": "Du sollst zwei Dinge berechnen: den Mittelwert und den Median. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 6,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind arbeitet an der Aufgabe",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndas Kind arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nMax hat in Mathematik die Noten 2, 3, 1, 4, 2. Berechne den Mittelwert und gib den Median an.\nHilfe der Stufe 1: Max hat fünf Noten in Mathematik, die er in einer Liste hat. Der Median ist die Note, die genau in der Mitte steht, wenn man die Noten der Größe nach ordnet. Jemand könnte das wissen wollen, um zu sehen, wie gut Max im Durchschnitt ist oder ob er überall etwa gleich gut ist. Du kannst jetzt versuchen, die Noten in der richtigen Reihenfolge zu schreiben.\nFrühere Rückfrage: Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.\nAntwort darauf: Du sollst zwei Dinge berechnen: den Mittelwert und den Median der Noten. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?\nFrühere Rückfrage: Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.\nAntwort darauf: Du sollst zwei Dinge berechnen: den Mittelwert und den Median. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?\nFrühere Rückfrage: Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.\nAntwort darauf: Du sollst zwei Dinge berechnen: den Mittelwert und den Median. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?\nFrühere Rückfrage: Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.\nAntwort darauf: Du sollst zwei Dinge berechnen: den Mittelwert und den Median. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?\n\nDie Rückfrage lautet:\nIch soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.",
+   "tutor_text": "Du sollst zwei Dinge berechnen: den Mittelwert und den Median. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 7,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind arbeitet an der Aufgabe",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndas Kind arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nMax hat in Mathematik die Noten 2, 3, 1, 4, 2. Berechne den Mittelwert und gib den Median an.\nHilfe der Stufe 1: Max hat fünf Noten in Mathematik, die er in einer Liste hat. Der Median ist die Note, die genau in der Mitte steht, wenn man die Noten der Größe nach ordnet. Jemand könnte das wissen wollen, um zu sehen, wie gut Max im Durchschnitt ist oder ob er überall etwa gleich gut ist. Du kannst jetzt versuchen, die Noten in der richtigen Reihenfolge zu schreiben.\nFrühere Rückfrage: Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.\nAntwort darauf: Du sollst zwei Dinge berechnen: den Mittelwert und den Median der Noten. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?\nFrühere Rückfrage: Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.\nAntwort darauf: Du sollst zwei Dinge berechnen: den Mittelwert und den Median. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?\nFrühere Rückfrage: Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.\nAntwort darauf: Du sollst zwei Dinge berechnen: den Mittelwert und den Median. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?\nFrühere Rückfrage: Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.\nAntwort darauf: Du sollst zwei Dinge berechnen: den Mittelwert und den Median. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?\nFrühere Rückfrage: Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.\nAntwort darauf: Du sollst zwei Dinge berechnen: den Mittelwert und den Median. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?\n\nDie Rückfrage lautet:\nIch soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.",
+   "tutor_text": "Du sollst zwei Dinge berechnen: den Mittelwert und den Median. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 8,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Das Kind arbeitet an der Aufgabe.",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndas Kind arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nMax hat in Mathematik die Noten 2, 3, 1, 4, 2. Berechne den Mittelwert und gib den Median an.\nHilfe der Stufe 1: Max hat fünf Noten in Mathematik, die er in einer Liste hat. Der Median ist die Note, die genau in der Mitte steht, wenn man die Noten der Größe nach ordnet. Jemand könnte das wissen wollen, um zu sehen, wie gut Max im Durchschnitt ist oder ob er überall etwa gleich gut ist. Du kannst jetzt versuchen, die Noten in der richtigen Reihenfolge zu schreiben.\nFrühere Rückfrage: Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.\nAntwort darauf: Du sollst zwei Dinge berechnen: den Mittelwert und den Median der Noten. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?\nFrühere Rückfrage: Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.\nAntwort darauf: Du sollst zwei Dinge berechnen: den Mittelwert und den Median. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?\nFrühere Rückfrage: Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.\nAntwort darauf: Du sollst zwei Dinge berechnen: den Mittelwert und den Median. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?\nFrühere Rückfrage: Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.\nAntwort darauf: Du sollst zwei Dinge berechnen: den Mittelwert und den Median. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?\nFrühere Rückfrage: Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.\nAntwort darauf: Du sollst zwei Dinge berechnen: den Mittelwert und den Median. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?\nFrühere Rückfrage: Ich soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.\nAntwort darauf: Du sollst zwei Dinge berechnen: den Mittelwert und den Median. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?\n\nDie Rückfrage lautet:\nIch soll den Mittelwert und den Median der Noten 2, 3, 1, 4, 2 berechnen.",
+   "tutor_text": "Du sollst zwei Dinge berechnen: den Mittelwert und den Median. Der Median ist die Note, die in der Mitte steht, wenn du die Noten der Größe nach ordnest. Was möchtest du zuerst machen: die Noten ordnen oder die Summe berechnen?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_verraet_loesung": false
+  }
+ ],
+ "ereignisse": [],
+ "ergebnis": {
+  "status": "abgebrochen_zuege",
+  "selbst_gerechnet": false,
+  "zug_selbst_gerechnet": null,
+  "loesung_gezeigt": false,
+  "hoechste_stufe": 1,
+  "zuege": 8,
+  "kinderbeitraege": 7,
+  "fragen_des_kindes": 7,
+  "als_frage_gewertete_ergebnisse": 0,
+  "bestaetigung_nach_ergebnis": null,
+  "dauer_s": 55.5,
+  "spark_aufrufe": 24
+ },
+ "messungen": [
+  {
+   "art": "hilfe",
+   "dauer_ms": 3781,
+   "tokens_ein": 921,
+   "tokens_aus": 92
+  },
+  {
+   "art": "hilfe_2",
+   "dauer_ms": 5405,
+   "tokens_ein": 1014,
+   "tokens_aus": 125
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 1641,
+   "tokens_ein": 702,
+   "tokens_aus": 31
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1297,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 4592,
+   "tokens_ein": 985,
+   "tokens_aus": 115
+  },
+  {
+   "art": "nachfrage_2",
+   "dauer_ms": 4282,
+   "tokens_ein": 1078,
+   "tokens_aus": 106
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 1670,
+   "tokens_ein": 839,
+   "tokens_aus": 31
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1157,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2922,
+   "tokens_ein": 1093,
+   "tokens_aus": 66
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 1516,
+   "tokens_ein": 973,
+   "tokens_aus": 31
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1389,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 3172,
+   "tokens_ein": 1198,
+   "tokens_aus": 66
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 1609,
+   "tokens_ein": 1107,
+   "tokens_aus": 31
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1297,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2906,
+   "tokens_ein": 1303,
+   "tokens_aus": 66
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 1764,
+   "tokens_ein": 1241,
+   "tokens_aus": 31
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1282,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2842,
+   "tokens_ein": 1408,
+   "tokens_aus": 66
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 1547,
+   "tokens_ein": 1375,
+   "tokens_aus": 31
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1172,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2546,
+   "tokens_ein": 1513,
+   "tokens_aus": 66
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 1547,
+   "tokens_ein": 1509,
+   "tokens_aus": 31
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1281,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2891,
+   "tokens_ein": 1618,
+   "tokens_aus": 66
+  }
+ ],
+ "beendet": "2026-10-19T09:35:49"
+}

@@ -1,0 +1,260 @@
+/* Der Trainer: Verlauf, die eine Frage, der ruhige Wartezustand.
+   Nur Farben und Masse aus app.css, keine einzige eigene Farbe: Damit
+   stimmt der dunkle Modus hier von selbst, und wenn sich das PH-Blau
+   einmal aendert, aendert es sich auch hier.
+   Zuerst fuer 360 Pixel Breite entworfen, der grosse Bildschirm ist der
+   Sonderfall. Zielflaechen bleiben bei 44 Pixeln, auch eng. */
+
+/* --- Wo stehe ich gerade ------------------------------------------------ */
+
+.trainer-leiste {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .5rem .9rem;
+  margin: 0 0 1rem;
+  padding: .7rem .9rem;
+  border: 1px solid var(--rand);
+  border-radius: 12px;
+  background: var(--flaeche);
+}
+
+/* min-width: 0 erlaubt dem langen Thema, umzubrechen. Ohne diese Zeile
+   sprengt ein einziger langer Wunsch die Leiste am Handy nach rechts. */
+.trainer-lage { flex: 1 1 11rem; min-width: 0; }
+
+.trainer-stand { margin: 0; font-weight: 600; }
+
+.trainer-fortschritt {
+  margin: .15rem 0 0;
+  color: var(--schrift-leise);
+  font-size: .85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.trainer-thema { margin: .25rem 0 0; color: var(--schrift-leise); font-size: .85rem; }
+
+/* Der Umschalter fuer die Sprachausgabe. .werkzeug aus app.css liefert
+   Pillenform, 44 Pixel Hoehe und die Beschriftung; hier kommt nur der
+   eingeschaltete Zustand dazu, und er ist nicht bloss farbig, sondern traegt
+   aria-pressed -- Farbe allein waere kein Zustand. */
+.trainer-vorlesen { flex: 0 0 auto; }
+
+.trainer-vorlesen.ist-an {
+  background: var(--akzent-leise);
+  border-color: var(--akzent);
+}
+
+/* app.css blendet am schmalen Geraet das Wort in jedem .werkzeug optisch aus,
+   weil dort mehrere Knoepfe nebeneinander stehen. Hier steht nur dieser eine,
+   und ohne Wort haenge der eingeschaltete Zustand allein an der Farbe --
+   fuer alle, die Farben nicht unterscheiden, waere er dann gar nicht zu
+   sehen. Darum kommt das Wort hier zurueck. */
+.trainer-vorlesen .werkzeug-wort {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: nowrap;
+}
+
+/* --- Der erste Gruss ---------------------------------------------------- */
+
+.trainer-willkommen {
+  margin: 0 0 1rem;
+  padding: .9rem 1.1rem;
+  border-left: 4px solid var(--akzent);
+  border-radius: 0 12px 12px 0;
+  background: var(--akzent-leise);
+}
+
+.trainer-willkommen p { margin: 0; }
+
+/* --- Der Verlauf -------------------------------------------------------- */
+
+.trainer-verlauf { list-style: none; margin: 0 0 1rem; padding: 0; }
+
+.zug {
+  margin: 0 0 .8rem;
+  padding: .75rem .9rem;
+  border: 1px solid var(--rand);
+  border-radius: 12px;
+  background: var(--flaeche);
+}
+
+/* Trainer und lernende Person sind auf drei Wegen zu unterscheiden: durch
+   das Wort im Kopf, durch die Farbe des linken Streifens und durch den
+   Einzug. Wer Farben nicht unterscheiden kann, hat noch zwei Wege. */
+.zug-trainer { border-left: 4px solid var(--akzent); }
+
+.zug-lernend {
+  margin-left: 1.2rem;
+  border-left: 4px solid var(--rand);
+  background: var(--grund);
+}
+
+.zug-kopf {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .4rem;
+  margin: 0 0 .4rem;
+  padding-bottom: .35rem;
+  border-bottom: 1px solid var(--rand);
+  font-size: .78rem;
+  color: var(--schrift-leise);
+}
+
+.zug-wer { font-weight: 700; }
+.zug-trainer .zug-wer { color: var(--akzent); }
+
+/* pre-wrap statt linebreaksbr in der Vorlage: So steht im Dokument genau
+   der Text, den der Trainer geschickt hat -- und genau der wird vorgelesen. */
+.zug-text { white-space: pre-wrap; }
+
+/* --- Die eine Frage ----------------------------------------------------- */
+
+/* Sie sitzt am unteren Rand der Karte, ueber die ganze Breite, und ist das
+   Letzte, was vor dem Eingabefeld steht. Darum die negativen Aussenabstaende:
+   Der Kasten reicht bis an die Kartenkante und wirkt als Sockel, nicht als
+   weiterer Absatz im Text. */
+.zug-frage {
+  display: block;
+  margin: .75rem -.9rem -.75rem;
+  padding: .7rem .9rem;
+  border-top: 2px solid var(--akzent);
+  border-radius: 0 0 11px 11px;
+  background: var(--akzent-leise);
+}
+
+.zug-frage-marke {
+  display: block;
+  margin-bottom: .15rem;
+  color: var(--akzent);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.zug-frage-text { display: block; font-size: 1.1rem; font-weight: 600; }
+
+/* Beantwortete Fragen treten zurueck. Ohne diese Regel schreien nach fuenf
+   Schritten fuenf Fragen gleich laut, und keine ist mehr die, auf die
+   geantwortet werden soll. Die letzte im Verlauf ist immer die offene --
+   auch dann, wenn das Skript gerade eine neue angehaengt hat. */
+.trainer-verlauf > li:not(:last-child) .zug-frage {
+  border-top-color: var(--rand);
+  background: transparent;
+}
+
+.trainer-verlauf > li:not(:last-child) .zug-frage-marke { color: var(--schrift-leise); }
+
+.trainer-verlauf > li:not(:last-child) .zug-frage-text {
+  color: var(--schrift-leise);
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+/* --- Wie der Trainer die Antwort sieht ---------------------------------- */
+
+.urteil {
+  display: inline-block;
+  padding: .05rem .5rem;
+  border: 1px solid var(--rand);
+  border-radius: 999px;
+  background: var(--grund);
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+/* Dieselben drei Farbwerte wie .meldung-gut in app.css. Fuer Gruen gibt es
+   dort keine Variable, und eine neue anzulegen heisst, app.css anzufassen. */
+.urteil-verstanden { border-color: #1d7a4a; background: #eef7f1; color: #14502f; }
+.urteil-teilweise { border-color: var(--fokus); background: var(--flaeche); color: var(--schrift); }
+.urteil-nicht { border-color: var(--warnung); background: var(--warnung-leise); color: var(--warnung); }
+
+@media (prefers-color-scheme: dark) {
+  .urteil-verstanden { border-color: #2f6a4a; background: #12241a; color: #8fd9b0; }
+}
+
+/* --- Der Eingabebereich ------------------------------------------------- */
+
+/* Wie im Chat: Der Bereich klebt nicht unten fest, sondern steht am Ende der
+   Seite. Auf dem Handy ist die Seite selbst der Scrollbereich, und
+   verschachteltes Scrollen ist dort ein Aergernis. */
+.trainer-eingabe {
+  margin: 1.2rem -16px 0;
+  padding: 1rem 16px 1.5rem;
+  border-top: 2px solid var(--rand);
+  background: var(--flaeche);
+}
+
+.trainer-eingabe .meldung { margin-bottom: .8rem; }
+.trainer-eingabe .fertighinweis { margin: 0 0 .8rem; }
+
+.trainer-form { margin: 0; }
+.trainer-form > label { display: block; font-weight: 600; margin-bottom: .2rem; }
+.trainer-form .feld-hilfe { margin: 0 0 .45rem; }
+
+.trainer-zeile { display: flex; align-items: flex-end; gap: .5rem; }
+.trainer-zeile textarea { flex: 1; min-height: 44px; }
+.trainer-zeile .knopf { flex: 0 0 auto; }
+
+/* Am schmalen Geraet nebeneinander hiesse: ein Feld von 190 Pixeln neben
+   einem Knopf. Untereinander bekommt beides die volle Breite, und der Knopf
+   liegt dort, wo der Daumen liegt. */
+@media (max-width: 26rem) {
+  .trainer-zeile { flex-wrap: wrap; }
+  .trainer-zeile textarea { flex: 1 1 100%; }
+  .trainer-zeile .knopf { flex: 1 1 100%; }
+}
+
+@media (min-width: 40rem) {
+  .trainer-eingabe { margin: 0; padding-left: 0; padding-right: 0; }
+}
+
+/* --- Der Trainer denkt nach --------------------------------------------- */
+
+/* Ruhig, nicht zappelig: drei Punkte, die langsam atmen. Ein wanderndes
+   Band oder ein Kreisel zieht das Auge vom Text weg, und gewartet wird hier
+   oefter als gelesen. */
+.trainer-denkt {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  margin: 0 0 .9rem;
+  padding: .75rem .9rem;
+  border: 1px dashed var(--rand);
+  border-radius: 12px;
+  background: var(--grund);
+  color: var(--schrift-leise);
+}
+
+.trainer-punkte { display: inline-flex; flex: 0 0 auto; gap: .28rem; }
+
+.trainer-punkt {
+  width: .5rem;
+  height: .5rem;
+  border-radius: 50%;
+  background: var(--akzent);
+  animation: trainer-atmen 2.4s ease-in-out infinite;
+}
+
+.trainer-punkt:nth-child(2) { animation-delay: .35s; }
+.trainer-punkt:nth-child(3) { animation-delay: .7s; }
+
+/* Anfang und Ende voll deckend. app.css kuerzt bei prefers-reduced-motion
+   jede Laufzeit auf beinahe null; endete der Ablauf blass, blieben die
+   Punkte dort stehen. */
+@keyframes trainer-atmen {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .25; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trainer-punkt { animation: none; opacity: .55; }
+}

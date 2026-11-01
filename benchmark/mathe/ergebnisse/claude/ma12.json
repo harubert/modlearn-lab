@@ -1,0 +1,192 @@
+{
+ "id": "ma12",
+ "tutor": "claude",
+ "lauf": "claude",
+ "modell": "qwen3-vl-30b",
+ "begonnen": "2026-10-19T10:02:09",
+ "aufgabe": {
+  "id": "ma12",
+  "stufe": "matura",
+  "schulstufe": 11,
+  "altersklasse": "14-19",
+  "grundkompetenz": "AN 1.3",
+  "thema": "Mittlere und momentane Änderungsrate",
+  "text": "Die Höhe eines Balls (in Metern) nach t Sekunden ist h(t) = −5t² + 20t. Berechne die mittlere Geschwindigkeit im Zeitintervall [1; 2] und die momentane Geschwindigkeit zum Zeitpunkt t = 1.",
+  "loesung": "mittlere Geschwindigkeit 5 m/s, momentane Geschwindigkeit 10 m/s",
+  "loesungsweg": "h(1) = 15, h(2) = 20. Mittlere: (20 − 15)/(2 − 1) = 5 m/s. Ableitung h'(t) = −10t + 20, h'(1) = 10 m/s.",
+  "typische_fehler": [
+   "Mittlere Änderungsrate als h(2)/2 oder als h(2) − h(1) ohne Division (zufällig gleich, aber falsch begründet).",
+   "Ableitung ohne den linearen Term: h'(t) = −10t, h'(1) = −10.",
+   "Momentane Geschwindigkeit als h(1)/1 = 15 m/s."
+  ],
+  "loesung_muster": [
+   "(?<![\\d.-])5(?![\\d.])",
+   "(?<![\\d.-])10(?![\\d.])"
+  ]
+ },
+ "profil": {
+  "schluessel": "stark",
+  "name": "Sophie, 18, stark",
+  "stufe": "matura"
+ },
+ "umfang": "auf_bitte",
+ "obergrenze": 5,
+ "altersklasse": "14-19",
+ "mit_loesung": false,
+ "frageerkennung": "kind",
+ "zuege": [
+  {
+   "nr": 1,
+   "art": "hilfe",
+   "stufe": 1,
+   "wiederholung": false,
+   "tutor_text": "Ein Ball wird hochgeworfen: Er steigt, wird langsamer, kehrt um und fällt. Die Funktion h(t) sagt für jeden Zeitpunkt, wie hoch er gerade ist. Was passiert mit dem Ball zwischen der ersten und der zweiten Sekunde – steigt er noch?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "hinweis": "Pruefung nur protokolliert, Text nicht veraendert"
+   },
+   "rueckfrage": "Was soll man hier herausfinden? Sag es mit deinen Worten.",
+   "tutor_verraet_loesung": false,
+   "kind_text": "Man soll die mittlere Geschwindigkeit im Zeitintervall  berechnen und die momentane Geschwindigkeit zum Zeitpunkt t = 1. Dazu braucht man die Höhe des Balls zu diesen Zeitpunkten und die Ableitung der Höhefunktion.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind versteht Aufgabe, fragt nach Details",
+   "kind_ist_frage": false,
+   "kind_ergebnis_richtig": false,
+   "diagnose": {
+    "stufe": 4,
+    "grund": "Ziel und Werkzeug (Ableitung) benannt: ausführen."
+   },
+   "tutor_text_spark": "Die Aufgabe beschreibt, wie sich die Höhe eines Balls über die Zeit ändert. Du sollst herausfinden, wie schnell der Ball im Zeitintervall von 1 bis 2 Sekunden durchschnittlich fällt oder steigt, und wie schnell er genau nach einer Sekunde bewegt ist. Das hilft, das Bewegungsverhalten des Balls genau zu verstehen. Du kannst das schaffen.",
+   "diagnose_spark": {
+    "stufe": 2,
+    "grund": "Kind nennt Ziel und Ansatz, aber keine konkrete Strategie."
+   }
+  },
+  {
+   "nr": 2,
+   "art": "hilfe",
+   "stufe": 2,
+   "wiederholung": false,
+   "tutor_text": "Beides richtig: Höhen an den Intervallgrenzen für die mittlere, Ableitung für die momentane Geschwindigkeit. Dann rechne beides aus und schreib die Werte hin. Was bekommst du?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "hinweis": "Pruefung nur protokolliert, Text nicht veraendert"
+   },
+   "rueckfrage": "Probier es noch einmal. Was rechnest du jetzt?",
+   "tutor_verraet_loesung": false,
+   "kind_text": "Ich berechne zuerst die Höhe des Balls bei t = 1 und t = 2. Also h(1) = −5·1² + 20·1 = −5 + 20 = 15 und h(2) = −5·4 + 20·2 = −20 + 40 = 20. Die mittlere Geschwindigkeit ist dann (20 − 15)/(2 − 1) = 5 m/s.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Das Kind rechnet an der Aufgabe weiter.",
+   "kind_ist_frage": false,
+   "kind_ergebnis_richtig": false,
+   "diagnose": {
+    "stufe": 4,
+    "grund": "Erster Teil richtig (5 m/s); zweiter Teil noch offen: Stufe 4."
+   },
+   "tutor_text_spark": "Dein Ansatz, dass man die Höhe zu den Zeitpunkten und die Ableitung der Funktion braucht, trägt dazu bei, die Aufgabe zu strukturieren. Du hast richtig erkannt, dass für die mittlere Geschwindigkeit die Höhenwerte an den Intervallgrenzen benötigt werden. An welcher Stelle im Rechenweg ist dir nicht klar, wie du weitermachst?",
+   "diagnose_spark": {
+    "stufe": 3,
+    "grund": "Kind hat Zwischenergebnis berechnet"
+   }
+  },
+  {
+   "nr": 3,
+   "art": "hilfe",
+   "stufe": 3,
+   "wiederholung": false,
+   "tutor_text": "5 m/s stimmt für das Intervall [1; 2], mit Differenzenquotient richtig gerechnet. Allgemein: Die mittlere Änderungsrate ist eine Sekante, die momentane die Tangente – deshalb braucht die zweite die Ableitung. Wie lautet h'(t), und was ergibt sie bei t = 1?",
+   "pruefung": {
+    "verstoesse": [
+     "Gleichung mit Ergebnis"
+    ],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "hinweis": "Pruefung nur protokolliert, Text nicht veraendert"
+   },
+   "rueckfrage": "Und jetzt du: Was machst du als Erstes?",
+   "tutor_verraet_loesung": false,
+   "kind_text": "Ich berechne die Ableitung der Funktion h(t), weil die momentane Geschwindigkeit die Ableitung der Höhe ist. Also h'(t) = −10t + 20. Dann setze ich t = 1 ein: h'(1) = −10·1 + 20 = 10 m/s.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Das Kind arbeitet an der Aufgabe.",
+   "kind_ist_frage": false,
+   "kind_ergebnis_richtig": false,
+   "diagnose": {
+    "stufe": 5,
+    "grund": "Beides richtig: fertig."
+   },
+   "tutor_text_spark": "Überlege, wie du die Änderungsrate an einem Punkt allgemein berechnest.",
+   "diagnose_spark": {
+    "stufe": 4,
+    "grund": "Das Kind hat die momentane Geschwindigkeit berechnet."
+   }
+  },
+  {
+   "nr": 4,
+   "art": "hilfe",
+   "stufe": 4,
+   "wiederholung": false,
+   "tutor_text": "Auch das stimmt: h'(t) = −10t + 20, also h'(1) = 10 m/s. Damit ist die Aufgabe gelöst – mittlere Geschwindigkeit 5 m/s, momentane 10 m/s. Zur Deutung: Warum ist die momentane Geschwindigkeit bei t = 1 größer als die mittlere über [1; 2]?",
+   "pruefung": {
+    "verstoesse": [
+     "Gleichung mit Ergebnis"
+    ],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "hinweis": "Pruefung nur protokolliert, Text nicht veraendert"
+   },
+   "rueckfrage": "Rechne das aus. Was kommt heraus?",
+   "tutor_verraet_loesung": true,
+   "kind_text": "h(1) = 15, h(2) = 20. Die Differenz ist 20 − 15 = 5. Die Zeitdifferenz ist 2 − 1 = 1. Also 5/1 = 5 m/s.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Das Kind berechnet die Geschwindigkeit korrekt.",
+   "kind_ist_frage": false,
+   "kind_ergebnis_richtig": false,
+   "diagnose": {
+    "stufe": 5,
+    "grund": "Fertig."
+   },
+   "tutor_text_spark": "Die mittlere Geschwindigkeit im Intervall [1; 2] berechnest du über die Differenz der Höhenwerte geteilt durch die Zeitdifferenz. Welche Werte musst du für die mittlere Geschwindigkeit verwenden?",
+   "diagnose_spark": {
+    "stufe": 5,
+    "grund": "mittlere Geschwindigkeit korrekt berechnet"
+   }
+  }
+ ],
+ "ereignisse": [
+  {
+   "nach_zug": 4,
+   "art": "loesungsabfrage",
+   "kind_text": "nein"
+  },
+  {
+   "nach_zug": 4,
+   "art": "ergaenzung_statt_versuch",
+   "kind_text": "Die mittlere Geschwindigkeit im Intervall  ist 5 m/s. Die momentane Geschwindigkeit zum Zeitpunkt t = 1 ist 10 m/s.",
+   "ergebnis_richtig": true
+  }
+ ],
+ "ergebnis": {
+  "status": "selbst_geloest_ohne_rueckmeldung",
+  "selbst_gerechnet": true,
+  "zug_selbst_gerechnet": 4,
+  "loesung_gezeigt": false,
+  "hoechste_stufe": 4,
+  "zuege": 4,
+  "kinderbeitraege": 5,
+  "fragen_des_kindes": 0,
+  "als_frage_gewertete_ergebnisse": 0,
+  "bestaetigung_nach_ergebnis": null,
+  "dauer_s": 62.0,
+  "spark_aufrufe": 21
+ },
+ "beendet": "2026-10-19T10:03:11",
+ "quelle_der_kinderzuege": "spark_kind"
+}

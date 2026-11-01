@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block titel %}Der Sprechcoach{% endblock %}
+
+{% block inhalt %}
+<article class="rechtstext">
+<h1>Der Sprechcoach</h1>
+<p class="lead">
+  Für Lehrpersonen: Was der Sprechcoach in einem Gespräch tut, warum er
+  <strong>anknüpft statt zu spiegeln</strong>, warum er nachfragt statt zu
+  korrigieren, warum jedes Gespräch eine Aufgabe hat und dieselbe Aufgabe
+  zweimal kommt, was gemessen wird, und worauf das beruht. Die Kurzfassung einer Recherche über die
+  Didaktik der mündlichen Gesprächsführung (Oktober 2026, 102 Quellen).
+</p>
+
+<h2>1. Ein Gesprächspartner, kein Prüfer</h2>
+<p>
+  Der Sprechcoach ist ein Gesprächspartner, der Ihre Schülerinnen und Schüler
+  zum Sprechen bringt, kein Prüfer. Er stellt Fragen, auf die er die Antwort
+  nicht kennt, und knüpft mit seiner nächsten Frage an das an, was das Kind
+  gerade gesagt hat, statt das Thema zu wechseln. Nach jeder Frage wartet er
+  einige Sekunden, weil Kinder in einer Fremdsprache Zeit brauchen und längere
+  Antworten geben, wenn niemand dazwischenredet. Er spricht selbst kurz,
+  langsam und mit Wörtern, die das Kind kennt, damit das Kind den größeren
+  Teil des Gesprächs bestreitet.
+</p>
+
+<h2>2. Nachfragen statt korrigieren</h2>
+<p>
+  Wenn etwas unklar oder ungenau ist, fragt er nach, wie es ein echter
+  Gesprächspartner täte („Wait, was that today or yesterday?“), und gibt dem
+  Kind die Gelegenheit, es noch einmal besser zu sagen. Fehler zählt er nicht
+  und bewertet sie nicht; er greift höchstens einen Punkt pro Antwort auf und
+  verwendet die richtige Form in seiner nächsten Frage, damit das Kind sie
+  hört und gleich selbst benutzen kann. Fehlt ein Wort, sagt er es kurz vor
+  und lässt das Gespräch weiterlaufen.
+</p>
+<p class="hervorgehoben">
+  Er lobt nicht pauschal, sondern reagiert auf den Inhalt, weil ständiges
+  „Super!“ Kinder nicht weiterbringt und sogar als Bewertung erlebt werden
+  kann. Zeigt ein Kind Unsicherheit, etwa durch sehr kurze Antworten oder
+  lange Pausen, wird der Coach einfacher und ruhiger und korrigiert vorerst
+  gar nicht.
+</p>
+
+<h2>3. Was er versteht und was nicht</h2>
+<p>
+  In einer Englischstunde tut der Coach, als verstünde er kein Deutsch. Spricht
+  ein Kind Deutsch, sagt er auf Englisch, dass er es leider nicht versteht –
+  die älteste Methode des Sprachunterrichts. Damit niemand feststeckt, gibt es
+  den stillen Knopf „Ich komme nicht weiter“: eine deutsche Erklärung, was der
+  Coach gerade wissen will, und ein Beispielsatz auf Englisch. Der Coach selbst
+  bleibt dabei englisch.
+</p>
+
+{% comment %}Abschnitte 4 bis 6 sind mit den Gespraechsaufgaben dazugekommen
+(Regeln 11, 12, 6 und 14 des Berichts). Die Aufgabenliste kommt aus
+tutoring/sprechaufgaben.py, nicht aus dieser Vorlage.{% endcomment %}
+<h2 id="aufgaben">4. Eine Aufgabe statt Plaudern</h2>
+<p>
+  Jedes Gespräch hat ein Ziel: etwas herausfinden, vereinbaren oder
+  entscheiden. Der Coach spielt eine Rolle – eine Tierärztin, einen
+  Austauschschüler, eine Lehrerin im Schulausschuss – und weiß Dinge, die das
+  Kind erfragen muss. Er verrät sie nicht von selbst. Danach tauschen die
+  beiden die Rollen, und der Coach fragt das Kind.
+</p>
+<p>
+  Das ist der am besten belegte Teil der ganzen Recherche. In der größten
+  Übersicht über Gesprächssysteme fürs Sprachenlernen wirken geführte
+  Gespräche mit Ziel stark (d = 0,97), aufgabenorientierte mittel (0,50),
+  freies Plaudern gar nicht nachweisbar (Bibauw et al. 2022). Aufgaben, bei
+  denen beide Seiten Informationen haben und am Ende zu einem gemeinsamen
+  Ergebnis kommen müssen, lösen mehr Nachfragen und Klärungen aus als ein
+  Meinungsaustausch (Pica et al. 1993). Und weil von zehnjährigen Kindern
+  nach vier Jahren Englisch zwar fast alle antworten, aber nur die Hälfte
+  Fragen stellen kann (Szpotowicz 2012), muss in der Aufgabe das Kind
+  fragen.
+</p>
+<p>Zur Wahl stehen derzeit:</p>
+<ul>
+  {% for a in sprechaufgaben %}
+    <li><strong>{{ a.titel }}</strong> ({{ a.niveaus|join:", " }},
+      {% if a.typ == "lang" %}Meinungsgespräch{% else %}Alltagsgespräch{% endif %},
+      {{ a.fuer }}): {{ a.ziel_deutsch }}</li>
+  {% endfor %}
+  <li><strong>Freies Gespräch zum Thema</strong>: wie bisher, ohne Ziel und
+    ohne Wiederholung – für Stunden, in denen Sie genau das wollen.</li>
+</ul>
+<p>
+  Die Aufgaben folgen den beiden Dialogformen der Bildungsstandards E8 (ein
+  kurzes Alltagsgespräch: Einkauf, Weg, Vereinbarung; ein längeres
+  Meinungsgespräch) und den Beschreibungen des Referenzrahmens für den
+  Informationsaustausch („can ask and answer simple questions about an
+  event – where and when it took place, who was there and what it was
+  like“). Ob das Ziel erreicht ist, entscheidet die Anwendung selbst und
+  nicht das Sprachmodell: Das Kind muss das Ergebnis aussprechen – den Tag,
+  den Ort, den Preis –, und das lässt sich zählen.
+</p>
+
+<h2 id="ablauf">5. Der Ablauf: planen, sprechen, noch einmal, zurückschauen</h2>
+<p>
+  Die Bedingungen, unter denen gesprochen wird, wirken stärker als das Thema
+  (Skehan 2016). Deshalb hat jede Aufgabe denselben Ablauf, und die
+  Anwendung steuert ihn, nicht das Sprachmodell:
+</p>
+<ol>
+  <li><strong>Planen.</strong> Eine Minute „think first“: Das Kind sieht sein
+    Ziel und drei bis fünf Wendungen, die helfen. Planung macht das Sprechen
+    flüssiger und reicher (Foster &amp; Skehan 1996; Johnson &amp; Abdi Tabari
+    2022).</li>
+  <li><strong>Gespräch.</strong> Das Kind fragt, der Coach antwortet nur auf
+    das, wonach gefragt wurde. Ist das Ziel erreicht, tauschen sie die
+    Rollen.</li>
+  <li><strong>Noch einmal.</strong> Dieselbe Aufgabe gleich danach, der Coach
+    in leicht anderer Rolle, das Geheimnis dasselbe. Beim zweiten Mal
+    sprechen Kinder flüssiger und genauer (Sun &amp; Révész 2021; Abdi Tabari
+    et al. 2025).</li>
+  <li><strong>Rückblick.</strong> Zwei bis drei Punkte: eine Wendung, die gut
+    war, und eine, die noch nicht saß, mit der richtigen Form – deutsch
+    erklärt, englisch gezeigt, ohne Note. Ausführliche Rückmeldung gehört ans
+    Ende, nicht in das Gespräch (Park et al. 2025). Dieselben Punkte sehen
+    Sie in der Sitzungsansicht.</li>
+</ol>
+<p>
+  In der Volksschule ist alles kürzer (höchstens sechs Beiträge je
+  Durchgang statt zehn), Ziel und Wendungen stehen groß da, und der Rückblick
+  zeigt nur Gelungenes und einen einzigen Punkt zum Weiterüben – ohne den
+  ursprünglichen Satz des Kindes daneben. Ein Kind darf jederzeit aufhören;
+  dann kommt gleich der Rückblick.
+</p>
+
+<h2 id="messung">6. Was Sie einstellen, und was Sie sehen</h2>
+<p>
+  Sie bestimmen Niveau, Aufgabe und Zeitfenster. Das Niveau (A1 bis B2) legt
+  fest, wie lang die Sätze des Coachs sein dürfen und wie er fragt: Auf A1
+  wiederholt er langsam und fragt mit zwei Möglichkeiten, auf A2 hält er das
+  Gespräch in Gang, auf B1 verlangt er Meinung und Begründung, auf B2
+  widerspricht er auch. Angeboten werden nur Aufgaben, die zum Niveau passen.
+</p>
+<p>
+  In der Sitzungsansicht steht je Kind eine ruhige Zahlenzeile, ohne Farbe
+  und ohne Urteil. Es sind die Maße, die die Forschung selbst verwendet:
+</p>
+<ul>
+  <li><strong>Wörter je Beitrag</strong> – echte Fragen verdoppeln die
+    Antwortlänge (Brock 1986).</li>
+  <li><strong>Anteil erweiterter Beiträge</strong> – mehr als ein Satz oder
+    mindestens {{ erweitert_ab }} Wörter; anknüpfende Gesprächsführung
+    verdreifacht sie (Alexander et al. 2017).</li>
+  <li><strong>Fragen des Kindes</strong> – die Fähigkeit, die bei Zehnjährigen
+    am meisten fehlt (Szpotowicz 2012).</li>
+  <li><strong>Sperren</strong> – wie oft der Coach „nicht verstanden“ hat,
+    weil Deutsch gesprochen wurde.</li>
+  <li><strong>Dauer</strong> und <strong>Ziel erreicht</strong>, für den
+    ersten und den zweiten Durchgang.</li>
+  <li><strong>Erster gegen zweiter Durchgang</strong> – Fortschritt zeigt sich
+    über Wiederholungen, nicht innerhalb eines Gesprächs (Skehan). Weniger
+    Wörter beim zweiten Mal können auch heißen: genauer.</li>
+</ul>
+<p>
+  In der Volksschule sehen Sie keine Zahlen je Kind, nur die Summe der
+  Klasse – keine Niveauzuordnung, keine Beurteilung (Lehrplan Volksschule;
+  BMBWF: keine mündlichen Prüfungen). Die Rückblickpunkte je Kind sehen Sie
+  trotzdem, denn sie sind keine Zahl.
+</p>
+
+<h2>7. Woran wir das festmachen</h2>
+<p>
+  Diese Dinge prüft die Anwendung selbst, nicht das Sprachmodell: ob die
+  Antwort des Coachs an den letzten Beitrag anknüpft, ob sie die richtige
+  Zahl Fragen stellt, ob sie spiegelt oder pauschal lobt, und in der Aufgabe,
+  ob der Coach sein Geheimnis zu früh verrät. Verstößt eine Antwort dagegen,
+  wird sie ein zweites Mal geholt. Auch wann das Ziel erreicht ist und wann
+  das Gespräch in die nächste Phase geht, entscheidet die Anwendung. Das ist
+  derselbe Grundsatz wie bei der Aufgabenhilfe: Ein Systemprompt ist eine
+  Bitte, keine Grenze.
+</p>
+<p>
+  Die Regeln stammen aus der Forschung zur Gesprächsführung im
+  Fremdsprachenunterricht: Anknüpfende Folgezüge verdreifachen erweiterte
+  Schülerbeiträge (Alexander et al. 2017); echte Fragen erzeugen mehr als
+  doppelt so lange Antworten wie Prüffragen (Brock 1986); Nachfragen, die den
+  zweiten Versuch einfordern, wirken stärker als beiläufige Korrektur, und bei
+  jüngeren Lernenden am stärksten (Lyster &amp; Saito 2010; Ammar &amp; Spada
+  2006); KI-Gesprächspartner wirken auf A1 und A2 am stärksten, wenn sie führen
+  und kurz bleiben (Bibauw et al. 2022). Der österreichische Lehrplan verlangt
+  dasselbe: Gelungene Kommunikation hat Vorrang vor fehlerfreiem Sprachgebrauch.
+</p>
+<p>
+  Was noch nicht belegt ist, sagen wir dazu: Für Kinder unter zehn Jahren mit
+  einem KI-Partner gibt es keine Studie. Ob der Coach bei ihnen wirkt, zeigt
+  erst das eigene Protokoll – Wörter je Beitrag, Anteil längerer Beiträge,
+  Fragen, Durchhaltedauer, erster gegen zweiter Durchgang. Das messen wir.
+  Noch nicht gemessen wird, wie oft ein Kind nach einer Nachfrage seinen Satz
+  verbessert (modifizierter Output); dafür müsste die Anwendung erkennen, auf
+  welchen Satz sich eine Nachfrage bezieht.
+</p>
+</article>
+{% endblock %}

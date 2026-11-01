@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block titel %}Fotos der Aufgabe prüfen lassen{% endblock %}
+
+{% block inhalt %}
+<article class="rechtstext">
+<h1>Fotos der Aufgabe prüfen lassen</h1>
+<p class="lead">
+  Für Lehrpersonen: Was passiert, wenn in der Qualitätssicherung die Option
+  <strong>Auch Fotos der Aufgabe prüfen lassen</strong> eingeschaltet ist, was
+  die Anwendung dabei ausschließt, und wo die Grenzen liegen.
+</p>
+
+<h2>1. Ausgangslage</h2>
+<p>
+  Kinder fotografieren Aufgaben aus dem Heft oder dem Buch. Ein solches Foto
+  zeigt selten nur die Aufgabe: Daneben stehen Handschrift, oft ein Name, manchmal
+  das Schullogo, und im Hintergrund kann ein Gesicht sein. Deshalb galt bisher ohne
+  Ausnahme: Kein Bild verlässt die PH. Die Qualitätssicherung bekam nur den Text,
+  den der Rechner der Hochschule vom Foto abgelesen hatte.
+</p>
+<p>
+  Bei Aufgaben mit Abbildungen, Brüchen, Hochzahlen oder Skizzen geht beim
+  Ablesen etwas verloren. Die externe KI löst solche Aufgaben deutlich besser,
+  wenn sie die gedruckte Aufgabe selbst sieht. Darum gibt es seit Oktober 2026
+  einen zweiten Schalter. Er ist in jeder neuen Stunde aus und lässt sich nur
+  zusammen mit der Qualitätssicherung einschalten.
+</p>
+
+<h2>2. Was hinausgeht, und was nie</h2>
+<p>
+  Hinaus geht nicht das Foto, sondern ein <strong>Ausschnitt</strong>: die gedruckte
+  Aufgabe, neu gespeichert, ohne Metadaten des Handys, ohne Handschrift, ohne Namen,
+  Gesichter oder Logos. Nie hinaus geht:
+</p>
+<ul>
+  <li>das Foto selbst, so wie das Kind es aufgenommen hat,</li>
+  <li>der Lösungsversuch des Kindes, weder als Bild noch als Text,</li>
+  <li>ein Bild, bei dem die Prüfung unten nicht eindeutig ausgefallen ist.</li>
+</ul>
+<p>
+  Fällt die Prüfung durch, bekommt die externe KI wie bisher nur den abgelesenen
+  Text. Die Kinder merken davon nichts; die Hilfen kommen in jedem Fall vom
+  Rechner der Hochschule.
+</p>
+
+<h2>3. Die Kette, Schritt für Schritt</h2>
+<ol>
+  <li>
+    <strong>Neu speichern.</strong> Das Foto wird auf dem Server der PH neu
+    kodiert. Dabei fallen alle Metadaten weg, auch Ortsangaben des Handys.
+  </li>
+  <li>
+    <strong>Verorten.</strong> Das Sprachmodell auf dem Rechner der Hochschule
+    benennt, wo auf dem Bild die gedruckte Aufgabe steht und wo Handschrift,
+    Namen, Gesichter oder Logos sind.
+  </li>
+  <li>
+    <strong>Schwärzen und zuschneiden.</strong> Alles Heikle wird schwarz
+    übermalt, danach wird auf die gedruckte Aufgabe zugeschnitten. Die Schwärzung
+    hat Vorrang: Hat ein Kind direkt unter die Aufgabe geschrieben, fehlt eher ein
+    Stück Aufgabe, als dass ein Stück Handschrift stehen bleibt.
+  </li>
+  <li>
+    <strong>Zweite Prüfung.</strong> Der fertige Ausschnitt wird noch einmal
+    angesehen: Das Modell wird gefragt, ob darauf noch Handschrift, ein Name, ein
+    Gesicht oder ein Logo zu sehen ist. Dann wird der Text des Ausschnitts
+    abgelesen und mit dem abgelesenen Text der Aufgabe verglichen: Ein erkannter
+    Name oder eine Zahl, die nicht zur Aufgabe gehört, sperrt den Weg. Ist die
+    Aufgabe im Ausschnitt nicht mehr lesbar, sperrt das ebenfalls.
+  </li>
+  <li>
+    <strong>Senden.</strong> Nur wenn alle Prüfungen bestanden sind, geht der
+    Ausschnitt zusammen mit dem bereinigten Aufgabentext an die externe KI.
+  </li>
+  <li>
+    <strong>Nachsehen.</strong> Im Verlauf der Stunde steht bei jeder Aufgabe das
+    Foto des Kindes neben dem Ausschnitt, der hinausging, dazu die Zahl der
+    Schwärzungen je Art. Wurde der Weg gesperrt, steht dort der Grund.
+  </li>
+</ol>
+
+<h2>4. Was die Prüfung kann und was nicht</h2>
+<p>
+  Die Prüfung erkennt, was ein Sprachmodell erkennt. Das ist viel, aber es ist
+  kein Beweis. Die Anwendung gleicht das auf zwei Arten aus: Sie prüft den fertigen
+  Ausschnitt ein zweites Mal, mit anderen Mitteln als beim ersten Durchgang, und
+  sie sperrt im Zweifel. Ein Ausschnitt, bei dem etwas unklar ist, bleibt im Haus.
+</p>
+<p>
+  Die Kette wurde zuerst mit künstlich erzeugten Testbildern gemessen, in denen
+  Namen, Handschrift, Gesichter und Logos an bekannten Stellen stehen. Die
+  Ergebnisse stehen im Projektverzeichnis unter <code>benchmark/bildkette/</code>.
+  Vor dem Einsatz mit Kindern wird mit echten Heftfotos nachgemessen.
+</p>
+<p>
+  Wir sagen <em>zugeschnitten und bereinigt</em> und nicht <em>anonymisiert</em>:
+  Das Bild wird auf die gedruckte Aufgabe verkleinert und von allem befreit, was
+  die Prüfung findet. Ob darauf noch etwas steht, das eine Person erkennbar macht,
+  ist eine Frage des Einzelfalls, und genau deshalb können Sie jeden Ausschnitt im
+  Verlauf nachsehen.
+</p>
+
+<h2>5. Was Sie als Lehrperson tun können</h2>
+<ul>
+  <li>Lassen Sie die Option aus, wenn die Klasse Aufgaben aus Heften mit Namen
+    und Handschrift fotografiert und die Aufgaben ohne Abbildungen auskommen.
+    Der abgelesene Text reicht dann.</li>
+  <li>Schalten Sie sie ein, wenn Aufgaben Skizzen, Diagramme, Brüche oder
+    Hochzahlen enthalten, bei denen das Ablesen Fehler macht.</li>
+  <li>Sehen Sie nach der Stunde im Verlauf nach, was hinausging. Sie sehen dort
+    dasselbe, was die externe KI gesehen hat.</li>
+  <li>Sagen Sie den Kindern, dass sie nur die Aufgabe fotografieren sollen. Das
+    hilft der Prüfung und ist ohnehin die Regel der Anwendung.</li>
+</ul>
+
+<p class="stand">Stand: Oktober 2026. Diese Seite beschreibt den technischen Ablauf
+und ersetzt keine datenschutzrechtliche Einordnung.</p>
+</article>
+{% endblock %}

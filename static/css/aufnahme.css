@@ -1,0 +1,203 @@
+/* Die sichtbare Seite der Spracheingabe: Pegel, Dauer, drei Knoepfe.
+   Eigene Datei, weil an app.css gleichzeitig gearbeitet wird.
+
+   Alle Farben kommen aus den Variablen in app.css. Damit stimmt der dunkle
+   Modus ohne eine zweite Pflegestelle, und die Tafel bleibt im selben Blau
+   wie der Rest der Seite. Zuerst fuer das Handy: Bei 360 px Breite stehen
+   die drei Knoepfe als gleich breite Drittel. */
+
+.aufnahme {
+  margin: 0 0 .6rem;
+  padding: .7rem .8rem .8rem;
+  border: 1px solid var(--rand);
+  border-radius: 12px;
+  background: var(--grund);
+}
+
+/* Die Tafel bekommt beim Aufdecken den Fokus, damit die Tastatur mitkommt.
+   Ein Rahmen um den ganzen Kasten waere dabei nur Laerm. */
+.aufnahme:focus { outline: none; }
+
+.aufnahme-kopf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .3rem .6rem;
+  margin: 0 0 .5rem;
+}
+
+.aufnahme-lage { font-weight: 600; font-size: .95rem; }
+
+.aufnahme-punkt {
+  display: inline-block;
+  width: .65rem;
+  height: .65rem;
+  margin-right: .4rem;
+  border-radius: 50%;
+  background: var(--warnung);
+  animation: aufnahme-pochen 1.6s ease-in-out infinite;
+}
+
+/* Eigene Keyframes und nicht die aus app.css: Die Datei gehoert einem
+   anderen Arbeitsschritt, ein Umbenennen dort soll hier nichts ausmachen.
+   Bei prefers-reduced-motion haelt app.css jede Animation ohnehin an. */
+@keyframes aufnahme-pochen {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .25; }
+}
+
+.aufnahme.pausiert .aufnahme-punkt {
+  animation: none;
+  background: var(--schrift-leise);
+}
+
+.aufnahme-uhr {
+  font-size: .9rem;
+  color: var(--schrift-leise);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.aufnahme-zeit { font-weight: 600; color: var(--schrift); }
+.aufnahme.warnt .aufnahme-zeit { color: var(--warnung); }
+
+/* --- Pegel ------------------------------------------------------------- */
+
+.aufnahme-pegel {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 46px;
+  padding: 4px;
+  border-radius: 8px;
+  background: var(--flaeche);
+}
+
+.aufnahme-balken {
+  flex: 1 1 0;
+  min-width: 3px;
+  height: 8%;
+  border-radius: 2px;
+  background: var(--akzent);
+  /* Der kurze Uebergang macht aus 20 Messungen je Sekunde eine ruhige
+     Bewegung, statt aus jeder Messung einen Sprung. */
+  transition: height 90ms linear;
+}
+
+/* Die ruhige Fassung liegt immer im Dokument und wird nur umgeschaltet:
+   Mit dem hidden-Attribut ginge das nicht, app.css setzt es hart durch. */
+.aufnahme-ruhe { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* app.css drueckt jede Animation auf .001ms herunter. Hier steht es
+     trotzdem ausdruecklich: Der Punkt soll nicht pochen, sondern stehen. */
+  .aufnahme-punkt { animation: none; }
+  .aufnahme-pegel { display: none; }
+  .aufnahme-ruhe {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin: 0;
+    min-height: 46px;
+    font-size: .85rem;
+    color: var(--schrift-leise);
+  }
+}
+
+.aufnahme-ruhe-bahn {
+  flex: 1 1 auto;
+  height: 14px;
+  border: 1px solid var(--rand);
+  border-radius: 999px;
+  background: var(--flaeche);
+  overflow: hidden;
+}
+
+.aufnahme-ruhe-fuellung {
+  display: block;
+  width: 3%;
+  height: 100%;
+  background: var(--akzent);
+}
+
+.aufnahme-ruhe-wert {
+  font-variant-numeric: tabular-nums;
+  min-width: 2.8rem;
+  text-align: right;
+}
+
+.aufnahme-hinweis {
+  margin: .45rem 0 0;
+  font-size: .85rem;
+  color: var(--schrift-leise);
+}
+
+.aufnahme.warnt .aufnahme-hinweis { color: var(--warnung); font-weight: 600; }
+
+/* --- Die drei Knoepfe --------------------------------------------------- */
+
+.aufnahme-knoepfe {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .5rem;
+  margin-top: .6rem;
+}
+
+/* Zeichen ueber Wort, nicht daneben: So bleibt jeder Knopf auch bei 360 px
+   Breite ein volles Drittel und ueber 44 px hoch. */
+.aufnahme-knopf {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .1rem;
+  min-height: 56px;
+  min-width: 44px;
+  padding: .45rem .3rem;
+  border: 1px solid var(--rand);
+  border-radius: 10px;
+  background: var(--flaeche);
+  color: var(--akzent);
+  font: inherit;
+  font-weight: 600;
+  font-size: .8rem;
+  line-height: 1.25;
+  cursor: pointer;
+}
+
+.aufnahme-knopf:hover:enabled { border-color: var(--akzent); }
+.aufnahme-knopf:disabled { opacity: .45; cursor: default; }
+.aufnahme-zeichen { width: 22px; height: 22px; flex: 0 0 auto; }
+
+.aufnahme-auf { color: var(--warnung); }
+.aufnahme-auf:hover:enabled { border-color: var(--warnung); }
+
+/* Waehrend die Aufnahme laeuft, ist dieser Knopf nicht bedienbar, aber er
+   ist der Zustand: blass ausgegraut waere hier die falsche Auskunft. */
+.aufnahme-auf.laeuft-gerade:disabled {
+  opacity: 1;
+  background: var(--warnung-leise);
+  border-color: var(--warnung);
+  color: var(--warnung);
+  cursor: default;
+}
+
+.aufnahme-stopp {
+  background: var(--akzent);
+  border-color: var(--akzent);
+  color: var(--grund);
+}
+
+@media (prefers-color-scheme: dark) {
+  .aufnahme-stopp { color: #10182a; }
+}
+
+.aufnahme-stopp:hover:enabled { background: var(--akzent-stark); border-color: var(--akzent-stark); }
+
+/* Auf sehr schmalen Geraeten zaehlt jede Zeile. */
+@media (max-width: 22rem) {
+  .aufnahme { padding: .6rem .6rem .7rem; }
+  .aufnahme-pegel { height: 38px; }
+  .aufnahme-knopf { font-size: .75rem; }
+}

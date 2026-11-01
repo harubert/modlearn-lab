@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block titel %}Anmeldung über das PH-Konto{% endblock %}
+
+{% block inhalt %}
+<h1>Anmeldung über das PH-Konto</h1>
+<p class="lead">Auf diesem Server ist die Anmeldung über das PH-Konto nicht eingerichtet.</p>
+{% comment %}Bewusst ohne Pfad und ohne Hinweis, was genau fehlt: Wer das
+einrichtet, weiss es aus der Betriebsdokumentation; wer es nicht weiss, soll
+es von dieser Seite nicht lernen.{% endcomment %}
+<p>
+  Auf einem Entwicklungsrechner ist das der Normalfall. Auf dem Lab-Server
+  fehlt dann die Einrichtung zwischen dem Proxy und der Anwendung; die
+  Serverbetreuung weiss Bescheid.
+</p>
+<p><a class="knopf" href="{% url 'anmelden' %}">Mit Benutzername und Kennwort anmelden</a></p>
+{% endblock %}

@@ -1,0 +1,479 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% comment %}Die oeffentliche Seite ueber das ganze Vorhaben.
+
+Fuer wen: Lehrpersonen, Kolleginnen und Kollegen an der PH, Erasmus-Partner,
+Schulleitungen. Nicht fuer Kinder: Die kommen ueber die Startseite mit dem
+Code, und die bleibt die Startseite. Diese Seite steht daneben, erreichbar
+ueber eine kleine Zeile unter dem Code-Feld und aus dem Fuss jeder Seite.
+
+Gestaltung: ein Bauplan. Ein Labor zeigt, wie es gebaut ist, und genau das
+ist die Aussage der Seite: Jede Grenze steht im Server, jede Zahl ist
+gemessen. Deshalb Linien statt Flaechen, Masslinien statt Kacheln, der Weg
+einer Anfrage als Schaltplan, Detailnummern statt Symbole. Keine Emoji,
+keine Verlaeufe, keine Schrift aus dem Netz: Bahnschrift (Windows) oder DIN
+(Apple) fuer Ueberschriften, eine Monospace fuer Beschriftungen, sonst die
+Schrift der Anwendung.
+
+Die Zeichnungen der Werkzeuge sind Inline-SVG, damit sie die Farben aus
+app.css nehmen (style="stroke:var(--akzent)"); im dunklen Modus wird der
+Bauplan zur Blaupause, ohne eine eigene Farbe. Die zwei Illustrationen
+(Klassenzimmer, Rechner) sind mit gpt-image-1 erzeugte Linienzeichnungen,
+als WebP mit Alphakanal in PH-Blau; projekt.css hellt sie im dunklen Modus auf.
+
+Reihenfolge: Was es ist, wie eine Stunde beginnt, die Serie, die Grundsaetze,
+wie es gebaut ist, die Messwerte, fuer wen, was noch kommt, die Musik-KI
+zum Ausprobieren (das einzige Skript der Seite), Impressum. Die
+fachlichen Erklaerungen (Stufen, Trainer, Sprechcoach) werden verlinkt,
+nicht wiederholt; hier steht je Werkzeug, was es tut, und was es nicht tut.
+
+Jede Zahl auf dieser Seite ist gemessen und steht so im Code oder im
+Briefing (CLAUDE.md, config/settings.py, plan/models.py). Ein Name steht nur
+im Impressum; test_projekt.py prueft das.{% endcomment %}
+
+{% block titel %}Über das Projekt{% endblock %}
+
+{% block kopf_extra %}
+  <link rel="stylesheet" href="{% static 'css/projekt.css' %}">
+{% endblock %}
+
+{% block inhalt %}
+<div class="projektseite">
+
+<header class="projekt-kopf">
+  <svg class="projekt-raster" aria-hidden="true" focusable="false"><defs><pattern id="raster-kopf" width="16" height="16" patternUnits="userSpaceOnUse"><path d="M16 0H0V16" fill="none" stroke-width=".6" style="stroke:var(--akzent)"></path></pattern></defs><rect width="100%" height="100%" fill="url(#raster-kopf)"></rect></svg>
+  <div class="projekt-kopf-text">
+    <p class="projekt-ueberzeile">ModLearn Technology Lab · Pädagogische Hochschule Vorarlberg</p>
+    <h1>AI LAB</h1>
+    <p class="projekt-lead">
+      KI-gestützte Lernwerkzeuge für Schulen, gebaut an der PH Vorarlberg.
+      Sie laufen auf einem eigenen Rechner der Hochschule, einem ASUS Ascent
+      GX10 aus der DGX-Spark-Reihe: Kein Kind redet mit einem Konzern. Das
+      Vorhaben ist Teil des Erasmus-Projekts „GenAI-Natives“.
+    </p>
+    <nav class="projekt-sprungleiste" aria-label="Abschnitte dieser Seite">
+      <a href="#serie">Die Serie</a>
+      <a href="#grundsaetze">Die Grundsätze</a>
+      <a href="#bau">Wie es gebaut ist</a>
+      <a href="#mitmachen">Mitmachen</a>
+      <a href="#ausprobieren">Ausprobieren</a>
+    </nav>
+  </div>
+  {% comment %}Der Film steht dort, wo vorher die Zeichnung stand, und laeuft im
+  Kreis: Er beginnt und endet mit dem Funken. Stumm, weil eine Seite, die beim
+  Laden Ton macht, beim Lesen stoert. Bei reduzierter Bewegung bleibt das
+  Standbild (die Zeichnung) stehen; das Skript unten startet sonst die
+  Wiedergabe.{% endcomment %}
+  <figure class="projekt-kopf-bild projekt-kopf-film">
+    <video class="projekt-film-video" id="projekt-film" muted loop playsinline
+           preload="metadata" width="1280" height="720"
+           poster="{% static 'video/ai_lab_film_poster.webp' %}"
+           aria-label="Film: Ein Funke zeichnet Stuhl, Bank und Klassenzimmer, und die Zeichnung wird zum gerenderten Raum.">
+      <source src="{% static 'video/ai_lab_film.mp4' %}" type="video/mp4">
+    </video>
+  </figure>
+</header>
+
+<script>
+  (function () {
+    var film = document.getElementById("projekt-film");
+    if (!film || !window.matchMedia) { return; }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { return; }
+    var p = film.play();
+    if (p && p.catch) { p.catch(function () {}); }
+  })();
+</script>
+
+{% comment %}Drei Schritte, weil eine Lehrperson zuerst wissen will, was in der
+Stunde passiert, bevor sie liest, wie es gebaut ist.{% endcomment %}
+<section class="projekt-abschnitt projekt-einstieg" aria-labelledby="einstieg-titel">
+  <h2 id="einstieg-titel" class="projekt-zwischentitel">So beginnt eine Stunde</h2>
+  <ol class="projekt-schritte">
+    <li><span class="projekt-nummer">01</span><strong>Fach wählen</strong>
+      Die Lehrperson wählt eines von vier Fächern und legt eine Sitzung an.</li>
+    <li><span class="projekt-nummer">02</span><strong>Code zeigen</strong>
+      Ein sechsstelliger Code steht an der Tafel, die Kinder tippen ihn ein.</li>
+    <li><span class="projekt-nummer">03</span><strong>Tier aussuchen</strong>
+      Kein Konto, kein Name: Jedes Kind sucht sich ein Tier aus und arbeitet.</li>
+  </ol>
+  <p class="projekt-vermerk">Mit dem Ende der Sitzung ist alles gelöscht.</p>
+</section>
+
+{% comment %}Die Serie: ein Detailblatt je Werkzeug, alle gleich gebaut.
+Nummer und Fach in der Kopfzeile, eine Linienzeichnung, Name, was es tut,
+die Grenze (was es nicht tut) und ein Weg zur Erklaerung, wo es eine gibt.
+Am Telefon eine Spalte, am Tablet zwei, am PC drei (projekt.css).{% endcomment %}
+<section class="projekt-abschnitt" id="serie" aria-labelledby="serie-titel">
+  <div class="projekt-marke">
+    <span class="projekt-kreis" aria-hidden="true">A</span>
+    <h2 id="serie-titel">Die Serie</h2>
+    <span class="projekt-marke-linie" aria-hidden="true"></span>
+    <span class="projekt-marke-zusatz">6 Werkzeuge · 1 Rechner</span>
+  </div>
+  <p class="projekt-text">
+    Sechs Werkzeuge auf einem Rechner. Zu jedem steht hier, was es tut, und
+    was es nicht tut.
+  </p>
+
+  <ul class="projekt-werkzeuge">
+    <li class="projekt-werkzeug">
+      <p class="projekt-werkzeug-kopf"><span class="projekt-mono">Detail 01</span><span class="projekt-fach">Mathematik</span></p>
+      <div class="projekt-zeichnung"><svg viewBox="0 0 240 140" class="projekt-svg" aria-hidden="true" focusable="false"><g><path d="M12 122 H228" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.9799999999999999" opacity=".6" style="stroke:var(--akzent)"></path><path d="M20 122 V104 H56 V86 H92 V68 H128 V50 H164 V32 H200 V122" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></path><text x="38" y="118" text-anchor="middle" font-size="9" style="fill:var(--schrift-leise)">1</text><text x="74" y="118" text-anchor="middle" font-size="9" style="fill:var(--schrift-leise)">2</text><text x="110" y="118" text-anchor="middle" font-size="9" style="fill:var(--schrift-leise)">3</text><text x="146" y="118" text-anchor="middle" font-size="9" style="fill:var(--schrift-leise)">4</text><text x="182" y="118" text-anchor="middle" font-size="9" style="fill:var(--schrift-leise)">5</text><path d="M10 59 H230" fill="none" stroke-width="1.4" stroke-dasharray="6 4" style="stroke:var(--projekt-grenze)"></path><text x="14" y="53" font-size="9" style="fill:var(--schrift-leise)">Obergrenze</text><circle cx="110" cy="62" r="4.5" stroke="none" style="fill:var(--projekt-grenze)"></circle><path d="M104 58 C92 42, 80 50, 76 74" fill="none" stroke-width="1.4" stroke-linecap="round" style="stroke:var(--projekt-grenze)"></path><polyline points="-7,-4 0,0 -7,4" transform="translate(76 74) rotate(100)" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--projekt-grenze)"></polyline></g></svg></div>
+      <div class="projekt-werkzeug-inhalt">
+        <h3>Aufgabenhilfe</h3>
+        <p class="projekt-tut"><span class="projekt-marker">Was sie tut</span> Die Kinder tippen, fotografieren oder sprechen eine Aufgabe und bekommen gestufte Hilfen nach Zech: fünf Stufen, die Lehrperson setzt die Obergrenze, und nach jedem Versuch schätzt die Anwendung, welche Stufe das Kind als Nächstes braucht, auch eine tiefere. Diagnose statt Leiter.</p>
+        <p class="projekt-nicht"><span class="projekt-marker">Was sie nicht tut</span> Sie verrät die Lösung nie vor der Zeit: Stufe 5 kommt nur innerhalb der Obergrenze, nach eigenen Versuchen und auf ausdrückliche Bitte.</p>
+        <a class="projekt-werkzeug-weg" href="{% url 'stufen' %}">Die fünf Stufen, fachlich erklärt</a>
+      </div>
+    </li>
+    <li class="projekt-werkzeug">
+      <p class="projekt-werkzeug-kopf"><span class="projekt-mono">Detail 02</span><span class="projekt-fach">Deutsch, Sachunterricht</span></p>
+      <div class="projekt-zeichnung"><svg viewBox="0 0 240 140" class="projekt-svg" aria-hidden="true" focusable="false"><g><path d="M24 64 h32 v32 h-32 z M24 64 l12 -12 h32 l-12 12 M68 52 v32 l-12 12" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></path><rect x="92" y="52" width="54" height="44" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></rect><polyline points="96,90 110,72 120,82 130,66 142,90" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></polyline><circle cx="104" cy="62" r="3.5" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></circle><text x="194" y="82" text-anchor="middle" font-size="20" style="fill:var(--akzent)">3 + 4</text><path d="M44 46 C58 26, 100 26, 114 44" fill="none" stroke-width="1.4" stroke-linecap="round" style="stroke:var(--projekt-grenze)"></path><polyline points="-7,-4 0,0 -7,4" transform="translate(114 44) rotate(52)" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--projekt-grenze)"></polyline><path d="M126 46 C142 26, 178 26, 190 56" fill="none" stroke-width="1.4" stroke-linecap="round" style="stroke:var(--projekt-grenze)"></path><polyline points="-7,-4 0,0 -7,4" transform="translate(190 56) rotate(68)" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--projekt-grenze)"></polyline><text x="46" y="120" text-anchor="middle" font-size="9" style="fill:var(--schrift-leise)">enaktiv</text><text x="119" y="120" text-anchor="middle" font-size="9" style="fill:var(--schrift-leise)">ikonisch</text><text x="194" y="120" text-anchor="middle" font-size="9" style="fill:var(--schrift-leise)">symbolisch</text></g></svg></div>
+      <div class="projekt-werkzeug-inhalt">
+        <h3>Ein Trainer für alles</h3>
+        <p class="projekt-tut"><span class="projekt-marker">Was er tut</span> Er erklärt ein Thema, das das Kind selbst nennt, in kleinen Schritten, stellt genau eine Frage je Zug und wechselt bei einem Fehler die Darstellung nach Bruner, statt dasselbe noch einmal mit mehr Worten zu sagen.</p>
+        <p class="projekt-nicht"><span class="projekt-marker">Was er nicht tut</span> Er hält nichts zurück und ist deshalb das falsche Werkzeug für eine Aufgabe, die das Kind selbst lösen soll; und er gibt keine Note.</p>
+        <a class="projekt-werkzeug-weg" href="{% url 'trainer_erklaerung' %}">Der Trainer, für Lehrpersonen erklärt</a>
+      </div>
+    </li>
+    <li class="projekt-werkzeug">
+      <p class="projekt-werkzeug-kopf"><span class="projekt-mono">Detail 03</span><span class="projekt-fach">Englisch</span></p>
+      <div class="projekt-zeichnung"><svg viewBox="0 0 240 140" class="projekt-svg" aria-hidden="true" focusable="false"><g><path d="M34 30 H116 Q130 30 130 44 V72 Q130 86 116 86 H58 L40 102 L44 86 H34 Q20 86 20 72 V44 Q20 30 34 30 Z" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></path><path d="M34.0 54.0 V62.0" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></path><path d="M42.4 50.0 V66.0" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></path><path d="M50.8 45.0 V71.0" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></path><path d="M59.2 51.0 V65.0" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></path><path d="M67.6 43.0 V73.0" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></path><path d="M76.0 48.0 V68.0" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></path><path d="M84.4 53.0 V63.0" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></path><path d="M92.8 46.0 V70.0" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></path><path d="M101.2 49.0 V67.0" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></path><path d="M109.6 54.0 V62.0" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></path><path d="M118.0 52.0 V64.0" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></path><path d="M134 62 H206 Q220 62 220 76 V96 Q220 110 206 110 H200 L204 126 L184 110 H134 Q120 110 120 96 V76 Q120 62 134 62 Z" stroke-width="1.4" stroke-linejoin="round" style="fill:var(--grund);stroke:var(--projekt-grenze)"></path><text x="170" y="96" text-anchor="middle" font-size="22" style="fill:var(--projekt-grenze)">?</text></g></svg></div>
+      <div class="projekt-werkzeug-inhalt">
+        <h3>Sprechcoach</h3>
+        <p class="projekt-tut"><span class="projekt-marker">Was er tut</span> Ein Gesprächspartner auf Englisch, der an das anknüpft, was das Kind gesagt hat, statt es zu spiegeln, und nachfragt, statt zu korrigieren; die Kinder sprechen, die Leertaste ist die Funktaste, die Antwort kommt gesprochen zurück.</p>
+        <p class="projekt-nicht"><span class="projekt-marker">Was er nicht tut</span> Er versteht kein Deutsch, jedenfalls tut er so, und er prüft nicht: Fehler werden nicht gezählt, nicht bewertet und nicht benotet.</p>
+        <a class="projekt-werkzeug-weg" href="{% url 'sprechcoach_erklaerung' %}">Der Sprechcoach, für Lehrpersonen erklärt</a>
+      </div>
+    </li>
+    <li class="projekt-werkzeug">
+      <p class="projekt-werkzeug-kopf"><span class="projekt-mono">Detail 04</span><span class="projekt-fach">In jedem Fach, auf Wunsch der Lehrperson</span></p>
+      <div class="projekt-zeichnung"><svg viewBox="0 0 240 140" class="projekt-svg" aria-hidden="true" focusable="false"><g><path d="M12 28 H60 L72 40 V108 H12 Z M60 28 V40 H72" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></path><path d="M22 50 H62" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.1199999999999999" style="stroke:var(--akzent)"></path><path d="M22 60 H62" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.1199999999999999" style="stroke:var(--akzent)"></path><path d="M22 70 H62" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.1199999999999999" style="stroke:var(--akzent)"></path><path d="M22 86 H48" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2399999999999998" style="stroke:var(--akzent)"></path><path d="M18 92 L54 80" fill="none" stroke-width="1.4" stroke-linecap="round" style="stroke:var(--projekt-grenze)"></path><path d="M92 24 V112 M100 24 V112" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></path><path d="M92 36 H100" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.9799999999999999" style="stroke:var(--akzent)"></path><path d="M92 52 H100" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.9799999999999999" style="stroke:var(--akzent)"></path><path d="M92 68 H100" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.9799999999999999" style="stroke:var(--akzent)"></path><path d="M92 84 H100" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.9799999999999999" style="stroke:var(--akzent)"></path><path d="M92 100 H100" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.9799999999999999" style="stroke:var(--akzent)"></path><path d="M76 68 H86" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></path><polyline points="-7,-4 0,0 -7,4" transform="translate(86 68) rotate(0)" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></polyline><path d="M124 28 H164 L176 40 V108 H124 Z M164 28 V40 H176" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></path><path d="M134 50 H166" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.1199999999999999" style="stroke:var(--akzent)"></path><path d="M134 60 H166" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.1199999999999999" style="stroke:var(--akzent)"></path><path d="M134 70 H166" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.1199999999999999" style="stroke:var(--akzent)"></path><path d="M134 80 H166" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.1199999999999999" style="stroke:var(--akzent)"></path><path d="M106 68 H118" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></path><polyline points="-7,-4 0,0 -7,4" transform="translate(118 68) rotate(0)" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></polyline><path d="M182 68 H198" fill="none" stroke-width="1.4" stroke-dasharray="3 3" style="stroke:var(--projekt-grenze)"></path><polyline points="-7,-4 0,0 -7,4" transform="translate(198 68) rotate(0)" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--projekt-grenze)"></polyline><circle cx="216" cy="68" r="13" fill="none" stroke-width="1.4" style="stroke:var(--projekt-grenze)"></circle><text x="96" y="128" text-anchor="middle" font-size="9" style="fill:var(--schrift-leise)">Spark</text><text x="216" y="100" text-anchor="middle" font-size="9" style="fill:var(--schrift-leise)">gpt-6.1</text></g></svg></div>
+      <div class="projekt-werkzeug-inhalt">
+        <h3>Qualitätssicherung</h3>
+        <p class="projekt-tut"><span class="projekt-marker">Was sie tut</span> Auf Wunsch der Lehrperson löst ein Frontier-Modell die Aufgabe mit, aber erst, nachdem der Spark sie ohne jede Person neu formuliert hat; die Lösung bleibt in der Anwendung und stützt die Hilfen, das Kind bekommt sie nicht zu sehen.</p>
+        <p class="projekt-nicht"><span class="projekt-marker">Was sie nicht tut</span> Sie schickt nie ein Foto und nie einen Namen hinaus, und sie läuft nicht unbegrenzt: Ein Budgetwächter zählt Aufrufe und Euro und sperrt den Weg, sobald die Grenze erreicht ist.</p>
+      </div>
+    </li>
+    <li class="projekt-werkzeug">
+      <p class="projekt-werkzeug-kopf"><span class="projekt-mono">Detail 05</span><span class="projekt-fach">Für Lehrpersonen</span></p>
+      <div class="projekt-zeichnung"><svg viewBox="0 0 240 140" class="projekt-svg" aria-hidden="true" focusable="false"><g><defs><clipPath id="klp4"><rect x="18" y="44" width="66" height="34"></rect></clipPath></defs><rect x="18" y="44" width="15" height="34" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></rect><rect x="35" y="44" width="15" height="34" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></rect><rect x="52" y="44" width="15" height="34" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></rect><rect x="69" y="44" width="15" height="34" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></rect><rect x="86" y="44" width="15" height="34" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></rect><rect x="103" y="44" width="15" height="34" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></rect><rect x="120" y="44" width="15" height="34" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></rect><rect x="137" y="44" width="15" height="34" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></rect><rect x="154" y="44" width="15" height="34" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></rect><rect x="171" y="44" width="15" height="34" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></rect><rect x="188" y="44" width="15" height="34" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></rect><rect x="205" y="44" width="15" height="34" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 2.5" style="stroke:var(--akzent)"></rect><g clip-path="url(#klp4)"><path d="M-20 80 L20 40" stroke-width="1.1199999999999999" style="stroke:var(--projekt-grenze)"></path><path d="M-14 80 L26 40" stroke-width="1.1199999999999999" style="stroke:var(--projekt-grenze)"></path><path d="M-8 80 L32 40" stroke-width="1.1199999999999999" style="stroke:var(--projekt-grenze)"></path><path d="M-2 80 L38 40" stroke-width="1.1199999999999999" style="stroke:var(--projekt-grenze)"></path><path d="M4 80 L44 40" stroke-width="1.1199999999999999" style="stroke:var(--projekt-grenze)"></path><path d="M10 80 L50 40" stroke-width="1.1199999999999999" style="stroke:var(--projekt-grenze)"></path><path d="M16 80 L56 40" stroke-width="1.1199999999999999" style="stroke:var(--projekt-grenze)"></path><path d="M22 80 L62 40" stroke-width="1.1199999999999999" style="stroke:var(--projekt-grenze)"></path><path d="M28 80 L68 40" stroke-width="1.1199999999999999" style="stroke:var(--projekt-grenze)"></path><path d="M34 80 L74 40" stroke-width="1.1199999999999999" style="stroke:var(--projekt-grenze)"></path><path d="M40 80 L80 40" stroke-width="1.1199999999999999" style="stroke:var(--projekt-grenze)"></path><path d="M46 80 L86 40" stroke-width="1.1199999999999999" style="stroke:var(--projekt-grenze)"></path><path d="M52 80 L92 40" stroke-width="1.1199999999999999" style="stroke:var(--projekt-grenze)"></path><path d="M58 80 L98 40" stroke-width="1.1199999999999999" style="stroke:var(--projekt-grenze)"></path><path d="M64 80 L104 40" stroke-width="1.1199999999999999" style="stroke:var(--projekt-grenze)"></path><path d="M70 80 L110 40" stroke-width="1.1199999999999999" style="stroke:var(--projekt-grenze)"></path><path d="M76 80 L116 40" stroke-width="1.1199999999999999" style="stroke:var(--projekt-grenze)"></path><path d="M82 80 L122 40" stroke-width="1.1199999999999999" style="stroke:var(--projekt-grenze)"></path><path d="M88 80 L128 40" stroke-width="1.1199999999999999" style="stroke:var(--projekt-grenze)"></path></g><path d="M18 30 H84 M18 25 V35 M84 25 V35" fill="none" stroke-width="1.1199999999999999" style="stroke:var(--projekt-grenze)"></path><text x="51" y="22" text-anchor="middle" font-size="9" style="fill:var(--schrift-leise)">eine Klasse</text><path d="M18 96 H222" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.9799999999999999" style="stroke:var(--akzent)"></path><path d="M18 92 V100" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.9799999999999999" style="stroke:var(--akzent)"></path><text x="18" y="114" text-anchor="start" font-size="9" style="fill:var(--schrift-leise)">8:00</text><path d="M86 92 V100" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.9799999999999999" style="stroke:var(--akzent)"></path><text x="86" y="114" text-anchor="middle" font-size="9" style="fill:var(--schrift-leise)">9:00</text><path d="M154 92 V100" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.9799999999999999" style="stroke:var(--akzent)"></path><text x="154" y="114" text-anchor="middle" font-size="9" style="fill:var(--schrift-leise)">10:00</text><path d="M222 92 V100" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.9799999999999999" style="stroke:var(--akzent)"></path><text x="222" y="114" text-anchor="end" font-size="9" style="fill:var(--schrift-leise)">11:00</text></g></svg></div>
+      <div class="projekt-werkzeug-inhalt">
+        <h3>Platz buchen</h3>
+        <p class="projekt-tut"><span class="projekt-marker">Was es tut</span> Lehrpersonen reservieren Plätze auf dem Rechner, nicht den Rechner, und sagen dazu, wofür: Unterricht mit einer Klasse, Sichere Verwaltung, Bild, Video und Musik, eigene Unterlagen befragen, ein Modell schulen.</p>
+        <p class="projekt-nicht"><span class="projekt-marker">Was es nicht tut</span> Eine Buchung ist eine Zusage, keine Sperre: Wer nicht gebucht hat, darf arbeiten, solange Plätze frei sind; gemessen sind 25 Kinder im Schnitt gut ein Platz.</p>
+        <a class="projekt-werkzeug-weg" href="{% url 'plan:tag' %}">Zum Buchen, mit Anmeldung</a>
+      </div>
+    </li>
+    <li class="projekt-werkzeug">
+      <p class="projekt-werkzeug-kopf"><span class="projekt-mono">Detail 06</span><span class="projekt-fach">Für Lehrpersonen und Studierende der PH</span></p>
+      <div class="projekt-zeichnung"><svg viewBox="0 0 240 140" class="projekt-svg" aria-hidden="true" focusable="false"><g><path d="M100 122 H220" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.9799999999999999" style="stroke:var(--akzent)"></path><rect x="136" y="22" width="60" height="100" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></rect><path d="M136 22 L166 34 V114 L136 122 Z" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></path><circle cx="160" cy="76" r="2.5" stroke="none" style="fill:var(--akzent)"></circle><rect x="20" y="54" width="52" height="34" rx="4" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></rect><circle cx="34" cy="68" r="5" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></circle><path d="M46 64 H64 M46 72 H60 M28 80 H64" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.1199999999999999" style="stroke:var(--akzent)"></path><path d="M80 71 H124" fill="none" stroke-width="1.4" style="stroke:var(--projekt-grenze)"></path><polyline points="-7,-4 0,0 -7,4" transform="translate(124 71) rotate(0)" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--projekt-grenze)"></polyline><text x="46" y="104" text-anchor="middle" font-size="9" style="fill:var(--schrift-leise)">PH-Konto</text></g></svg></div>
+      <div class="projekt-werkzeug-inhalt">
+        <h3>Anmeldung mit dem PH-Konto</h3>
+        <p class="projekt-tut"><span class="projekt-marker">Was sie tut</span> Wer ein Konto der PH Vorarlberg hat, meldet sich damit an, über die zentrale Anmeldung der Hochschule; die Anwendung sieht nie ein Kennwort.</p>
+        <p class="projekt-nicht"><span class="projekt-marker">Was sie nicht tut</span> Kinder melden sich nicht an: Sie haben kein Konto und keinen Namen, nur einen Sitzungscode und ein Tier.</p>
+        <a class="projekt-werkzeug-weg" href="{% url 'anmelden' %}">Zur Anmeldung</a>
+      </div>
+    </li>
+  </ul>
+</section>
+
+{% comment %}Vier Saetze, jeder mit dem, was er im Bau bedeutet. Eine
+Definitionsliste, weil sie das sind.{% endcomment %}
+<section class="projekt-abschnitt" id="grundsaetze" aria-labelledby="grundsaetze-titel">
+  <div class="projekt-marke">
+    <span class="projekt-kreis" aria-hidden="true">B</span>
+    <h2 id="grundsaetze-titel">Die Grundsätze</h2>
+    <span class="projekt-marke-linie" aria-hidden="true"></span>
+    <span class="projekt-marke-zusatz">im Server erzwungen</span>
+  </div>
+  <dl class="projekt-grundsaetze">
+    <div class="projekt-grundsatz">
+      <span class="projekt-nummer" aria-hidden="true">G1</span>
+      <dt>„Ein Systemprompt ist eine Bitte, keine Grenze.“</dt>
+      <dd>
+        Jede Zusage auf dieser Seite wird im Server geprüft und erzwungen,
+        nicht im Prompt erbeten: welche Hilfestufe erlaubt ist, ob eine
+        Antwort genau eine Frage stellt, ob ein Name das Haus verlässt.
+      </dd>
+    </div>
+    <div class="projekt-grundsatz">
+      <span class="projekt-nummer" aria-hidden="true">G2</span>
+      <dt>„Alles stirbt mit der Sitzung.“</dt>
+      <dd>
+        Fotos, Aufgaben und Verläufe gibt es nur, solange die Sitzung läuft;
+        Teilnehmende haben kein Konto und keinen Namen, nur ein Tier.
+      </dd>
+    </div>
+    <div class="projekt-grundsatz">
+      <span class="projekt-nummer" aria-hidden="true">G3</span>
+      <dt>„Die Verbrennung passiert im Spark.“</dt>
+      <dd>
+        Kein Kind redet mit einem Konzern: Was Kinder tippen, fotografieren
+        oder sprechen, verarbeitet der Rechner der PH; die Qualitätssicherung
+        sieht nur Aufgaben, die der Spark vorher ohne jede Person neu
+        formuliert hat.
+      </dd>
+    </div>
+    <div class="projekt-grundsatz">
+      <span class="projekt-nummer" aria-hidden="true">G4</span>
+      <dt>„Eine Zahl, die niemand nachprüft, ist geraten.“</dt>
+      <dd>
+        Der Rückblick im Buchungswerkzeug stellt Tag für Tag nebeneinander,
+        was gebucht war und was gemessen wurde; die Kapazitätszahl wird
+        korrigiert, sobald er etwas anderes sagt.
+      </dd>
+    </div>
+  </dl>
+</section>
+
+{% comment %}Der Weg einer Anfrage zweimal: als Liste, die jeder Bildschirm-
+leser vorliest und die am Telefon als senkrechter Plan steht, und ab 56rem
+als Schaltplan (SVG, aria-hidden), weil dort die Grenze des PH-Netzes und
+die Abzweigung zu gpt-5 sichtbar werden. Die Liste ist dort nur noch fuer
+Vorleseprogramme da.{% endcomment %}
+<section class="projekt-abschnitt" id="bau" aria-labelledby="bau-titel">
+  <div class="projekt-marke">
+    <span class="projekt-kreis" aria-hidden="true">C</span>
+    <h2 id="bau-titel">Wie es gebaut ist</h2>
+    <span class="projekt-marke-linie" aria-hidden="true"></span>
+    <span class="projekt-marke-zusatz">Schaltplan</span>
+  </div>
+  <div class="projekt-bau">
+    <div class="projekt-bau-text">
+      <p class="projekt-text">
+        Die Anwendung läuft auf einem Server der PH unter
+        lab.ph-vorarlberg.at, der Rechner mit den Modellen davon getrennt.
+        Dazwischen liegt Tailscale, ein privates Netz: Der Spark hat keinen
+        offenen Port im Internet, und nur der Server der PH erreicht ihn.
+      </p>
+      <p class="projekt-text">
+        Auf dem Spark laufen Qwen3.6 35B für Text und Bild und Whisper für
+        die Spracherkennung, beide lokal. gpt-6.1 kommt nur in der
+        Qualitätssicherung zum Zug und bekommt nur umformulierte Aufgaben.
+      </p>
+      <p class="projekt-hinweis">
+        <span class="projekt-marker">Hinweis</span>
+        Das AI LAB ist ein Pilotprojekt, das bei entsprechender
+        Hostingumgebung auch vollständig DSGVO-konform betrieben werden kann.
+      </p>
+    </div>
+    <figure class="projekt-bau-bild">
+      <img class="projekt-bild" src="{% static 'img/projekt/rechner.webp' %}" width="640" height="920" loading="lazy"
+           alt="Explosionszeichnung eines kleinen Rechners: Deckel, Kühlkörper, Platine mit Chip und Gehäuseboden, übereinander ausgerichtet.">
+    </figure>
+  </div>
+
+  <ol class="projekt-weg" aria-label="Der Weg einer Anfrage">
+    <li><strong>Handy oder Browser</strong><span>verschlüsselt zum Server der PH</span></li>
+    <li><strong>lab.ph-vorarlberg.at</strong><span>die Anwendung, Server der PH</span></li>
+    <li><strong>Tailscale</strong><span>privates Netz, kein offener Port, 103 ms</span></li>
+    <li><strong>Spark</strong><span>Qwen3.6 35B und Whisper, lokal</span></li>
+    <li class="projekt-weg-ausnahme"><strong>gpt-6.1</strong><span>nur Qualitätssicherung, nur umformuliert</span></li>
+  </ol>
+  <div class="projekt-plan" aria-hidden="true">
+    <svg class="projekt-raster" aria-hidden="true" focusable="false"><defs><pattern id="raster-plan" width="16" height="16" patternUnits="userSpaceOnUse"><path d="M16 0H0V16" fill="none" stroke-width=".6" style="stroke:var(--akzent)"></path></pattern></defs><rect width="100%" height="100%" fill="url(#raster-plan)"></rect></svg>
+    <svg viewBox="0 0 1100 300" class="projekt-svg" aria-hidden="true" focusable="false"><g><rect x="250" y="26" width="770" height="150" rx="0" fill="none" stroke-width="1.1199999999999999" stroke-dasharray="8 6" opacity=".7" style="stroke:var(--akzent)"></rect><text x="262" y="20" class="projekt-mono" font-size="11" letter-spacing="1" style="fill:var(--schrift-leise)">Netz der PH Vorarlberg</text><rect x="30" y="66" width="190" height="70" rx="0" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="fill:var(--grund);stroke:var(--akzent)"></rect><text x="125" y="98" text-anchor="middle" font-size="16" font-weight="600" style="fill:var(--akzent)">Handy oder Browser</text><text x="125" y="120" text-anchor="middle" class="projekt-mono" font-size="11" style="fill:var(--schrift-leise)">verschlüsselt</text><rect x="300" y="66" width="190" height="70" rx="0" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="fill:var(--grund);stroke:var(--akzent)"></rect><text x="395" y="98" text-anchor="middle" font-size="16" font-weight="600" style="fill:var(--akzent)">lab.ph-vorarlberg.at</text><text x="395" y="120" text-anchor="middle" class="projekt-mono" font-size="11" style="fill:var(--schrift-leise)">die Anwendung</text><rect x="790" y="66" width="190" height="70" rx="0" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="fill:var(--grund);stroke:var(--akzent)"></rect><text x="885" y="98" text-anchor="middle" font-size="16" font-weight="600" style="fill:var(--akzent)">Spark</text><text x="885" y="120" text-anchor="middle" class="projekt-mono" font-size="11" style="fill:var(--schrift-leise)">Qwen3.6 35B, Whisper</text><path d="M220 101 H292" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></path><polyline points="-7,-4 0,0 -7,4" transform="translate(292 101) rotate(0)" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></polyline><path d="M490 93 H782 M490 109 H782" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></path><path d="M560 101 H712" fill="none" stroke-width="1.4" stroke-dasharray="2 5" stroke-linecap="round" style="stroke:var(--projekt-grenze)"></path><polyline points="-7,-4 0,0 -7,4" transform="translate(782 101) rotate(0)" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--akzent)"></polyline><text x="636" y="80" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--akzent)">Tailscale</text><text x="636" y="132" text-anchor="middle" class="projekt-mono" font-size="11" style="fill:var(--schrift-leise)">privates Netz, kein offener Port</text><path d="M885 136 V214" fill="none" stroke-width="1.4" stroke-dasharray="6 5" style="stroke:var(--projekt-grenze)"></path><path d="M868 186 H902" fill="none" stroke-width="2.2399999999999998" style="stroke:var(--projekt-grenze)"></path><text x="912" y="190" class="projekt-mono" font-size="11" style="fill:var(--projekt-grenze)">nur umformuliert</text><polyline points="-7,-4 0,0 -7,4" transform="translate(885 214) rotate(90)" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--projekt-grenze)"></polyline><rect x="810" y="222" width="150" height="56" rx="0" fill-opacity="0" stroke-width="1.4" stroke-dasharray="6 5" style="fill:var(--grund);stroke:var(--projekt-grenze)"></rect><text x="885" y="248" text-anchor="middle" font-size="15" font-weight="600" style="fill:var(--projekt-grenze)">gpt-6.1</text><text x="885" y="267" text-anchor="middle" class="projekt-mono" font-size="10" style="fill:var(--projekt-grenze)">nur Qualitätssicherung</text><path d="M490 240 H782 M490 232 V248 M782 232 V248" fill="none" stroke-width="0.9799999999999999" style="stroke:var(--schrift-leise)"></path><text x="636" y="232" text-anchor="middle" class="projekt-mono" font-size="12" style="fill:var(--schrift-leise)">103 ms</text></g></svg>
+  </div>
+
+  {% comment %}Messwerte als Masslinien: Jede Zahl steht ueber einer Strecke
+auf einer genannten Skala. Die Skala steht dabei, damit niemand eine Laenge
+fuer eine Aussage haelt, die sie nicht ist.{% endcomment %}
+  <div class="projekt-marke projekt-marke-klein">
+    <span class="projekt-kreis" aria-hidden="true">D</span>
+    <h3 class="projekt-zwischentitel">Gemessen, nicht geschätzt</h3>
+    <span class="projekt-marke-linie" aria-hidden="true"></span>
+  </div>
+  <dl class="projekt-messwerte">
+    <div class="projekt-messwert">
+      <dt>Textaufgaben richtig gestuft<span class="projekt-skala">Skala 0 bis 80 Aufgaben</span></dt>
+      <dd><span class="projekt-strecke" style="--anteil: 100%"><span class="projekt-mass"><span class="projekt-wert">80 von 80</span></span></span></dd>
+    </div>
+    <div class="projekt-messwert">
+      <dt>langsamste Antwort bei 50 gleichzeitigen Anfragen, kein Ausfall<span class="projekt-skala">Skala 0 bis 10 s</span></dt>
+      <dd><span class="projekt-strecke" style="--anteil: 64%"><span class="projekt-mass"><span class="projekt-wert">6,4 s</span></span></span></dd>
+    </div>
+    <div class="projekt-messwert">
+      <dt>vom Server der PH zum Spark<span class="projekt-skala">Skala 0 bis 1 s</span></dt>
+      <dd><span class="projekt-strecke" style="--anteil: 10.3%"><span class="projekt-mass"><span class="projekt-wert">103 ms</span></span></span></dd>
+    </div>
+    <div class="projekt-messwert">
+      <dt>höchste echte Gleichzeitigkeit im Betrieb, über zehn Tage und 344 Anfragen<span class="projekt-skala">Skala 0 bis 10 Anfragen zugleich</span></dt>
+      <dd><span class="projekt-strecke" style="--anteil: 30%"><span class="projekt-mass"><span class="projekt-wert">3</span></span></span></dd>
+    </div>
+    <div class="projekt-messwert">
+      <dt>je Aufgabe in der Qualitätssicherung<span class="projekt-skala">Skala 0 bis 1 Cent</span></dt>
+      <dd><span class="projekt-strecke" style="--anteil: 22%"><span class="projekt-mass"><span class="projekt-wert">0,22 Cent</span></span></span></dd>
+    </div>
+  </dl>
+</section>
+
+<section class="projekt-abschnitt" id="mitmachen" aria-labelledby="mitmachen-titel">
+  <div class="projekt-marke">
+    <span class="projekt-kreis" aria-hidden="true">E</span>
+    <h2 id="mitmachen-titel">Für wen, und wie mitmachen</h2>
+    <span class="projekt-marke-linie" aria-hidden="true"></span>
+  </div>
+  <p class="projekt-text">
+    Das AI LAB ist für Lehrpersonen der PH Vorarlberg und ihrer
+    Partnerschulen gedacht, von der Volksschule bis zur Sekundarstufe. Wer
+    ein PH-Konto hat, meldet sich damit an und legt eine Sitzung an; die
+    Kinder brauchen nur den Code. Lehrpersonen ohne PH-Konto bekommen ihren
+    Zugang über das ModLearn Technology Lab.
+  </p>
+  <p class="projekt-text">
+    Erasmus-Partner, Schulleitungen und Kolleginnen und Kollegen, die das
+    Vorhaben kennenlernen oder erproben wollen, erreichen das ModLearn
+    Technology Lab über die PH Vorarlberg.
+  </p>
+  <p class="projekt-wege">
+    <a class="knopf" href="{% url 'anmelden' %}">Anmelden</a>
+    <a href="{% url 'datenschutz' %}">Datenschutzerklärung</a>
+  </p>
+</section>
+
+{% comment %}Was hier steht, ist in Arbeit und wird so genannt; eine Seite,
+die Geplantes wie Fertiges beschreibt, verspricht etwas, das die Anwendung
+nicht haelt.{% endcomment %}
+<section class="projekt-abschnitt" aria-labelledby="kommt-titel">
+  <div class="projekt-marke">
+    <span class="projekt-kreis" aria-hidden="true">F</span>
+    <h2 id="kommt-titel">Was noch kommt</h2>
+    <span class="projekt-marke-linie" aria-hidden="true"></span>
+  </div>
+  <ul class="projekt-kommt">
+    <li>
+      <span class="projekt-chip">in Arbeit</span>
+      <strong>Musikstunde.</strong> Ein Fach wie Mathematik: Die Klasse
+      schreibt einen Liedtext, der Spark macht daraus ein Lied. Der Dienst am
+      Spark steht, ausprobieren lässt er sich ganz unten auf dieser Seite;
+      die Oberfläche für die Klasse fehlt noch.
+    </li>
+    <li>
+      <span class="projekt-chip">in Arbeit</span>
+      <strong>Ressourcen buchen.</strong> Das Buchungswerkzeug soll auch die
+      Geräte des Labs kennen, den 3D-Drucker zuerst; Schritt für Schritt.
+    </li>
+    <li>
+      <span class="projekt-chip">in Arbeit</span>
+      <strong>Fehlerzusammenfassung im Sprechcoach.</strong> Am Ende eines
+      Gesprächs sieht die Lehrperson, welche Fehler sich wiederholt haben,
+      statt jedes Wort zu lesen.
+    </li>
+    <li>
+      <span class="projekt-chip">in Arbeit</span>
+      <strong>Eine Stimme vom Spark.</strong> Die Sprachausgabe des
+      Sprechcoachs kommt derzeit aus dem Betriebssystem des Geräts; eine
+      eigene Stimme auf dem Spark ist geplant.
+    </li>
+  </ul>
+</section>
+
+{% comment %}Die Musik-KI zum Ausprobieren, ohne Anmeldung, zum Teilen ueber
+/projekt/#ausprobieren. Ein weiteres Detailblatt: Kopfzeile, Zeichnung,
+vier nummerierte Felder, die Dauer als Masslinie.
+
+Die Seite fragt den Musikdienst beim Laden nicht. Steht schon ohne Netz
+fest, dass nichts geht (Geheimnis fehlt, Dienst zuletzt stumm), steht hier
+gleich der Satz. Sonst holt musik_oeffentlich.js Stile und Marken und
+zeigt erst dann das Formular; bis dahin bleibt es verborgen, damit niemand
+ein Formular ohne Stile abschickt. Jede Grenze (Dauer, Textlaenge, Woerter,
+Anzahl, Schlange) prueft der Server, nicht das Skript.{% endcomment %}
+<section class="projekt-abschnitt projekt-ausprobieren" id="ausprobieren" aria-labelledby="ausprobieren-titel">
+  <div class="projekt-marke">
+    <span class="projekt-kreis" aria-hidden="true">G</span>
+    <h2 id="ausprobieren-titel">Ausprobieren: Ein Lied in einer Minute</h2>
+    <span class="projekt-marke-linie" aria-hidden="true"></span>
+    <span class="projekt-marke-zusatz">ohne Anmeldung</span>
+  </div>
+  <p class="projekt-text">
+    Einen Stil wählen, ein paar Zeilen schreiben, abschicken: Der Spark macht
+    daraus mit ACE-Step 1.5 ein Lied von 30 oder 60 Sekunden. Er rechnet ein
+    Lied nach dem anderen; stehen schon andere an, steht hier, an welcher
+    Stelle das eigene wartet und wie lange es noch dauert.
+  </p>
+
+  <div class="projekt-blatt">
+    <p class="projekt-werkzeug-kopf"><span class="projekt-mono">Detail 07</span><span class="projekt-fach">Musik-KI am Spark, für alle</span></p>
+    <div class="projekt-blatt-inhalt">
+      <div class="projekt-zeichnung projekt-musik-zeichnung"><svg viewBox="0 0 240 120" class="projekt-svg" aria-hidden="true" focusable="false"><g fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 30 H226 M14 40 H226 M14 50 H226 M14 60 H226 M14 70 H226" stroke-width=".9" opacity=".55" style="stroke:var(--akzent)"></path><path d="M14 50 C24 26, 32 74, 42 50 S60 30, 70 50 S86 66, 96 50 S112 22, 124 50 S142 76, 152 50 S168 34, 178 50 S196 62, 206 50 L226 50" style="stroke:var(--akzent)"></path><path d="M14 92 H226 M14 86 V98 M226 86 V98" stroke-width="1.1" style="stroke:var(--akzent)"></path><path d="M120 86 V98" stroke-width="1.1" style="stroke:var(--akzent)"></path><text x="67" y="112" text-anchor="middle" font-size="9" stroke="none" style="fill:var(--schrift-leise)">30 s</text><text x="173" y="112" text-anchor="middle" font-size="9" stroke="none" style="fill:var(--schrift-leise)">60 s</text><path d="M226 16 V84" stroke-dasharray="4 4" style="stroke:var(--projekt-grenze)"></path><text x="222" y="12" text-anchor="end" font-size="9" stroke="none" style="fill:var(--projekt-grenze)">nach 1 h gelöscht</text></g></svg></div>
+
+      <noscript><p class="projekt-musik-satz">Zum Ausprobieren braucht diese Seite JavaScript. Ohne JavaScript bleibt es bei dieser Beschreibung.</p></noscript>
+
+      {% if musik_hinweis %}
+        <p class="projekt-musik-satz" role="status">{{ musik_hinweis }}</p>
+      {% else %}
+        <p class="projekt-musik-satz" id="musik-oe-laden" role="status" hidden>Die Musik-KI wird gefragt …</p>
+
+        <form id="musik-oe" class="projekt-musik" method="post" action="{% url 'musik_oe_lied' %}"
+              data-stand="{% url 'musik_oe_stand' %}" hidden>
+          {% csrf_token %}
+          <fieldset class="projekt-musik-teil">
+            <legend><span class="projekt-nummer">01</span>Stil</legend>
+            <div class="projekt-stile" id="musik-oe-stile"></div>
+          </fieldset>
+
+          <div class="projekt-musik-teil">
+            <label class="projekt-musik-titel" for="musik-oe-text"><span class="projekt-nummer">02</span>Liedtext</label>
+            <div class="projekt-marken-knoepfe" id="musik-oe-marken" role="group" aria-label="Marke an der Schreibstelle einfügen"></div>
+            <textarea name="lyrics" id="musik-oe-text" rows="6" maxlength="{{ musik_text_max }}"
+                      aria-describedby="musik-oe-text-hilfe"></textarea>
+            <p class="projekt-musik-hilfe" id="musik-oe-text-hilfe"><span id="musik-oe-zeichen">0</span> von {{ musik_text_max }} Zeichen. Die Marken gliedern das Lied in Strophe, Refrain und so weiter; ohne Text wird es ein Instrumentalstück.</p>
+          </div>
+
+          <div class="projekt-musik-zeile">
+            <fieldset class="projekt-musik-teil">
+              <legend><span class="projekt-nummer">03</span>Dauer</legend>
+              <label class="projekt-dauer">
+                <input type="radio" name="sekunden" value="30" checked>
+                <span class="projekt-dauer-wert">30 s</span>
+                <span class="projekt-strecke" style="--anteil: 50%" aria-hidden="true"><span class="projekt-mass"></span></span>
+              </label>
+              <label class="projekt-dauer">
+                <input type="radio" name="sekunden" value="60">
+                <span class="projekt-dauer-wert">60 s</span>
+                <span class="projekt-strecke" style="--anteil: 100%" aria-hidden="true"><span class="projekt-mass"></span></span>
+              </label>
+            </fieldset>
+            <fieldset class="projekt-musik-teil">
+              <legend><span class="projekt-nummer">04</span>Sprache</legend>
+              <label class="projekt-sprache"><input type="radio" name="sprache" value="de" checked> Deutsch</label>
+              <label class="projekt-sprache"><input type="radio" name="sprache" value="en"> Englisch</label>
+            </fieldset>
+          </div>
+
+          <button type="submit" class="knopf" id="musik-oe-senden">Lied erzeugen</button>
+          <p class="projekt-musik-meldung" id="musik-oe-meldung" role="status" aria-live="polite"></p>
+        </form>
+
+        <div class="projekt-musik-ergebnis" id="musik-oe-ergebnis" hidden>
+          <span class="projekt-marker">Das Lied</span>
+          <p class="projekt-musik-stand" id="musik-oe-stand" aria-live="polite"></p>
+          <div id="musik-oe-spieler"></div>
+        </div>
+      {% endif %}
+
+      <p class="projekt-vermerk">Lieder werden nach einer Stunde gelöscht. Bitte keine Namen oder persönlichen Angaben in den Text.</p>
+    </div>
+  </div>
+</section>
+
+{% comment %}Das Impressum als Schriftfeld, wie unten rechts auf einem Plan.
+Der einzige Ort der Seite, an dem ein Name steht.{% endcomment %}
+<section class="projekt-abschnitt projekt-impressum" id="impressum" aria-labelledby="impressum-titel">
+  <h2 id="impressum-titel">Impressum</h2>
+  <dl class="projekt-schriftfeld">
+    <div><dt>Stelle</dt><dd>ModLearn Technology Lab, Pädagogische Hochschule Vorarlberg</dd></div>
+    <div><dt>Verantwortlich</dt><dd>Thomas Schroffenegger</dd></div>
+    <div><dt>Projekt</dt><dd>AI LAB, Erasmus-Projekt „GenAI-Natives“</dd></div>
+    <div><dt>Stand</dt><dd>Oktober 2026</dd></div>
+  </dl>
+</section>
+
+</div>
+{% endblock %}
+
+{% block skripte %}
+{% if not musik_hinweis %}<script src="{% static 'js/musik_oeffentlich.js' %}" defer></script>{% endif %}
+{% endblock %}

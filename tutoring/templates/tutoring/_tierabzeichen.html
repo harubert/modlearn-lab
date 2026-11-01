@@ -1,0 +1,15 @@
+{% load static %}{% comment %}Das Bild des Tieres, oder ein Platzhalter.
+
+Wer beitritt und die Tierwahl verlaesst, hat kein Tier. {% static "" %}
+wirft dann einen ValueError und nimmt die ganze Seite mit. Im Betrieb war
+das eine Person von 28 - und die Lehrperson kam nicht mehr an die
+Verlaeufe der anderen 27.{% endcomment %}
+{% if teilnahme.hat_tier %}
+  <img class="{{ klasse|default:'tier-bild-klein' }}"
+       src="{% static teilnahme.tier_bild %}" alt=""
+       width="{{ groesse|default:32 }}" height="{{ groesse|default:32 }}"
+       loading="lazy">
+{% else %}
+  <span class="{{ klasse|default:'tier-bild-klein' }} tier-ohne"
+        aria-hidden="true">?</span>
+{% endif %}

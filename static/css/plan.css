@@ -1,0 +1,792 @@
+/* Der Tag auf dem Spark: ein Balken, darunter das Buchungsformular.
+   Nur Farben und Masse aus app.css, keine eigene Farbe: Damit stimmt der
+   dunkle Modus hier von selbst.
+   Zuerst fuer 360 Pixel Breite entworfen. Dort laeuft der Balken senkrecht,
+   weil zwoelf Stunden in Viertelstunden quer auf 300 Pixel nicht lesbar sind;
+   ab 40rem kippt er in die Waagrechte.
+   Die Zahl 720 in den calc() ist die Spanne des Rasters in Minuten, 07:00 bis
+   19:00. Die Vorlage liefert Minuten, nicht Prozent, damit eine Buchung von
+   10:00 bis 10:50 genau liegt und nicht auf ein Viertel gerundet wird. */
+
+/* --- Der Kerngedanke, ganz oben ----------------------------------------- */
+
+/* Diese Flaeche ist absichtlich die auffaelligste der Seite: Wer glaubt, er
+   sperre mit einer Buchung den Rechner, bucht lieber nicht. */
+.plan-zusage {
+  margin: 0 0 1.2rem;
+  padding: .9rem 1.1rem;
+  border-radius: 12px;
+  background: var(--akzent-leise);
+}
+
+.plan-zusage-kern { margin: 0 0 .4rem; font-weight: 600; }
+
+.plan-zusage-text { margin: 0; font-size: .9rem; }
+
+/* --- Tagewechsel -------------------------------------------------------- */
+
+.plan-tage { margin: 0 0 1.3rem; }
+
+/* Waagrecht rollbar: Bei zehn Tagen reicht die Breite am Handy nicht, und
+   umgebrochene Tagesknoepfe sind schwerer zu treffen als gerollte. */
+.plan-tage ul {
+  display: flex;
+  gap: .4rem;
+  margin: 0;
+  padding: 0 0 .35rem;
+  list-style: none;
+  overflow-x: auto;
+}
+
+.plan-tagknopf {
+  display: flex;
+  flex-direction: column;
+  gap: .1rem;
+  min-width: 4.6rem;
+  min-height: 44px;
+  padding: .35rem .5rem .4rem;
+  border: 1px solid var(--rand);
+  border-radius: 10px;
+  background: var(--grund);
+  color: var(--schrift);
+  font-size: .8rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* Der gewaehlte Tag ist nicht nur farbig, sondern auch fetter und dicker
+   umrandet: Farbe allein traegt keine Auskunft. */
+.plan-tagknopf.ist-gewaehlt {
+  border-color: var(--akzent);
+  border-width: 2px;
+  background: var(--akzent-leise);
+  font-weight: 700;
+}
+
+.plan-tagkurz { font-variant-numeric: tabular-nums; }
+
+.plan-tagheute { font-size: .68rem; color: var(--schrift-leise); }
+
+/* Der Streifen zeigt denselben Wert wie der Balken weiter unten, naemlich den
+   vergebenen Anteil. Zwei Balken auf einer Seite, von denen einer "frei" und
+   der andere "belegt" fuellt, waeren eine Falle. Die freien Minuten als Zahl
+   stehen fuer das Vorlesewerkzeug daneben. */
+.plan-tagfrei {
+  display: block;
+  height: 4px;
+  margin-top: auto;
+  border-radius: 2px;
+  background: var(--rand);
+  overflow: hidden;
+}
+
+.plan-tagfrei-fuellung {
+  display: block;
+  height: 100%;
+  width: var(--anteil, 0%);
+  background: var(--akzent);
+}
+
+/* --- Legende ------------------------------------------------------------ */
+
+.plan-legende {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem .9rem;
+  margin: 0 0 .7rem;
+  color: var(--schrift-leise);
+  font-size: .75rem;
+}
+
+.plan-legende-teil { display: inline-flex; align-items: center; gap: .35rem; }
+
+.plan-probe { flex: 0 0 auto; width: 1.1rem; height: .8rem; border-radius: 3px; }
+.plan-probe-fuellung { background: var(--akzent); }
+.plan-probe-eigen { border: 2px solid var(--akzent); background: var(--akzent-leise); }
+.plan-probe-fremd { border: 1px dashed var(--rand); background: var(--flaeche); }
+
+.plan-probe-wahl {
+  background: var(--akzent-leise);
+  border-top: 2px solid var(--akzent);
+  border-bottom: 2px solid var(--akzent);
+}
+
+.plan-probe-voll {
+  background: var(--warnung-leise);
+  box-shadow: inset 0 0 0 1px var(--warnung);
+}
+
+/* Schraffur statt Flaeche: Eine alleinige Buchung ist nicht "voll", weil
+   viele Plaetze vergeben waeren, sondern weil daneben nichts gehen kann.
+   Zwei verschiedene Gruende, zwei verschiedene Bilder. Die Schraffur steht
+   einmal als Variable, weil Legende, Zelle und Block sie teilen. */
+.plan-tagansicht {
+  --plan-schraffur: repeating-linear-gradient(
+    -45deg,
+    var(--warnung-leise) 0 4px,
+    var(--grund) 4px 7px
+  );
+}
+
+.plan-probe-alleinig {
+  background: var(--plan-schraffur);
+  box-shadow: inset 0 0 0 1px var(--warnung);
+}
+
+/* --- Der Tag als Ganzes ------------------------------------------------- */
+
+.plan-tagansicht { margin: 0 0 1.6rem; }
+
+/* --- Der Balken, senkrecht (Handy) ------------------------------------- */
+
+.plan-balken {
+  --plan-zelle: 15px;        /* Hoehe einer Viertelstunde: 48 mal 15 = 720px */
+  display: flex;
+  gap: .25rem;
+  margin: 0 0 1rem;
+}
+
+.plan-achse { position: relative; flex: 0 0 2.3rem; }
+
+.plan-stunde {
+  position: absolute;
+  top: calc(var(--von-min, 0) / 720 * 100%);
+  right: .25rem;
+  margin-top: -.1rem;
+  color: var(--schrift-leise);
+  font-size: .7rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Der Rahmen liegt als innerer Schatten und nicht als border: Ein Rahmen
+   machte die Flaeche zwei Pixel hoeher als die Stundenachse daneben, und dann
+   stehen die Stundenzahlen nicht mehr auf ihren Linien. */
+.plan-flaeche {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  border-radius: 8px;
+  background: var(--grund);
+  box-shadow: inset 0 0 0 1px var(--rand);
+  overflow: hidden;
+}
+
+/* z-index 1, damit der gewaehlte Zeitraum (z-index 0) durch die leeren Zellen
+   hindurch zu sehen ist, die Fuellungen aber darueber liegen. */
+.plan-raster {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-auto-rows: var(--plan-zelle);
+}
+
+.plan-zelle { position: relative; }
+
+.plan-zelle.ist-stunde { box-shadow: inset 0 1px 0 var(--rand); }
+.plan-zelle:first-child { box-shadow: none; }
+
+/* Voll heisst: kein Platz mehr frei. Das ist der einzige Zustand, der im
+   Raster wirklich auffallen muss. */
+.plan-zelle.ist-voll { background: var(--warnung-leise); }
+
+/* Alleinig: schraffiert, und die Fuellung tritt zurueck. Hundert Prozent
+   blau saehe aus wie "sehr viele Plaetze vergeben", und das ist es nicht. */
+.plan-zelle.ist-alleinig { background: var(--plan-schraffur); }
+.plan-zelle.ist-alleinig .plan-fuellung { background: transparent; }
+
+.plan-fuellung {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--anteil, 0%);
+  border-radius: 0 2px 2px 0;
+  background: var(--akzent);
+}
+
+/* Ein einzelner von fuenfzig Plaetzen sind zwei Prozent und damit weniger als
+   ein Pixel. Vier Pixel Mindestbreite machen aus "fast nichts" ein sichtbares
+   "etwas", ohne aus "nichts" etwas zu machen. */
+.plan-zelle.ist-belegt .plan-fuellung { min-width: 4px; }
+
+/* --- Der gewaehlte Zeitraum -------------------------------------------- */
+
+.plan-wahl {
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  right: 0;
+  top: calc(var(--von-min, 0) / 720 * 100%);
+  height: calc(var(--dauer-min, 0) / 720 * 100%);
+  min-height: 4px;
+  background: var(--akzent-leise);
+  border-top: 2px solid var(--akzent);
+  border-bottom: 2px solid var(--akzent);
+  pointer-events: none;
+}
+
+/* --- Die Buchungen als Bloecke ----------------------------------------- */
+
+.plan-bloecke {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/* Die Bloecke stehen nicht auf der ganzen Breite, sondern rechts: Die linken
+   38 Prozent bleiben fuer die Fuellung frei, sonst verdeckt die eine Auskunft
+   die andere.
+   --spur und --spurbreite setzt plan.js, wenn sich Buchungen ueberschneiden:
+   --spurbreite ist 1 geteilt durch die Zahl der Spuren. Ohne Skript liegen
+   ueberschneidende Bloecke uebereinander; die Liste unter dem Balken bleibt
+   davon unberuehrt. */
+.plan-block {
+  --spur: 0;
+  --spurbreite: 1;
+  position: absolute;
+  top: calc(var(--von-min, 0) / 720 * 100%);
+  height: calc(var(--dauer-min, 0) / 720 * 100%);
+  left: calc(38% + 60% * var(--spurbreite) * var(--spur));
+  width: calc(60% * var(--spurbreite));
+  min-height: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: .1rem .4rem;
+  border: 1px dashed var(--rand);
+  border-radius: 6px;
+  background: var(--flaeche);
+  font-size: .7rem;
+  line-height: 1.25;
+  overflow: hidden;
+}
+
+/* Jede Zeile einzeln beschneiden, nicht den Block: So bleibt Platz fuer das
+   Kreuz, das bei kurzen Buchungen oben und unten aus dem Block herausragen
+   darf, ohne dass es abgeschnitten wird. */
+.plan-block > span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Eigene Buchungen: dicker Rahmen, andere Flaeche, fetter Satz, und das Kreuz.
+   Vier Unterschiede, von denen nur einer die Farbe ist.
+   Das padding rechts haelt die Beschriftung unter dem Kreuz heraus. */
+.plan-block.ist-eigen {
+  border: 2px solid var(--akzent);
+  background: var(--akzent-leise);
+  font-weight: 600;
+  padding-right: 46px;
+  overflow: visible;
+}
+
+.plan-block-zeit { font-variant-numeric: tabular-nums; }
+
+.plan-block-plaetze,
+.plan-block-wer { color: var(--schrift-leise); }
+
+.plan-block-wer { font-size: .66rem; }
+
+/* Eine alleinige Buchung liegt ueber der ganzen Breite, nicht auf einer
+   Spur rechts: Sie ist keine Buchung neben anderen, sondern der Grund, warum
+   es daneben keine gibt. Das Symbol steht gross davor, damit man auch quer
+   auf einen Blick sieht, was den Rechner nimmt. */
+.plan-block.ist-alleinig {
+  left: 0;
+  width: 100%;
+  border: 1px solid var(--warnung);
+  background: var(--plan-schraffur);
+  font-weight: 600;
+}
+
+.plan-block.ist-alleinig.ist-eigen { border-width: 2px; padding-right: 46px; }
+
+.plan-block.ist-alleinig .plan-block-konzept { font-size: .85rem; }
+
+.plan-block.ist-alleinig .plan-block-plaetze { color: var(--warnung); }
+
+/* 44 mal 44 Pixel, auch wenn die Buchung nur eine Viertelstunde dauert: Dann
+   ragt das Kreuz eben ueber den Block hinaus. Den Block dafuer hoeher zu
+   machen waere schlimmer, denn dann stimmte die Zeit im Balken nicht mehr. */
+.plan-block-absagen {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  margin: 0;
+  transform: translateY(-50%);
+}
+
+.plan-kreuz {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--akzent);
+  font: inherit;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.plan-kreuz:hover { background: var(--grund); color: var(--warnung); }
+
+/* --- Die Buchungen als Liste ------------------------------------------- */
+
+.plan-listentitel { margin: 1.2rem 0 .5rem; }
+
+.plan-liste {
+  display: grid;
+  gap: .5rem;
+  margin: 0 0 1.6rem;
+  padding: 0;
+  list-style: none;
+}
+
+.plan-eintrag {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem .7rem;
+  padding: .55rem .75rem;
+  border: 1px solid var(--rand);
+  border-radius: 10px;
+  background: var(--grund);
+}
+
+.plan-eintrag.ist-eigen {
+  border-color: var(--akzent);
+  border-width: 2px;
+  background: var(--akzent-leise);
+}
+
+/* In der Liste bleibt die eigene Buchung blau, die alleinige bekommt nur
+   den roten Rand: Beides zugleich ist moeglich, und die Farbe der Flaeche
+   sagt "meine", der Rand sagt "nimmt den Rechner". */
+.plan-eintrag.ist-alleinig { border-color: var(--warnung); }
+
+.plan-eintrag-symbol { flex: 0 0 auto; font-size: 1.5rem; line-height: 1; }
+
+.plan-eintrag-konzept { font-weight: 600; }
+
+.plan-eintrag-mitte { flex: 1 1 10rem; min-width: 0; }
+
+.plan-eintrag-zeit { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.plan-eintrag-plaetze { font-weight: 400; color: var(--schrift-leise); font-size: .85rem; }
+
+.plan-eintrag-text { margin: .1rem 0 0; font-size: .88rem; }
+
+.plan-eintrag-wer { color: var(--schrift-leise); font-size: .8rem; }
+
+.plan-eintrag-absagen { flex: 0 0 auto; margin: 0; }
+
+/* --- Das Formular ------------------------------------------------------ */
+
+.plan-meine {
+  margin: 0 0 1.1rem;
+  color: var(--schrift-leise);
+  font-size: .85rem;
+}
+
+/* --- Das Konzept: die erste Frage ------------------------------------- */
+
+/* Grosse Flaechen und kein Auswahlfeld, wie bei der Fachwahl der
+   Lehrpersonenseite: Wofuer gebucht wird, ist die Frage, die alles Weitere
+   bestimmt, und ein <select> versteckt sie hinter einem Klick. Jede Flaeche
+   ist ein Label um einen gewoehnlichen Auswahlknopf, also auch mit der
+   Tastatur und ohne Skript bedienbar.
+   Zuerst fuer das Telefon: eine Spalte, 16px Rand kommen von .inhalt, kein
+   waagrechter Lauf. Tablet zwei Spalten, PC eine Reihe - weiter unten. */
+.plan-konzepte { margin-bottom: 1.3rem; }
+
+.plan-konzepte legend { margin-bottom: .5rem; }
+
+.plan-konzeptliste {
+  display: grid;
+  gap: .6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Als label.plan-konzept geschrieben, weil app.css fuer ".feld label"
+   display: block und fett vorgibt; gleiche Spezifitaet, spaeter geladen,
+   also gilt diese Regel. */
+label.plan-konzept {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: .1rem .8rem;
+  align-items: start;
+  min-height: 44px;
+  margin: 0;
+  padding: .8rem .9rem;
+  border: 1px solid var(--rand);
+  border-radius: 12px;
+  background: var(--grund);
+  color: var(--schrift);
+  font-weight: 400;
+  cursor: pointer;
+}
+
+/* Der Auswahlknopf bleibt im Dokument und fokussierbar, nur unsichtbar: So
+   traegt das Label seinen Namen fuers Vorlesewerkzeug, die Pfeiltasten
+   wechseln das Konzept, und der Fokusring liegt auf der ganzen Karte. */
+.plan-konzept input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.plan-konzept:hover { border-color: var(--akzent); }
+
+.plan-konzept:has(input:focus-visible) {
+  outline: 3px solid var(--fokus);
+  outline-offset: 2px;
+}
+
+/* Gewaehlt: Rand, Flaeche, fetter Name. Der innere Schatten statt einer
+   dickeren Linie, damit die Karte beim Wechsel nicht um ein Pixel springt.
+   Die Klasse setzt der Server und toggelt plan.js; :has() faengt den
+   Wechsel ohne Skript ab. */
+.plan-konzept.ist-gewaehlt,
+.plan-konzept:has(input:checked) {
+  border-color: var(--akzent);
+  box-shadow: inset 0 0 0 1px var(--akzent);
+  background: var(--akzent-leise);
+}
+
+.plan-konzept.ist-gewaehlt .plan-konzept-name,
+.plan-konzept:has(input:checked) .plan-konzept-name { font-weight: 700; }
+
+.plan-konzept-symbol {
+  grid-row: span 3;
+  font-size: 1.8rem;
+  line-height: 1.1;
+}
+
+.plan-konzept-name { font-weight: 600; }
+
+.plan-konzept-satz { color: var(--schrift-leise); font-size: .85rem; line-height: 1.45; }
+
+/* Der Hinweis gehoert zum Konzept und nicht erst zur Lage: Wer den Rechner
+   ganz nimmt, soll das lesen, bevor er die Karte waehlt. */
+.plan-konzept-hinweis {
+  justify-self: start;
+  margin-top: .3rem;
+  padding: .1rem .5rem;
+  border: 1px solid var(--warnung);
+  border-radius: 999px;
+  color: var(--warnung);
+  font-size: .72rem;
+  font-weight: 600;
+}
+
+/* Fach und Person stehen am Telefon untereinander, ab 40rem nebeneinander. */
+.plan-unterricht .feld { margin-bottom: 1.3rem; }
+
+/* Der Hinweis vor dem Absenden, in der Farbe der Warnung und mit Symbol:
+   derselbe Satz wie an der Karte, nur dort, wo gleich der Knopf kommt. */
+.plan-alleinig {
+  margin: 0 0 .8rem;
+  padding: .7rem .9rem;
+  border-radius: 8px;
+  border-left: 4px solid var(--warnung);
+  background: var(--warnung-leise);
+  font-size: .92rem;
+}
+
+.plan-regler { margin: 0 0 1.1rem; }
+
+.plan-regler-zeile { display: flex; align-items: center; gap: .6rem; }
+
+.plan-regler-zeile label { flex: 0 0 4rem; margin: 0; font-weight: 600; }
+
+/* 44 Pixel Hoehe, damit der Griff am Handy zu fassen ist; accent-color faerbt
+   Schiene und Griff ohne eine einzige Zeile Herstellerpraefix. */
+.plan-regler input[type="range"] {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 44px;
+  accent-color: var(--akzent);
+  background: transparent;
+}
+
+.plan-zeitfelder { display: flex; gap: .7rem; }
+
+.plan-zeitfeld { flex: 1 1 0; min-width: 0; }
+
+.plan-zeitfeld label { display: block; margin-bottom: .2rem; font-weight: 600; }
+
+/* app.css kennt time und number nicht, deshalb hier dieselben Masse wie dort
+   fuer text und select. */
+.plan-zeitfeld input[type="time"],
+.plan-zahl input[type="number"] {
+  width: 100%;
+  min-height: 44px;
+  padding: .6rem .75rem;
+  border: 1px solid var(--rand);
+  border-radius: 8px;
+  background: var(--grund);
+  color: var(--schrift);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+}
+
+.plan-zeitfeld input[type="time"]:focus,
+.plan-zahl input[type="number"]:focus { border-color: var(--akzent); }
+
+.plan-zahl { display: flex; align-items: stretch; gap: .4rem; max-width: 14rem; }
+
+.plan-schritt {
+  flex: 0 0 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid var(--rand);
+  border-radius: 8px;
+  background: var(--grund);
+  color: var(--akzent);
+  font: inherit;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color .12s ease-out;
+}
+
+.plan-schritt:hover { border-color: var(--akzent); background: var(--akzent-leise); }
+
+.plan-zahl input[type="number"] {
+  flex: 1 1 4rem;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.plan-deutung { margin: .45rem 0 0; color: var(--schrift-leise); font-size: .88rem; }
+
+/* Die Lagemeldung ist die Antwort auf die eine Frage, die alle haben: Passt
+   das noch? Deshalb steht sie unmittelbar ueber dem Knopf. */
+.plan-lage {
+  margin: 0 0 1rem;
+  padding: .7rem .9rem;
+  border-radius: 8px;
+  border-left: 4px solid var(--akzent);
+  background: var(--akzent-leise);
+  font-size: .92rem;
+  transition: background-color .12s ease-out;
+}
+
+.plan-lage.ist-eng {
+  border-left-color: var(--warnung);
+  background: var(--warnung-leise);
+}
+
+/* app.css setzt bei [disabled] den Zeiger auf "progress", weil dort auf eine
+   Antwort gewartet wird. Hier ist der Knopf gesperrt, nicht beschaeftigt. */
+.plan-buchen .knopf[disabled] { cursor: not-allowed; }
+
+/* --- Der Balken, waagrecht (ab 40rem) ---------------------------------- */
+
+@media (min-width: 40rem) {
+  /* column-reverse: Die Stundenachse steht im HTML vor der Flaeche, gehoert
+     in der Waagrechten aber darunter. */
+  .plan-balken { flex-direction: column-reverse; gap: .15rem; }
+
+  .plan-achse { flex: 0 0 1.1rem; }
+
+  .plan-stunde {
+    top: .05rem;
+    right: auto;
+    left: calc(var(--von-min, 0) / 720 * 100%);
+    margin-top: 0;
+  }
+
+  .plan-flaeche { height: 8.5rem; }
+
+  .plan-raster { display: flex; height: 100%; }
+
+  .plan-zelle { flex: 1 1 0; min-width: 0; }
+
+  .plan-zelle.ist-stunde { box-shadow: inset 1px 0 0 var(--rand); }
+
+  .plan-fuellung {
+    left: 0;
+    right: 0;
+    top: auto;
+    bottom: 0;
+    width: auto;
+    height: var(--anteil, 0%);
+    border-radius: 2px 2px 0 0;
+  }
+
+  .plan-zelle.ist-belegt .plan-fuellung { min-width: 0; min-height: 4px; }
+
+  .plan-wahl {
+    top: 0;
+    bottom: 0;
+    left: calc(var(--von-min, 0) / 720 * 100%);
+    width: calc(var(--dauer-min, 0) / 720 * 100%);
+    height: auto;
+    min-height: 0;
+    min-width: 4px;
+    border-top: 0;
+    border-bottom: 0;
+    border-left: 2px solid var(--akzent);
+    border-right: 2px solid var(--akzent);
+  }
+
+  /* Oben die Bloecke, unten bleiben 45 Prozent fuer die Fuellung sichtbar. */
+  .plan-block {
+    top: calc(55% * var(--spurbreite) * var(--spur));
+    height: calc(55% * var(--spurbreite));
+    left: calc(var(--von-min, 0) / 720 * 100%);
+    width: calc(var(--dauer-min, 0) / 720 * 100%);
+    min-height: 0;
+    min-width: 1.5rem;
+    padding: .1rem .2rem;
+    font-size: .62rem;
+  }
+
+  /* Quer ist ein Block von fuenfzig Minuten etwa vierzig Pixel breit. Darin
+     ist weder fuer den Namen noch fuer ein Kreuz von 44 Pixeln Platz; beides
+     steht in der Liste unter dem Balken. */
+  .plan-block-wer,
+  .plan-block-absagen { display: none; }
+
+  .plan-block.ist-eigen { padding-right: .2rem; overflow: hidden; }
+
+  /* Quer nimmt die alleinige Buchung die ganze Hoehe, nicht nur die oberen
+     55 Prozent: Die Fuellung darunter waere ohnehin voll. */
+  .plan-block.ist-alleinig {
+    top: 0;
+    height: 100%;
+    left: calc(var(--von-min, 0) / 720 * 100%);
+    width: calc(var(--dauer-min, 0) / 720 * 100%);
+    justify-content: flex-start;
+    padding-top: .3rem;
+  }
+
+  .plan-block.ist-alleinig .plan-block-konzept { font-size: .7rem; }
+
+  /* Quer gibt es kein Kreuz im Block, also auch keinen Platz dafuer. */
+  .plan-block.ist-alleinig.ist-eigen { padding-right: .2rem; }
+
+  .plan-zahl { max-width: 16rem; }
+
+  .plan-unterricht { display: flex; gap: .7rem; }
+
+  .plan-unterricht .feld { flex: 1 1 0; min-width: 0; }
+}
+
+/* --- Konzepte: Tablet zwei Spalten, PC eine Reihe ---------------------- */
+
+/* Dieselben Schwellen wie die Fachwahl auf der Lehrpersonenseite. */
+@media (min-width: 34rem) {
+  .plan-konzeptliste { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+}
+
+/* Auf dem PC stehen alle Konzepte in einer Reihe. Damit fuenf Karten darin
+   Platz haben, wird diese Seite wie die Lehrpersonenseite auf 72rem
+   verbreitert - Kopf und Fuss wandern mit, sonst sitzt eine schmale Leiste
+   ueber einem breiten Inhalt. plan.css wird nur auf den Planungsseiten
+   geladen, deshalb trifft das keine andere. Die Textflaechen des Formulars
+   bleiben bei 44rem, sonst wird ein Zeitfeld eine Armlaenge breit.
+   In der Reihe hat der Satz die ganze Spaltenbreite, deshalb rueckt das
+   Symbol ueber den Namen. */
+@media (min-width: 64rem) {
+  .inhalt { max-width: 72rem; }
+  .kopf-innen, .fuss-innen { max-width: 72rem; }
+
+  .plan-zusage,
+  .plan-meine,
+  .plan-zeitfelder,
+  .plan-unterricht,
+  .plan-buchen .feld:not(.plan-konzepte),
+  .plan-alleinig,
+  .plan-lage,
+  .plan-buchen .knopf-gross { max-width: 44rem; }
+
+  .plan-konzeptliste {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-template-columns: none;
+    gap: .8rem;
+  }
+
+  label.plan-konzept {
+    grid-template-columns: minmax(0, 1fr);
+    gap: .2rem;
+    padding: .9rem 1rem;
+  }
+
+  .plan-konzept-symbol { grid-row: auto; }
+}
+
+/* --- Ruhiger Modus ----------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .plan-schritt,
+  .plan-lage { transition: none; }
+}
+
+/* --- Rueckblick: gebucht neben gemessen -------------------------------- */
+
+/* Eine breite Tabelle auf einem Telefon darf scrollen, die Seite nicht. */
+.tabellenrahmen {
+  overflow-x: auto;
+  margin: 1rem 0;
+  border: 1px solid var(--rand);
+  border-radius: 8px;
+}
+
+.rueckblick {
+  width: 100%;
+  min-width: 26rem;
+  border-collapse: collapse;
+  font-size: .92rem;
+}
+
+.rueckblick th,
+.rueckblick td {
+  padding: .5rem .7rem;
+  text-align: left;
+  border-bottom: 1px solid var(--rand);
+}
+
+.rueckblick thead th {
+  font-size: .78rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--schrift-leise);
+  white-space: nowrap;
+}
+
+.rueckblick tbody tr:last-child th,
+.rueckblick tbody tr:last-child td { border-bottom: 0; }
+
+.rueckblick .zahl { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Keine Note, eine Auskunft: deshalb zurueckhaltend und nicht rot. */
+.abstand-hoch { color: var(--schrift-leise); white-space: nowrap; }
+
+.rueckblick-konzept { white-space: nowrap; }
+
+.plan-fussnote {
+  margin: 1.4rem 0 0;
+  color: var(--schrift-leise);
+  font-size: .9rem;
+}

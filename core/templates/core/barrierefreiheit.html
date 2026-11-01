@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block titel %}Barrierefreiheitserklärung{% endblock %}
+
+{% block inhalt %}
+<article class="rechtstext">
+<h1>Barrierefreiheitserklärung</h1>
+<p class="stand">Stand: {{ stand }}.</p>
+
+<p>
+  Die Pädagogische Hochschule Vorarlberg ist bemüht, diese Anwendung im Einklang mit dem
+  Web-Zugänglichkeits-Gesetz (WZG) barrierefrei zugänglich zu machen. Diese Erklärung gilt
+  für die Aufgabenhilfe unter {{ request.get_host }}.
+</p>
+
+<h2>Stand der Vereinbarkeit mit den Anforderungen</h2>
+<p>
+  Diese Anwendung ist mit dem Standard EN 301 549 und den Web Content Accessibility
+  Guidelines 2.1 auf Stufe AA <strong>teilweise vereinbar</strong>. Die unter „Nicht
+  barrierefreie Inhalte“ aufgeführten Punkte sind der Grund für die Einschränkung.
+</p>
+
+<h2>Was umgesetzt ist</h2>
+<ul>
+  <li>Die Anwendung lässt sich vollständig mit der Tastatur bedienen. Am Seitenanfang steht ein Sprunglink zum Inhalt.</li>
+  <li>Der Fokus ist jederzeit sichtbar. Bedienelemente sind mindestens 44 mal 44 Pixel groß.</li>
+  <li>Alle Eingabefelder haben dauerhaft sichtbare Beschriftungen. Erklärungen und Fehlermeldungen sind den Feldern programmatisch zugeordnet.</li>
+  <li>Fehlermeldungen werden Vorlesewerkzeugen aktiv gemeldet.</li>
+  <li>Die Farbkontraste erreichen mindestens das Verhältnis 4,5 zu 1, in heller wie in dunkler Darstellung.</li>
+  <li>Die Darstellung folgt der Systemeinstellung für helle oder dunkle Oberflächen und bleibt bis 200 Prozent Vergrößerung ohne waagrechtes Scrollen nutzbar.</li>
+  <li>Der Sitzungscode steht neben dem QR-Code immer auch als Text. Der QR-Code ist kein alleiniger Zugangsweg.</li>
+  <li>Bewegung und Übergänge sind sparsam eingesetzt und richten sich nach der Systemeinstellung für reduzierte Bewegung.</li>
+  <li>Die Seite lädt keine Inhalte von fremden Servern nach und funktioniert ohne Schriftarten aus dem Internet.</li>
+</ul>
+
+<h2>Eine bewusste Entscheidung beim Vorlesen der Hilfen</h2>
+<p>
+  Die Antwort des Sprachmodells erscheint fortlaufend, Wort für Wort. Vorlesewerkzeugen
+  wird sie jedoch <strong>erst dann als Ganzes angesagt, wenn sie vollständig ist</strong>.
+  Eine laufend aktualisierte Ansage würde jedes einzelne Wort erneut vorlesen und die Hilfe
+  unbrauchbar machen. Während geschrieben wird, meldet die Anwendung den Zustand
+  „wird geschrieben“.
+</p>
+
+<h2>Nicht barrierefreie Inhalte</h2>
+<ul>
+  <li>
+    <strong>Keine externe Prüfung.</strong> Die Bewertung beruht auf einer Selbsteinschätzung
+    und auf Tests mit Tastatur und Browserwerkzeugen. Eine Prüfung durch eine unabhängige
+    Stelle und ein Test mit Vorlesewerkzeugen durch betroffene Nutzerinnen und Nutzer stehen
+    noch aus.
+  </li>
+  <li>
+    <strong>Sprache der Hilfen.</strong> Die Hilfen formuliert ein Sprachmodell. Verständlichkeit
+    und sprachliche Form lassen sich nicht in jedem Einzelfall zusichern. Die Anwendung gibt
+    keine Leichte Sprache aus.
+  </li>
+  <li>
+    <strong>Rechenwege.</strong> Vorgerechnete Lösungen der Stufe 5 werden als Fließtext ausgegeben.
+    Mathematische Auszeichnung, die Vorlesewerkzeuge gezielt vorlesen könnten, ist noch nicht umgesetzt.
+  </li>
+</ul>
+
+<h2>Erstellung dieser Erklärung</h2>
+<p>
+  Diese Erklärung wurde am {{ stand }} erstellt. Grundlage ist eine Selbstbewertung der
+  Anwendung durch das ModLearn Technology Lab. Die Anwendung befindet sich in Entwicklung;
+  die Erklärung wird mit jeder wesentlichen Änderung überarbeitet.
+</p>
+
+<h2>Rückmeldung und Kontakt</h2>
+<p>
+  Falls dir Hürden auffallen oder du Inhalte in einer anderen Form brauchst, schreib bitte an
+  <a href="mailto:office@ph-vorarlberg.ac.at">office@ph-vorarlberg.ac.at</a>. Wir antworten so
+  rasch wie möglich.
+</p>
+<p>
+  Pädagogische Hochschule Vorarlberg, Liechtensteinerstraße 33–37, 6800 Feldkirch,
+  Telefon +43 (0)5522 311 99.
+</p>
+
+<h2>Durchsetzungsverfahren</h2>
+<p>
+  Wenn du mit der Antwort auf deine Rückmeldung nicht zufrieden bist, kannst du dich nach dem
+  Web-Zugänglichkeits-Gesetz an das Sozialministeriumservice wenden. Dieses prüft, ob die
+  Anforderungen an die Barrierefreiheit eingehalten werden.
+</p>
+</article>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% comment %}Die Phasenanzeige: Planen, Gespraech, Noch einmal, Rueckblick.
+Regel 12 des Berichts (Goh & Burns: Vorbereitung, Aufgabe, Wiederholung,
+Reflexion). Die Anzeige zeigt, was der Server entschieden hat - sie
+entscheidet nichts. Beim freien Gespraech stehen nur zwei Schritte da.
+
+data-nr ist die Nummer aus sprechablauf.SCHRITT_VON, damit sprechcoach.js
+nach einem Wechsel den richtigen Schritt markieren kann, ohne die Seite neu
+zu laden. Die sichtbare Zahl kommt aus einem CSS-Zaehler und ist deshalb
+auch beim freien Gespraech 1 und 2.
+
+Keine Symbole, nur Zahlen und Woerter.{% endcomment %}
+<nav class="coach-ablauf" aria-label="Ablauf des Gesprächs">
+  <ol class="coach-phasen" id="coach-phasen">
+    {% for s in schritte %}
+      <li class="coach-phase{% if s.jetzt %} ist-jetzt{% elif s.vorbei %} ist-vorbei{% endif %}"
+          data-nr="{{ s.nr }}"
+          {% if s.jetzt %}aria-current="step"{% endif %}>
+        <span class="coach-phase-name">{{ s.name }}</span>
+      </li>
+    {% endfor %}
+  </ol>
+  <p class="coach-phasenhinweis" id="coach-phasenhinweis">{{ phasenhinweis }}</p>
+</nav>

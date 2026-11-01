@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block titel %}Protokolle{% endblock %}
+
+{% block inhalt %}
+{% comment %}Alle Sitzungen der Lehrperson mit dem Weg ins Protokoll der
+Anfragen (Abschnitt 3b; Thomas, 31.10.2026). Auch beendete Sitzungen: Das
+Protokoll ueberlebt die Sitzung, die Zuordnung zu einem Tier nicht.{% endcomment %}
+<div class="lehrseite">
+  <div class="seitenkopf">
+    <h1>Protokolle</h1>
+    <p class="seitenkopf-zusatz">
+      Jede Anfrage an ein Sprachmodell, je Sitzung: am Spark und nach draußen.
+      Bleibt, wenn die Sitzung beendet ist; welches Tier eine Anfrage gestellt hat, nicht.
+    </p>
+  </div>
+  {% if zeilen %}
+    <ul class="leerliste protokoll-liste">
+      {% for z in zeilen %}
+        <li>
+          <a href="{% url 'tutoring:lehrperson_protokoll' z.sitzung.code %}">
+            <span class="leerliste-code">{{ z.sitzung.code }}</span>
+            <span class="leerliste-titel">{{ z.sitzung.title }}</span>
+          </a>
+          <span class="karten-leise">
+            {{ z.sitzung.fach_name }} &middot; {{ z.sitzung.created_at|date:"d.m.Y" }}
+            &middot; {% if z.sitzung.closed_at %}beendet{% else %}offen{% endif %}
+            &middot; {{ z.lokal }} am Spark, {{ z.cloud }} nach draußen
+          </span>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="leerhinweis">Noch keine Sitzung.</p>
+  {% endif %}
+</div>
+{% endblock %}

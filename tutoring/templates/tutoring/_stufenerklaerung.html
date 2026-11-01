@@ -1,0 +1,90 @@
+<details class="stufenerklaerung">
+  <summary>Was in den fünf Stufen passiert, und was die Anwendung verhindert</summary>
+  <p class="feld-hilfe">
+    Die Stufen folgen dem Modell der gestuften Hilfen nach Zech. Sie sind das
+    Vokabular der Hilfen und Ihre Obergrenze – aber keine Reihenfolge, die
+    abgearbeitet wird. Welche Hilfe kommt, entscheidet die Anwendung nach
+    einer Einschätzung jedes Beitrags, nicht das Sprachmodell: Der Auftrag an
+    das Modell enthält immer genau eine Stufe. Zwischen zwei Hilfen trägt das
+    Kind selbst etwas bei. <a href="{% url 'stufen' %}">Ausführlich mit Literatur</a>
+  </p>
+  {% comment %}Diagnose statt Leiter (12.10.2026): Vorher rueckte die Stufe
+  nach jedem Beitrag vor, auch nach einer Frage. Seit dem Benchmark
+  (19.10.2026): zwei Knoepfe statt einer Heuristik, die Diagnose mit Ergebnis
+  und Fehler, die Schulstufe. Seit 30.10.2026 (Thomas: "Wenn das KI-System
+  so schlau ist, muss es jeweils diagnostizieren: wo der Schueler steht, was
+  er will, was er braucht."): Die Hilfe wird GEWAEHLT, nicht gezaehlt - nach
+  Lage, Absicht und Bedarf, direkt oder indirekt, weit oder eng; bei
+  unklarer Lage erst eine Nachfrage; der erste Versuch vor jeder Hilfe; nach
+  dem richtigen Ergebnis eine Warum-Frage. Der Satz "Es wird keine Stufe
+  uebersprungen" ist damit falsch geworden und steht hier nicht mehr. Das
+  gehoert hierher und nicht ins Kleingedruckte, weil es das Bild "fuenf
+  Stufen, die man durchlaeuft" korrigiert.{% endcomment %}
+  <p class="feld-hilfe">
+    <strong>Die Stufen sind keine Leiter.</strong> Vor jeder Hilfe schätzt die
+    Anwendung den Beitrag des Kindes aus dem ganzen Gespräch ein, in drei
+    Teilen: die <strong>Lage</strong> (wo steht das Kind – noch kein eigener
+    Ansatz, falscher Ansatz, richtiger Weg mit Rechenfehler, richtiger Weg
+    noch nicht fertig, oder unklar), die <strong>Absicht</strong> (was will
+    es – weiterarbeiten, wissen, ob es stimmt, einen Tipp, die Lösung, ein
+    Wort verstehen) und den <strong>Bedarf</strong> (welche Hilfe es
+    vermutlich weiterbringt, und ob direkt oder indirekt). Dazu, ob das
+    Ergebnis richtig, falsch oder offen ist, und welcher Fehler es war. Die
+    Hilfe wird dann gewählt, nicht gezählt: Sie kann tiefer liegen als die
+    letzte, gleich oder höher. Eine Hilfe beginnt weit; kommt dieselbe Stufe
+    noch einmal, fragt sie enger. Ist die Lage unklar, fragt der Tutor erst
+    nach und lässt das Kind laut denken, bevor er hilft. Das Kind darf vor
+    jeder Hilfe mit einem eigenen Anfang beginnen; die erste Hilfe richtet
+    sich danach. Nach einem richtigen Ergebnis bestätigt der Tutor und stellt
+    genau eine Warum-Frage; die Antwort darauf ist freiwillig und wird nicht
+    beurteilt.
+  </p>
+  <p class="feld-hilfe">
+    <strong>Was die Anwendung immer entscheidet, nie das Modell:</strong> Ein
+    richtiges Ergebnis heißt fertig („Das stimmt.“), ohne dass die Lösung
+    gezeigt wird. Der erste falsche Versuch bekommt die Rückmeldung. Die
+    Lösung gibt es nur über die Abfrage davor, nie aus der Einschätzung.
+    Höchstens eine Nachfrage hintereinander und zwei je Aufgabe. Dieselbe
+    Stufe höchstens zweimal, dann eine stärkere. Ihre Obergrenze gilt immer.
+    Das Kind sagt selbst, was sein Beitrag ist: „{{ knopf_versuch|default:"Das ist mein Versuch" }}“
+    oder „{{ knopf_frage|default:"Ich habe eine Frage" }}“; eine Frage wird
+    beantwortet und ändert nichts an der Stufe. Im Verlauf sehen Sie zu
+    jedem Beitrag das Ergebnis, den Fehler im Klartext, Lage und Absicht in
+    Worten und die Hilfe, die die Anwendung danach gewählt hat.
+  </p>
+  <p class="feld-hilfe">
+    <strong>Die Schulstufe</strong> wählt nicht nur die Anrede: Volksschule,
+    Mittelstufe und Oberstufe haben eigene Anweisungen je Stufe (in der
+    Volksschule erklärt Stufe 1 die Situation, auf der Oberstufe den Begriff;
+    dort ist „Bestimme“ oder „Löse“ die Frage), und die Prüfung der Hilfen
+    kennt dort statt der Rechenarten die Werkzeuge: Satz, Formel, Verfahren
+    sind erst auf Stufe 4 an der Reihe. In der Volksschule setzt die erste
+    Hilfe stärker an, in den anderen Schulstufen fragt der Tutor zuerst nach.
+  </p>
+  <p class="feld-hilfe erklaerung-belege">
+    <strong>Woher das kommt:</strong> Zech nennt seine Stufung selbst
+    idealtypisch und nicht in eine lineare Ordnung zu bringen (Grundkurs
+    Mathematikdidaktik, S. 318); die minimale Hilfe ist die, die nach der
+    Einschätzung der Lehrperson vermutlich weiterbringt (S. 315); jede
+    Kategorie hat eine schwächere indirekte und eine stärkere direkte Form
+    (S. 316–318); Kinder sollen ihre Gedanken laut aussprechen (S. 321); weit
+    fragen und bei Schwierigkeiten verengen (S. 288), keine Kettenfragen
+    (S. 289), das Gute an einer Antwort herausstellen und nachfragen statt
+    urteilen (S. 290), nach richtigen Antworten öfter nach dem Warum fragen
+    (S. 290–291); in der Grundschule stärker ansetzen (S. 350). Dass Hilfen
+    auf einer sorgfältigen Diagnose beruhen: Kaiser, Blum, Borromeo Ferri und
+    Greefrath (2015, S. 376–377); Fehleranalyse und diagnostisches Interview:
+    Moser Opitz und Nührenbörger (2015, S. 505–506); lautes Denken und der
+    rationale Kern jeder Lösung: Franke und Ruwisch (2010, S. 95–96).
+  </p>
+  <ol class="erklaerungsliste">
+    {% for e in stufenerklaerung %}
+      <li>
+        <h4><span class="hilfe-stufe">Stufe {{ e.stufe }}</span> {{ e.name }}</h4>
+        <p class="erklaerung-tut">{{ e.tut }}</p>
+        <p class="erklaerung-nicht"><strong>Ausgeschlossen:</strong> {{ e.nicht }}</p>
+        <p class="erklaerung-danach"><strong>Danach:</strong> {{ e.danach }}</p>
+      </li>
+    {% endfor %}
+  </ol>
+</details>

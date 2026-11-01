@@ -1,0 +1,274 @@
+{% extends "base.html" %}
+
+{% block titel %}Die fünf Stufen{% endblock %}
+
+{% block inhalt %}
+{% comment %}Die oeffentliche Erklaerung fuer Lehrpersonen. Seit 30.10.2026
+(Hilfe nach Diagnose statt nach Leiter) beschreibt sie die Stufen als
+Vokabular und Obergrenze und die Wahl der Hilfe nach einer Einschaetzung
+je Beitrag. Belege mit Seitenzahlen, in eigenen Worten.{% endcomment %}
+<article class="rechtstext">
+<h1>Die gestuften Hilfen</h1>
+<p class="lead">
+  Für Lehrpersonen: Woher das Modell kommt, was in jeder Stufe passiert, wie
+  die Anwendung die Hilfe wählt, was sie technisch ausschließt, und warum die
+  Einstellung <strong>nur Tipps</strong> etwas anderes ist als eine
+  abgespeckte Fassung von <strong>bis zur Lösung</strong>.
+</p>
+
+<h2>1. Das Problem, das die Stufung löst</h2>
+<p>
+  Ein Chatbot, der eine Aufgabe löst, nimmt dem Kind genau den Denkschritt ab,
+  um den es in der Aufgabe geht. Die Hilfe wirkt freundlich und ist trotzdem im
+  Weg. Umgekehrt hilft es niemandem, Hilfe grundsätzlich zu verweigern: Ein Kind,
+  das nicht weiterkommt und keine Unterstützung bekommt, hört auf.
+</p>
+<p>
+  Die Mathematikdidaktik behandelt das nicht als Ja-oder-Nein-Frage, sondern als
+  Frage des <em>Maßes</em>. Hilfe wird in Kategorien gedacht, die inhaltlich immer
+  mehr vorwegnehmen, von der Ermutigung bis zur vorgerechneten Lösung. Diese
+  Einteilung geht auf Friedrich Zech zurück und ist in der deutschsprachigen
+  Didaktik eingeführt (Zech 2002).
+</p>
+<p class="hervorgehoben">
+  Der entscheidende Gedanke: Die Hilfe soll so klein sein, dass das Kind den
+  Denkschritt selbst macht, und so groß, dass es ihn macht. Zech nennt das die
+  <strong>minimale Hilfe</strong>: die, die nach der Einschätzung der Lehrperson
+  vermutlich weiterbringt (S. 315). Wer mit Stufe 5 beginnt, hat vier
+  Lerngelegenheiten übersprungen; wer immer bei Stufe 1 beginnt, lässt ein Kind
+  mit einem klaren Rechenfehler warten.
+</p>
+
+<h2>2. Die fünf Stufen im Einzelnen</h2>
+<p>
+  Die Stufen sind das Vokabular der Hilfen und die Obergrenze, die Sie setzen.
+  Zu jeder steht, was sie tut und was die Anwendung technisch ausschließt. Das
+  Ausschließen ist kein Beiwerk: Der Auftrag an das Sprachmodell enthält immer
+  genau eine Stufe und nennt ausdrücklich, was verboten ist. Ohne diese
+  Verneinung rutscht ein Sprachmodell verlässlich eine Stufe zu weit.
+</p>
+<ol class="stufenliste stufenliste-erklaert">
+  <li>
+    <span class="stufe-nr" aria-hidden="true">1</span>
+    <span class="stufe-text">
+      <strong>Motivationshilfe.</strong> Bringt die Situation der Aufgabe nahe:
+      erklärt unbekannte Wörter, sagt worum es geht und wen das angehen könnte,
+      macht Mut. Enthält die Angabe gar keine Frage, spricht die Anwendung das
+      ausdrücklich an – sie prüft das selbst und verlässt sich nicht darauf,
+      dass es dem Modell auffällt.
+      <span class="stufe-beispiel">„Eine Schulbibliothek ist ein Raum in der Schule, wo man Bücher ausleihen kann. Hier steht übrigens gar keine Frage – was könnte man denn wissen wollen?“</span>
+      <span class="stufe-verbot"><strong>Ausgeschlossen:</strong> rechnen, Rechenweg, Strategie, Ergebnis, und sagen, was herausgefunden werden soll.</span>
+    </span>
+  </li>
+  <li>
+    <span class="stufe-nr" aria-hidden="true">2</span>
+    <span class="stufe-text">
+      <strong>Rückmeldungshilfe.</strong> Meldet zurück, was am Versuch trägt und
+      wo er nicht aufgeht. Sie setzt voraus, dass das Kind etwas probiert hat –
+      deshalb wartet jede Hilfe auf einen eigenen Beitrag, bevor die nächste
+      kommt. Schreibt ein Kind, es verstehe die Aufgabe nicht, ist genau das
+      sein Versuch, und der unklare Teil wird erklärt.
+      <span class="stufe-beispiel">„Du hast 6 plus 8 gerechnet. Es sind aber 6 Packungen mit je 8 Stiften – schau dir das ‚je‘ noch einmal an.“</span>
+      <span class="stufe-verbot"><strong>Ausgeschlossen:</strong> den richtigen Weg verraten, den nächsten Rechenschritt nennen, vorrechnen, das Ergebnis nennen, und die gesuchte Größe benennen.</span>
+    </span>
+  </li>
+  <li>
+    <span class="stufe-nr" aria-hidden="true">3</span>
+    <span class="stufe-text">
+      <strong>Allgemein-strategische Hilfe.</strong> Schlägt eine Denkweise vor,
+      die bei vielen Aufgaben trägt, <em>ohne sie auf diese anzuwenden</em>. Das
+      ist die Stufe mit dem größten Übertrag: Was hier gelernt wird, hilft bei der
+      nächsten Aufgabe wieder. Die vorgeschlagenen Denkweisen stammen aus der
+      Heurismen-Tradition (Pólya 1949; Rott et al. 2023).
+      <span class="stufe-beispiel">„Was ist gegeben, was ist gesucht? Manchmal hilft eine Skizze, oder die Aufgabe mit kleineren Zahlen durchzuspielen.“</span>
+      <span class="stufe-verbot"><strong>Ausgeschlossen:</strong> die Strategie auf diese Aufgabe anwenden, deren Zahlen verrechnen, die gesuchte Größe benennen.</span>
+    </span>
+  </li>
+  <li>
+    <span class="stufe-nr" aria-hidden="true">4</span>
+    <span class="stufe-text">
+      <strong>Inhaltsorientiert-strategische Hilfe.</strong> Wendet die Strategie
+      auf genau diese Aufgabe an und nennt den nächsten Schritt – als Frage, nicht
+      als Rechnung. Ab hier wird die Hilfe aufgabenspezifisch und verliert den
+      Übertrag auf andere Aufgaben.
+      <span class="stufe-beispiel">„Wie viele Stifte sind in einer Packung?“</span>
+      <span class="stufe-verbot"><strong>Ausgeschlossen:</strong> diesen Schritt ausrechnen, weitere Schritte nennen, das Ergebnis nennen.</span>
+    </span>
+  </li>
+  <li>
+    <span class="stufe-nr" aria-hidden="true">5</span>
+    <span class="stufe-text">
+      <strong>Inhaltliche Hilfe.</strong> Rechnet Schritt für Schritt vor und
+      nennt das Ergebnis. Sie beendet die Aufgabe, statt beim Lösen zu helfen.
+      Vor dieser Stufe fragt die Anwendung ausdrücklich nach – sie kommt nur auf
+      Bitte des Kindes, nie aus der Einschätzung, und nicht, weil jemand
+      fünfmal auf denselben Knopf getippt hat.
+      <span class="stufe-beispiel">„8 mal 6 ist 48. Es sind also 48 Stifte.“</span>
+    </span>
+  </li>
+</ol>
+
+<h2>3. Die Hilfe wird gewählt, nicht gezählt</h2>
+<p>
+  Zech selbst nennt seine Stufung idealtypisch: Die Kategorien lassen sich
+  nicht in eine klare lineare Ordnung bringen, weil die Wirkung einer Hilfe vom
+  Zeitpunkt und vom Kind abhängt (S. 318). Eine Anwendung, die die Stufen
+  mechanisch der Reihe nach gibt, nimmt das Modell also genauer, als es gemeint
+  ist. Deshalb steht seit Oktober 2026 vor jeder Hilfe eine
+  <strong>Einschätzung des Beitrags</strong>, aus dem ganzen Gespräch:
+</p>
+<ul>
+  <li><strong>Lage:</strong> Wo steht das Kind? Noch kein eigener Ansatz, ein falscher Ansatz, der richtige Weg mit einem Rechenfehler, der richtige Weg noch nicht zu Ende – oder unklar.</li>
+  <li><strong>Absicht:</strong> Was will es? Weiterarbeiten, wissen, ob es stimmt, einen Tipp, die Lösung, ein Wort oder die Angabe verstehen, oder es ist frustriert und will aufhören.</li>
+  <li><strong>Bedarf:</strong> Welche Hilfe bringt es vermutlich weiter – und in welcher Form? Zech unterscheidet innerhalb jeder Kategorie eine schwächere <em>indirekte</em> Form (eine Frage, ein Hinweis) und eine stärkere <em>direkte</em> (eine Aussage) (S. 316–318).</li>
+</ul>
+<p>
+  Daraus wird die Hilfe gewählt, nicht gezählt: Sie kann tiefer liegen als die
+  letzte, gleich oder höher. Ein Kind mit einem klaren Rechenfehler bekommt die
+  Rückmeldung, auch wenn es zuletzt eine Strategie bekommen hat; ein Kind, das
+  die Aufgabe nicht mehr versteht, bekommt wieder die Situation erklärt. Eine
+  Hilfe fragt zuerst weit; kommt dieselbe Stufe noch einmal, wird die Frage
+  enger (S. 288). Jede Hilfe endet mit ihrer eigenen Frage, und darunter steht
+  kein zweiter Arbeitsauftrag mehr – Zech warnt vor Kettenfragen, die das Kind
+  nur noch abarbeitet (S. 289).
+</p>
+<p>
+  Ist die Lage unklar, hilft der Tutor nicht, sondern <strong>fragt
+  nach</strong>: Er lässt das Kind laut denken, Teilschritte erläutern,
+  beschreiben, was es schon versucht hat (S. 321). Das kostet keine Stufe. In
+  der Mittel- und Oberstufe ist das der erste Zug, wenn ein Kind um einen Tipp
+  bittet, ohne etwas geschrieben zu haben; in der Volksschule setzt die erste
+  Hilfe stärker an und erklärt die Situation (S. 350). Das Kind muss auf die
+  erste Hilfe aber nicht warten: Es darf vor jeder Hilfe einen eigenen
+  Anfang schreiben, und die erste Hilfe richtet sich nach ihm.
+</p>
+<p>
+  Nach einem richtigen Ergebnis ist die Aufgabe fertig. Der Tutor bestätigt
+  das und stellt genau eine <strong>Warum-Frage</strong>: Zech empfiehlt, nach
+  richtigen Antworten öfter zu fragen, warum etwas so ist, statt nur das
+  Ergebnis abzuhaken, und das Gute an einer Antwort herauszustellen statt zu
+  urteilen (S. 290–291). Die Antwort darauf ist freiwillig, wird nicht
+  beurteilt und bekommt einen kurzen Nachsatz; die nächste Aufgabe steht
+  daneben offen.
+</p>
+<p>
+  Dass Hilfen auf einer sorgfältigen Diagnose beruhen müssen und nicht auf
+  einem festen Schema, gehört zum Grundbestand der Didaktik: Kaiser, Blum,
+  Borromeo Ferri und Greefrath (2015, S. 376–377) für das Lösen von
+  Anwendungsaufgaben; Moser Opitz und Nührenbörger (2015, S. 505–506) für den
+  Weg von der Fehleranalyse zum diagnostischen Interview; Franke und Ruwisch
+  (2010, S. 95–96) für das laute Denken und den rationalen Kern, der in jeder
+  Lösung eines Kindes steckt, auch in einer falschen.
+</p>
+
+<h2>4. Was die Anwendung immer entscheidet</h2>
+<p>
+  Die Einschätzung kommt vom Sprachmodell, die Regeln darüber nicht. Was hier
+  steht, erzwingt der Server, und keine Formulierung im Gespräch ändert daran
+  etwas:
+</p>
+<ul>
+  <li>Ein richtiges Ergebnis heißt fertig. Das Kind sieht „Das stimmt.“, nie die vorgerechnete Lösung.</li>
+  <li>Der erste falsche Versuch bekommt die Rückmeldung (Stufe 2). Erst wenn ein Fehler schon benannt wurde, darf eine stärkere Hilfe folgen.</li>
+  <li>Die Lösung (Stufe 5) kommt nie aus der Einschätzung, sondern nur über die ausdrückliche Abfrage davor.</li>
+  <li>Höchstens eine Nachfrage hintereinander und höchstens zwei je Aufgabe – sonst wird aus Zuhören ein Verhör.</li>
+  <li>Dieselbe Stufe höchstens zweimal; dann kommt eine stärkere, auch wenn das Ziel der Stufe nicht erreicht ist.</li>
+  <li>Die Obergrenze der Lehrperson gilt immer, auch für die Antwort auf eine Frage.</li>
+</ul>
+<p>
+  Im Verlauf jedes Kindes sehen Sie zu jedem Beitrag, was die Anwendung daraus
+  geschlossen hat: das Ergebnis, den Fehler im Klartext, Lage und Absicht in
+  Worten, und die Hilfe, die sie danach gewählt hat.
+</p>
+
+<h2>5. Die beiden Einstellungen</h2>
+<h3>nur Tipps – Schluss nach Stufe 3</h3>
+<p>
+  Das Kind bekommt Ermutigung, eine Rückmeldung zu seinem Ansatz und eine
+  übertragbare Denkweise. Die Strategie wird nicht auf die Aufgabe angewandt, es
+  wird nichts gerechnet. Der eigentliche Rechenschritt bleibt beim Kind.
+</p>
+<p>
+  <strong>Das ist keine abgespeckte Fassung, sondern eine andere Absicht.</strong>
+  Die Stufen 1 bis 3 sind genau jene, die über die einzelne Aufgabe hinausweisen:
+  Was ein Kind hier lernt, kann es beim nächsten Mal wieder anwenden. Die Stufen 4
+  und 5 sind aufgabenspezifisch und helfen nur hier. Wer bei 3 aufhört, schneidet
+  also nicht das Ende weg, sondern behält den übertragbaren Teil und lässt den
+  einmaligen aus. Für Unterricht und Übungsphasen ist das die passende
+  Einstellung.
+</p>
+<h3>bis zur Lösung – alle fünf Stufen</h3>
+<p>
+  Zusätzlich der nächste Schritt als Frage und, wenn auch das nicht reicht und das
+  Kind ausdrücklich darum bittet, die vorgerechnete Lösung. Sinnvoll, wenn ein Kind
+  allein übt und sonst niemand da ist: Dann ist eine erklärte Lösung besser als
+  Abbrechen oder Abschreiben.
+</p>
+<p>
+  Auch hier kommt die Lösung nicht sofort. Sie steht erst an, wenn das Kind den
+  nächsten Schritt als Frage bekommen hat und daran scheitert, und auch dann
+  erst nach einer ausdrücklichen Rückfrage.
+</p>
+
+<h2>6. Wenn die Stufen aus sind</h2>
+<p>
+  Das Gespräch endet nicht mit der letzten freigegebenen Stufe. Ein Kind kann
+  weiter probieren und weiter fragen, was ein Wort bedeutet oder warum etwas so
+  ist. Die eingestellte Obergrenze gilt dabei unverändert weiter: Bei „nur
+  Tipps“ bleibt auch eine freundlich formulierte Bitte um die Lösung erfolglos,
+  ausdrücklich auch andeutungsweise und auch als Beispiel mit anderen Zahlen.
+  Sonst wäre die Rückfrage der Schleichweg um genau die Einstellung, die Sie
+  getroffen haben.
+</p>
+
+<h2>7. Warum die Lehrperson die Grenze setzt</h2>
+<p>
+  Ein Kind unter Zeitdruck wählt die höchste Stufe. Das ist kein Vorwurf, sondern
+  erwartbar. Wenn die Obergrenze bei der Lehrperson liegt, entscheidet die Person
+  über das Maß der Hilfe, die den Unterrichtszusammenhang kennt und weiß, worum es
+  in dieser Stunde geht.
+</p>
+<p class="hervorgehoben">
+  Technisch entscheidet die Anwendung, welche Stufe erlaubt ist, nicht das
+  Sprachmodell. Der Auftrag an das Modell enthält immer genau eine Stufe. Ein
+  Modell, das man höflich bittet, die Lösung zurückzuhalten, tut das irgendwann
+  nicht mehr – deshalb wird nicht gebeten, sondern die Möglichkeit gar nicht erst
+  eröffnet.
+</p>
+
+<h2>8. Offene Fragen für die Erprobung</h2>
+<p>
+  Das ModLearn Technology Lab erprobt diese Anwendung, es liegen dazu noch keine
+  eigenen Ergebnisse vor. Untersucht werden sollen unter anderem:
+</p>
+<ul>
+  <li>Wie oft trifft die Einschätzung von Lage und Absicht das, was eine Lehrperson im Gespräch gesehen hätte?</li>
+  <li>Verändert die Obergrenze, wie Kinder arbeiten – oder nur, was sie bekommen?</li>
+  <li>Was schreiben Kinder auf die Nachfrage des Tutors, und was auf die Warum-Frage nach einem richtigen Ergebnis?</li>
+  <li>Wie erleben Lehrpersonen die Steuerung, und stellen sie sie im Verlauf einer Stunde um?</li>
+</ul>
+<p>
+  Zum Stand der Forschung über adaptive Hilfen beim Problemlösen siehe
+  Herold-Blasius et al. (2025); zu den Nutzungsweisen von Kindern beim Einsatz von
+  KI Kriegel und Baumanns (2026).
+</p>
+
+<h2>Literatur</h2>
+<ul class="literatur">
+  <li>Zech, F. (2002). <em>Grundkurs Mathematikdidaktik. Theoretische und praktische Anleitungen für das Lehren und Lernen von Mathematik</em> (10. Aufl.). Weinheim: Beltz. – Stufung idealtypisch, nicht linear: S. 318; minimale Hilfe: S. 315; direkte und indirekte Hilfen: S. 316–318; laut denken lassen: S. 321; weit fragen, verengen: S. 288; keine Kettenfragen: S. 289; das Gute herausstellen, nachfragen statt urteilen: S. 290; Warum-Fragen: S. 290–291; in der Grundschule stärker ansetzen: S. 350.</li>
+  <li>Kaiser, G., Blum, W., Borromeo Ferri, R. &amp; Greefrath, G. (2015). Anwendungen und Modellieren. In R. Bruder, L. Hefendehl-Hebeker, B. Schmidt-Thieme &amp; H.-G. Weigand (Hrsg.), <em>Handbuch der Mathematikdidaktik</em>. Berlin, Heidelberg: Springer Spektrum, hier S. 376–377.</li>
+  <li>Moser Opitz, E. &amp; Nührenbörger, M. (2015). Diagnostik und Leistungsbeurteilung. In R. Bruder u. a. (Hrsg.), <em>Handbuch der Mathematikdidaktik</em>. Berlin, Heidelberg: Springer Spektrum, hier S. 505–506.</li>
+  <li>Franke, M. &amp; Ruwisch, S. (2010). <em>Didaktik des Sachrechnens in der Grundschule</em> (2. Aufl.). Heidelberg: Spektrum Akademischer Verlag, hier S. 95–96.</li>
+  <li>Herold-Blasius, R., Baumanns, L., Gruhn, K., Kleinschmidt, V. &amp; Tusche, C. (2025). Adaptive Hilfen beim Problemlösen. <em>mathematik differenziert</em>, 4, 40–48.</li>
+  <li>Kriegel, J. &amp; Baumanns, L. (2026). Wie nutzen mathematisch interessierte Kinder KI beim Problemlösen? <em>mathematica didactica</em>.</li>
+  <li>Rott, B., Bruder, R., Heinrich, F. &amp; Bauer, C. (2023). Problemlösen lernen. In <em>Handbuch der Mathematikdidaktik</em> (S. 313–339). Berlin: Springer.</li>
+  <li>Pólya, G. (1949). <em>Schule des Denkens. Vom Lösen mathematischer Probleme.</em> Bern: Francke.</li>
+</ul>
+<p class="quelle">
+  Die Angaben stammen aus den Projektunterlagen des ModLearn Technology Lab und
+  sind dort mit dem Vermerk versehen, sie vor der Verwendung zu prüfen; bei Zech
+  betrifft das die Auflage, bei den Handbuchbeiträgen Titel und Seitenumfang
+  der Kapitel.
+</p>
+</article>
+{% endblock %}

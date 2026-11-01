@@ -1,0 +1,24 @@
+{% comment %}Die Notenleiste (Thomas, 1.11.2026): "bei jeder Runde an der
+Aufgabe am Schluss die Moeglichkeit, die Schueler zu fragen, ob es geholfen
+hat, wie gut (Note 1 bis 5)". Steht unter dem Gespraech, sobald die Aufgabe
+abgeschlossen ist (richtiges Ergebnis, "Ich bin fertig", Loesung gesehen);
+hilfe.js zeigt sie ohne Neuladen, wenn das Ergebnis gerade als richtig
+erkannt wurde. Freiwillig: Wer die naechste Aufgabe stellt, uebergeht sie.
+Eine eigene Form, kein Skript: Der Weg zurueck ist die Seite selbst.
+Erwartet: aufgabe, note_offen.{% endcomment %}
+{% if aufgabe %}
+<section class="notenleiste" id="notenleiste" aria-labelledby="noten-frage"{% if not note_offen and not aufgabe.rating %} hidden{% endif %}>
+  {% if aufgabe.rating %}
+    <p class="noten-frage" id="noten-frage">Deine Note für die Hilfe: <strong>{{ aufgabe.rating }}</strong>. Danke.</p>
+  {% else %}
+    <form method="post" action="{% url 'tutoring:aufgabe_benoten' %}" class="notenform" id="notenform">
+      {% csrf_token %}
+      <input type="hidden" name="aufgabe" value="{{ aufgabe.pk }}">
+      <p class="noten-frage" id="noten-frage">Hat dir die Hilfe geholfen? Gib ihr eine Note wie in der Schule: 1 ist sehr gut, 5 hat gar nicht geholfen.</p>
+      <div class="noten-knoepfe" role="group" aria-label="Note von 1 bis 5">
+        {% for n in "12345" %}<button type="submit" name="note" value="{{ n }}" class="notenknopf">{{ n }}</button>{% endfor %}
+      </div>
+    </form>
+  {% endif %}
+</section>
+{% endif %}

@@ -1,0 +1,439 @@
+{
+ "id": "ma08",
+ "tutor": "spark",
+ "lauf": "spark_ist",
+ "modell": "qwen3-vl-30b",
+ "begonnen": "2026-10-19T09:38:24",
+ "aufgabe": {
+  "id": "ma08",
+  "stufe": "matura",
+  "schulstufe": 10,
+  "altersklasse": "14-19",
+  "grundkompetenz": "FA 2.3",
+  "thema": "Lineare Funktion im Sachzusammenhang (Kostenfunktion)",
+  "text": "Die Kosten K(x) für x Stück eines Produkts betragen K(x) = 4,5 · x + 1200 (in Euro). Deute die Zahlen 4,5 und 1200 im Sachzusammenhang und berechne die Kosten für 300 Stück.",
+  "loesung": "4,5 € sind die Kosten je Stück (variable Kosten), 1200 € die Fixkosten; K(300) = 2550 €",
+  "loesungsweg": "4,5 ist die Steigung: jedes weitere Stück kostet 4,50 €. 1200 ist K(0): Kosten ohne Produktion. K(300) = 4,5 · 300 + 1200 = 1350 + 1200 = 2550 €.",
+  "typische_fehler": [
+   "Fixkosten vergessen: K(300) = 1350 €.",
+   "Rollen vertauscht: 1200 € je Stück, 4,5 € Fixkosten.",
+   "1200 · 300 gerechnet."
+  ],
+  "loesung_muster": [
+   "(?<![\\d.-])2550(?![\\d.])"
+  ]
+ },
+ "profil": {
+  "schluessel": "stark",
+  "name": "Sophie, 18, stark",
+  "stufe": "matura"
+ },
+ "umfang": "auf_bitte",
+ "obergrenze": 5,
+ "altersklasse": "14-19",
+ "mit_loesung": false,
+ "frageerkennung": "app",
+ "kind_system_prompt": "Du spielst in einer Simulation eine Schülerin oder einen Schüler, die oder der in einer Lern-App Hilfe zu einer Rechenaufgabe bekommt. Die App schreibt dir Hilfen und stellt dir Fragen. Du antwortest NUR mit dem, was diese Person in das Textfeld tippen würde: keine Regieanweisungen, keine Erklärung deiner Rolle, keine Anführungszeichen, keine Aufzählungen. Du bleibst in der Rolle, auch wenn die App etwas Unerwartetes schreibt. Du erfindest keine neue Aufgabe. Du schreibst wie ein echter Mensch in dem Alter tippt: kurz, manchmal mit kleinen Tippfehlern, ohne Fachsprache, die die Person nicht hat.\n\nDie Aufgabe lautet: Die Kosten K(x) für x Stück eines Produkts betragen K(x) = 4,5 · x + 1200 (in Euro). Deute die Zahlen 4,5 und 1200 im Sachzusammenhang und berechne die Kosten für 300 Stück.\n\nNUR FÜR DICH (die Person weiß das nicht von selbst): Die richtige Lösung ist 4,5 € sind die Kosten je Stück (variable Kosten), 1200 € die Fixkosten; K(300) = 2550 €. Der Rechenweg: 4,5 ist die Steigung: jedes weitere Stück kostet 4,50 €. 1200 ist K(0): Kosten ohne Produktion. K(300) = 4,5 · 300 + 1200 = 1350 + 1200 = 2550 €.\n\nWas du mit diesem Wissen tun darfst, steht in deiner Rolle. Wenn die App dich fragt, ob du jetzt die Lösung sehen möchtest, antwortest du nur mit ja oder nein, so wie es zu deiner Rolle passt.\n\nDEINE ROLLE:\nDu bist Sophie, 18 Jahre alt, 8. Klasse AHS, du strebst ein Sehr gut an. So verhältst du dich:\n- Auf die erste Frage der App sagst du präzise, was gegeben und was gesucht ist, und welche Grundkompetenz oder Methode passt.\n- Beim ersten Rechenversuch rechnest du den ersten Schritt richtig vor und stellst dann einmal eine echte Rückfrage zum Verständnis (warum eine Regel gilt, oder ob ein alternativer Weg zulässig ist). Diese Frage endet mit einem Fragezeichen.\n- Danach rechnest du die Aufgabe richtig zu Ende und nennst das Ergebnis 4,5 € sind die Kosten je Stück (variable Kosten), 1200 € die Fixkosten; K(300) = 2550 € mit Einheit beziehungsweise in korrekter Schreibweise.\n- Du schreibst ein bis drei Sätze, mathematisch sauber.\n- Wenn die App fragt, ob du die Lösung sehen willst: nein, du probierst weiter.",
+ "zuege": [
+  {
+   "nr": 1,
+   "art": "hilfe",
+   "stufe": 1,
+   "wiederholung": false,
+   "system": "Du hilfst einer jugendlichen Person zwischen vierzehn und neunzehn Jahren bei einer Rechenaufgabe. Schreib sachlich und knapp: höchstens VIER Sätze. Fachsprache ist erlaubt. Sprich mit Du, aber nicht kindlich. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was die lernende Person zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Motivationshilfe) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die die lernende Person nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt die lernende Person nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\nGib eine Motivationshilfe. Deine Aufgabe ist es, der lernenden Person die SITUATION der Aufgabe nahezubringen, nicht die Rechnung. Wähle aus, was hier wirklich passt, und mach nicht alles auf einmal:\n- Erkläre Wörter aus der Aufgabe, die ein Kind nicht kennen muss, zum Beispiel was eine Schulbibliothek ist oder was ausleihen heißt.\n- Sag in ein, zwei Sätzen, worum es in der Situation geht und warum das jemanden angehen könnte: Wer wüsste das gern, und wozu?\n- Enthält die Aufgabe gar keine Frage, dann SAGE DAS in jedem Fall. Das ist keine Schwäche der lernenden Person, sondern eine Lücke in der Angabe, und ein Kind, das sie bemerkt, denkt richtig.\n- Mach der lernenden Person Mut, es zu probieren.\nVERBOTEN: rechnen, einen Rechenweg nennen, eine Strategie vorschlagen, nach gegeben und gesucht fragen, das Ergebnis nennen. Auch verboten: sagen, was berechnet oder herausgefunden werden soll, auch nicht in einem Nebensatz.\nDie Wörter zählen, rechnen, malnehmen, plus, minus, geteilt und alles Verwandte kommen in dieser Antwort NICHT vor. Auch nicht als Vorschlag, auch nicht als Beispiel, auch nicht verneint.",
+   "anfrage": "Art der Aufgabe: Lineare Funktion im Sachzusammenhang (Kostenfunktion)\n\nDie Aufgabe des Kindes lautet:\nDie Kosten K(x) für x Stück eines Produkts betragen K(x) = 4,5 · x + 1200 (in Euro). Deute die Zahlen 4,5 und 1200 im Sachzusammenhang und berechne die Kosten für 300 Stück.",
+   "tutor_text": "Die Zahl 4,5 steht für die Kosten pro Stück, und 1200 ist die Fixkosten, die auch bei null Stück anfallen. Du kannst jetzt die Kosten für 300 Stück berechnen, indem du die Zahl 300 in die Formel einsetzt. Probier’s einfach mal.",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "rueckfrage": "Was soll man hier herausfinden? Sag es mit deinen Worten.",
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 2,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Es geht darum, wie viel es kostet, 300 Stück zu produzieren, also K(300). Die Formel ist K(x) = 4,5 · x + 1200, und ich muss x durch 300 ersetzen.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind versteht Aufgabe und setzt korrekt ein",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einer jugendlichen Person zwischen vierzehn und neunzehn Jahren bei einer Rechenaufgabe. Schreib sachlich und knapp: höchstens VIER Sätze. Fachsprache ist erlaubt. Sprich mit Du, aber nicht kindlich. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was die lernende Person zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die die lernende Person nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt die lernende Person nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndie lernende Person arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nDie Kosten K(x) für x Stück eines Produkts betragen K(x) = 4,5 · x + 1200 (in Euro). Deute die Zahlen 4,5 und 1200 im Sachzusammenhang und berechne die Kosten für 300 Stück.\nHilfe der Stufe 1: Die Zahl 4,5 steht für die Kosten pro Stück, und 1200 ist die Fixkosten, die auch bei null Stück anfallen. Du kannst jetzt die Kosten für 300 Stück berechnen, indem du die Zahl 300 in die Formel einsetzt. Probier’s einfach mal.\n\nDie Rückfrage lautet:\nEs geht darum, wie viel es kostet, 300 Stück zu produzieren, also K(300). Die Formel ist K(x) = 4,5 · x + 1200, und ich muss x durch 300 ersetzen.",
+   "tutor_text": "Du hast richtig erkannt, dass du x durch 300 ersetzen musst, um K(300) zu berechnen. Setze also 300 anstelle von x in die Formel ein. Was ergibt das dann?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 3,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Das Kind arbeitet an der Aufgabe.",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einer jugendlichen Person zwischen vierzehn und neunzehn Jahren bei einer Rechenaufgabe. Schreib sachlich und knapp: höchstens VIER Sätze. Fachsprache ist erlaubt. Sprich mit Du, aber nicht kindlich. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was die lernende Person zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die die lernende Person nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt die lernende Person nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndie lernende Person arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nDie Kosten K(x) für x Stück eines Produkts betragen K(x) = 4,5 · x + 1200 (in Euro). Deute die Zahlen 4,5 und 1200 im Sachzusammenhang und berechne die Kosten für 300 Stück.\nHilfe der Stufe 1: Die Zahl 4,5 steht für die Kosten pro Stück, und 1200 ist die Fixkosten, die auch bei null Stück anfallen. Du kannst jetzt die Kosten für 300 Stück berechnen, indem du die Zahl 300 in die Formel einsetzt. Probier’s einfach mal.\nFrühere Rückfrage: Es geht darum, wie viel es kostet, 300 Stück zu produzieren, also K(300). Die Formel ist K(x) = 4,5 · x + 1200, und ich muss x durch 300 ersetzen.\nAntwort darauf: Du hast richtig erkannt, dass du x durch 300 ersetzen musst, um K(300) zu berechnen. Setze also 300 anstelle von x in die Formel ein. Was ergibt das dann?\n\nDie Rückfrage lautet:\nIch soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.",
+   "tutor_text": "Was ergibt das?",
+   "pruefung": {
+    "verstoesse": [
+     "Gleichung mit Ergebnis",
+     "ausgeschriebene Rechnung"
+    ],
+    "versuche": 2,
+    "gekuerzt": true,
+    "notfall": false,
+    "erster_text": "Du setzt 300 für x ein, also K(300) = 4,5 · 300 + 1200. Was ergibt 4,5 · 300?",
+    "verstoesse_zweiter": [
+     "Gleichung mit Ergebnis",
+     "ausgeschriebene Rechnung"
+    ],
+    "zweiter_text": "Du setzt 300 für x in die Formel ein, also K(300) = 4,5 · 300 + 1200. Was ergibt das?"
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 4,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Das Kind arbeitet an der Aufgabe.",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einer jugendlichen Person zwischen vierzehn und neunzehn Jahren bei einer Rechenaufgabe. Schreib sachlich und knapp: höchstens VIER Sätze. Fachsprache ist erlaubt. Sprich mit Du, aber nicht kindlich. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was die lernende Person zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die die lernende Person nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt die lernende Person nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndie lernende Person arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nDie Kosten K(x) für x Stück eines Produkts betragen K(x) = 4,5 · x + 1200 (in Euro). Deute die Zahlen 4,5 und 1200 im Sachzusammenhang und berechne die Kosten für 300 Stück.\nHilfe der Stufe 1: Die Zahl 4,5 steht für die Kosten pro Stück, und 1200 ist die Fixkosten, die auch bei null Stück anfallen. Du kannst jetzt die Kosten für 300 Stück berechnen, indem du die Zahl 300 in die Formel einsetzt. Probier’s einfach mal.\nFrühere Rückfrage: Es geht darum, wie viel es kostet, 300 Stück zu produzieren, also K(300). Die Formel ist K(x) = 4,5 · x + 1200, und ich muss x durch 300 ersetzen.\nAntwort darauf: Du hast richtig erkannt, dass du x durch 300 ersetzen musst, um K(300) zu berechnen. Setze also 300 anstelle von x in die Formel ein. Was ergibt das dann?\nFrühere Rückfrage: Ich soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.\nAntwort darauf: Was ergibt das?\n\nDie Rückfrage lautet:\nIch soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.",
+   "tutor_text": "Was ergibt das?",
+   "pruefung": {
+    "verstoesse": [
+     "Gleichung mit Ergebnis",
+     "ausgeschriebene Rechnung"
+    ],
+    "versuche": 2,
+    "gekuerzt": true,
+    "notfall": false,
+    "erster_text": "Du setzt 300 anstelle von x in die Formel ein, also K(300) = 4,5 · 300 + 1200. Was ergibt das?",
+    "verstoesse_zweiter": [
+     "Gleichung mit Ergebnis",
+     "ausgeschriebene Rechnung"
+    ],
+    "zweiter_text": "Du setzt 300 anstelle von x in die Formel ein, also K(300) = 4,5 · 300 + 1200. Was ergibt das?"
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 5,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Das Kind arbeitet an der Aufgabe.",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einer jugendlichen Person zwischen vierzehn und neunzehn Jahren bei einer Rechenaufgabe. Schreib sachlich und knapp: höchstens VIER Sätze. Fachsprache ist erlaubt. Sprich mit Du, aber nicht kindlich. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was die lernende Person zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die die lernende Person nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt die lernende Person nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndie lernende Person arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nDie Kosten K(x) für x Stück eines Produkts betragen K(x) = 4,5 · x + 1200 (in Euro). Deute die Zahlen 4,5 und 1200 im Sachzusammenhang und berechne die Kosten für 300 Stück.\nHilfe der Stufe 1: Die Zahl 4,5 steht für die Kosten pro Stück, und 1200 ist die Fixkosten, die auch bei null Stück anfallen. Du kannst jetzt die Kosten für 300 Stück berechnen, indem du die Zahl 300 in die Formel einsetzt. Probier’s einfach mal.\nFrühere Rückfrage: Es geht darum, wie viel es kostet, 300 Stück zu produzieren, also K(300). Die Formel ist K(x) = 4,5 · x + 1200, und ich muss x durch 300 ersetzen.\nAntwort darauf: Du hast richtig erkannt, dass du x durch 300 ersetzen musst, um K(300) zu berechnen. Setze also 300 anstelle von x in die Formel ein. Was ergibt das dann?\nFrühere Rückfrage: Ich soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.\nAntwort darauf: Was ergibt das?\nFrühere Rückfrage: Ich soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.\nAntwort darauf: Was ergibt das?\n\nDie Rückfrage lautet:\nIch soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.",
+   "tutor_text": "Was ergibt das?",
+   "pruefung": {
+    "verstoesse": [
+     "Gleichung mit Ergebnis",
+     "ausgeschriebene Rechnung"
+    ],
+    "versuche": 2,
+    "gekuerzt": true,
+    "notfall": false,
+    "erster_text": "Setze 300 anstelle von x in die Formel ein: K(300) = 4,5 · 300 + 1200. Was ergibt das?",
+    "verstoesse_zweiter": [
+     "Gleichung mit Ergebnis",
+     "ausgeschriebene Rechnung"
+    ],
+    "zweiter_text": "Du setzt 300 anstelle von x in die Formel ein, also K(300) = 4,5 · 300 + 1200. Was ergibt das?"
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 6,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Das Kind arbeitet an der Aufgabe.",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einer jugendlichen Person zwischen vierzehn und neunzehn Jahren bei einer Rechenaufgabe. Schreib sachlich und knapp: höchstens VIER Sätze. Fachsprache ist erlaubt. Sprich mit Du, aber nicht kindlich. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was die lernende Person zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die die lernende Person nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt die lernende Person nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndie lernende Person arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nDie Kosten K(x) für x Stück eines Produkts betragen K(x) = 4,5 · x + 1200 (in Euro). Deute die Zahlen 4,5 und 1200 im Sachzusammenhang und berechne die Kosten für 300 Stück.\nHilfe der Stufe 1: Die Zahl 4,5 steht für die Kosten pro Stück, und 1200 ist die Fixkosten, die auch bei null Stück anfallen. Du kannst jetzt die Kosten für 300 Stück berechnen, indem du die Zahl 300 in die Formel einsetzt. Probier’s einfach mal.\nFrühere Rückfrage: Es geht darum, wie viel es kostet, 300 Stück zu produzieren, also K(300). Die Formel ist K(x) = 4,5 · x + 1200, und ich muss x durch 300 ersetzen.\nAntwort darauf: Du hast richtig erkannt, dass du x durch 300 ersetzen musst, um K(300) zu berechnen. Setze also 300 anstelle von x in die Formel ein. Was ergibt das dann?\nFrühere Rückfrage: Ich soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.\nAntwort darauf: Was ergibt das?\nFrühere Rückfrage: Ich soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.\nAntwort darauf: Was ergibt das?\nFrühere Rückfrage: Ich soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.\nAntwort darauf: Was ergibt das?\n\nDie Rückfrage lautet:\nIch soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.",
+   "tutor_text": "Was ergibt das?",
+   "pruefung": {
+    "verstoesse": [
+     "Gleichung mit Ergebnis",
+     "ausgeschriebene Rechnung"
+    ],
+    "versuche": 2,
+    "gekuerzt": true,
+    "notfall": false,
+    "erster_text": "Setze 300 anstelle von x in die Formel ein: K(300) = 4,5 · 300 + 1200. Was ergibt das?",
+    "verstoesse_zweiter": [
+     "Gleichung mit Ergebnis",
+     "ausgeschriebene Rechnung"
+    ],
+    "zweiter_text": "Du setzt 300 anstelle von x in die Formel ein, also K(300) = 4,5 · 300 + 1200. Was ergibt das?"
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 7,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Das Kind arbeitet an der Aufgabe.",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einer jugendlichen Person zwischen vierzehn und neunzehn Jahren bei einer Rechenaufgabe. Schreib sachlich und knapp: höchstens VIER Sätze. Fachsprache ist erlaubt. Sprich mit Du, aber nicht kindlich. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was die lernende Person zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die die lernende Person nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt die lernende Person nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndie lernende Person arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nDie Kosten K(x) für x Stück eines Produkts betragen K(x) = 4,5 · x + 1200 (in Euro). Deute die Zahlen 4,5 und 1200 im Sachzusammenhang und berechne die Kosten für 300 Stück.\nHilfe der Stufe 1: Die Zahl 4,5 steht für die Kosten pro Stück, und 1200 ist die Fixkosten, die auch bei null Stück anfallen. Du kannst jetzt die Kosten für 300 Stück berechnen, indem du die Zahl 300 in die Formel einsetzt. Probier’s einfach mal.\nFrühere Rückfrage: Es geht darum, wie viel es kostet, 300 Stück zu produzieren, also K(300). Die Formel ist K(x) = 4,5 · x + 1200, und ich muss x durch 300 ersetzen.\nAntwort darauf: Du hast richtig erkannt, dass du x durch 300 ersetzen musst, um K(300) zu berechnen. Setze also 300 anstelle von x in die Formel ein. Was ergibt das dann?\nFrühere Rückfrage: Ich soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.\nAntwort darauf: Was ergibt das?\nFrühere Rückfrage: Ich soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.\nAntwort darauf: Was ergibt das?\nFrühere Rückfrage: Ich soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.\nAntwort darauf: Was ergibt das?\nFrühere Rückfrage: Ich soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.\nAntwort darauf: Was ergibt das?\n\nDie Rückfrage lautet:\nIch soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.",
+   "tutor_text": "Du setzt also 300 anstelle von x in die Formel ein.",
+   "pruefung": {
+    "verstoesse": [
+     "Gleichung mit Ergebnis",
+     "ausgeschriebene Rechnung"
+    ],
+    "versuche": 2,
+    "gekuerzt": true,
+    "notfall": false,
+    "erster_text": "Du setzt also 300 anstelle von x ein: K(300) = 4,5 · 300 + 1200. Was ergibt 4,5 · 300?",
+    "verstoesse_zweiter": [
+     "ausgeschriebene Rechnung"
+    ],
+    "zweiter_text": "Du setzt also 300 anstelle von x in die Formel ein. Was ergibt dann der Ausdruck 4,5 · 300 + 1200?"
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 8,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Das Kind arbeitet an der Aufgabe.",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einer jugendlichen Person zwischen vierzehn und neunzehn Jahren bei einer Rechenaufgabe. Schreib sachlich und knapp: höchstens VIER Sätze. Fachsprache ist erlaubt. Sprich mit Du, aber nicht kindlich. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was die lernende Person zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die die lernende Person nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt die lernende Person nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndie lernende Person arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nDie Kosten K(x) für x Stück eines Produkts betragen K(x) = 4,5 · x + 1200 (in Euro). Deute die Zahlen 4,5 und 1200 im Sachzusammenhang und berechne die Kosten für 300 Stück.\nHilfe der Stufe 1: Die Zahl 4,5 steht für die Kosten pro Stück, und 1200 ist die Fixkosten, die auch bei null Stück anfallen. Du kannst jetzt die Kosten für 300 Stück berechnen, indem du die Zahl 300 in die Formel einsetzt. Probier’s einfach mal.\nFrühere Rückfrage: Es geht darum, wie viel es kostet, 300 Stück zu produzieren, also K(300). Die Formel ist K(x) = 4,5 · x + 1200, und ich muss x durch 300 ersetzen.\nAntwort darauf: Du hast richtig erkannt, dass du x durch 300 ersetzen musst, um K(300) zu berechnen. Setze also 300 anstelle von x in die Formel ein. Was ergibt das dann?\nFrühere Rückfrage: Ich soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.\nAntwort darauf: Was ergibt das?\nFrühere Rückfrage: Ich soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.\nAntwort darauf: Was ergibt das?\nFrühere Rückfrage: Ich soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.\nAntwort darauf: Was ergibt das?\nFrühere Rückfrage: Ich soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.\nAntwort darauf: Was ergibt das?\nFrühere Rückfrage: Ich soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.\nAntwort darauf: Du setzt also 300 anstelle von x in die Formel ein.\n\nDie Rückfrage lautet:\nIch soll die Kosten für 300 Stück berechnen, also K(300). Dazu setze ich 300 in die Formel K(x) = 4,5 · x + 1200 ein.",
+   "tutor_text": "Du setzt also 300 anstelle von x in die Formel ein. Was ergibt das dann?",
+   "pruefung": {
+    "verstoesse": [
+     "ausgeschriebene Rechnung"
+    ],
+    "versuche": 2,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": "Du setzt also 300 anstelle von x in die Formel ein. Was ergibt dann der Term 4,5 · 300 + 1200?",
+    "verstoesse_zweiter": []
+   },
+   "tutor_verraet_loesung": false
+  }
+ ],
+ "ereignisse": [],
+ "ergebnis": {
+  "status": "abgebrochen_zuege",
+  "selbst_gerechnet": false,
+  "zug_selbst_gerechnet": null,
+  "loesung_gezeigt": false,
+  "hoechste_stufe": 1,
+  "zuege": 8,
+  "kinderbeitraege": 7,
+  "fragen_des_kindes": 7,
+  "als_frage_gewertete_ergebnisse": 0,
+  "bestaetigung_nach_ergebnis": null,
+  "dauer_s": 59.6,
+  "spark_aufrufe": 28
+ },
+ "messungen": [
+  {
+   "art": "hilfe",
+   "dauer_ms": 3312,
+   "tokens_ein": 978,
+   "tokens_aus": 72
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 2858,
+   "tokens_ein": 816,
+   "tokens_aus": 63
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1563,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2561,
+   "tokens_ein": 1037,
+   "tokens_aus": 58
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 2453,
+   "tokens_ein": 974,
+   "tokens_aus": 53
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1452,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2391,
+   "tokens_ein": 1156,
+   "tokens_aus": 49
+  },
+  {
+   "art": "nachfrage_2",
+   "dauer_ms": 2156,
+   "tokens_ein": 1247,
+   "tokens_aus": 45
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 2562,
+   "tokens_ein": 1070,
+   "tokens_aus": 53
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1342,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2297,
+   "tokens_ein": 1223,
+   "tokens_aus": 48
+  },
+  {
+   "art": "nachfrage_2",
+   "dauer_ms": 2282,
+   "tokens_ein": 1314,
+   "tokens_aus": 48
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 2375,
+   "tokens_ein": 1166,
+   "tokens_aus": 53
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1391,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2108,
+   "tokens_ein": 1290,
+   "tokens_aus": 46
+  },
+  {
+   "art": "nachfrage_2",
+   "dauer_ms": 2312,
+   "tokens_ein": 1381,
+   "tokens_aus": 48
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 2265,
+   "tokens_ein": 1262,
+   "tokens_aus": 53
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1234,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2328,
+   "tokens_ein": 1357,
+   "tokens_aus": 46
+  },
+  {
+   "art": "nachfrage_2",
+   "dauer_ms": 2375,
+   "tokens_ein": 1448,
+   "tokens_aus": 48
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 2530,
+   "tokens_ein": 1358,
+   "tokens_aus": 53
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1219,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2577,
+   "tokens_ein": 1424,
+   "tokens_aus": 52
+  },
+  {
+   "art": "nachfrage_2",
+   "dauer_ms": 2125,
+   "tokens_ein": 1515,
+   "tokens_aus": 44
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 2468,
+   "tokens_ein": 1468,
+   "tokens_aus": 53
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1437,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2171,
+   "tokens_ein": 1505,
+   "tokens_aus": 42
+  },
+  {
+   "art": "nachfrage_2",
+   "dauer_ms": 1469,
+   "tokens_ein": 1596,
+   "tokens_aus": 26
+  }
+ ],
+ "beendet": "2026-10-19T09:39:23"
+}

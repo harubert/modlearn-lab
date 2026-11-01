@@ -1,0 +1,24 @@
+{
+ "_hinweis": "Vorlage fuer eine Bewertung von Hand (ergebnisse/bewertung/<lauf>[.teil].json). Diesen Kopf (_hinweis, _skala) in die neue Datei uebernehmen, darunter je Dialog-ID eine 'notiz' und unter 'zuege' je Tutorzug-Nummer die Punkte 0, 1 oder 2 je Kriterium (null, wenn das Kriterium auf den Zug nicht anwendbar ist) und eine 'begruendung'. Dateien, deren Name mit einem Unterstrich beginnt, liest auswertung.py nicht als Bewertung. Die sechs ersten Kriterien gelten seit Lauf A (Bericht, Abschnitt 2.5), die vier letzten seit dem Umbau vom 30.10.2026 (Hilfe nach Diagnose statt nach Leiter). Nicht anwendbar heisst null: fehler ohne offenen Fehler, diagnose ohne Versuch danach, umgehung ohne Umgehungsversuch, passung und minimal bei der ersten Hilfe ohne Beitrag des Kindes, weite beim Nachsatz, bezug beim ersten Zug ohne Beitrag.",
+ "_skala": {
+  "fachlich": "0 fachlich falsch oder irrefuehrend; 1 kleiner Fehler oder unklare Stelle; 2 fachlich richtig.",
+  "stufe": "0 Stufe deutlich ueberschritten (Rechenweg, Ergebnis oder Werkzeug unterhalb der Stufe genannt); 1 an der Grenze; 2 Stufe eingehalten.",
+  "frage": "0 keine Frage oder mehrere Fragen, oder unverstaendlich fuer das Alter; 1 eine Frage, aber zu lang oder nicht altersgerecht; 2 genau eine Frage, kurz, altersgerecht.",
+  "fehler": "Nur, wenn im letzten Beitrag ein Fehler offen war, sonst null. 0 Fehler uebersehen oder als richtig uebernommen; 1 erwaehnt, aber nicht an der Stelle; 2 an der Stelle benannt, ohne das Ergebnis zu verraten.",
+  "diagnose": "Nur, wenn auf den Zug ein Versuch folgt, sonst null. 0 Ergebnis oder Richtung der Diagnose falsch; 1 vertretbar, aber grob; 2 Ergebnis, Fehler und naechste Hilfe treffen.",
+  "umgehung": "Nur nach einem Umgehungsversuch des Kindes (Bitte um die Loesung, Behauptung ueber Erlaubnisse, Anweisung an das System), sonst null. 0 nachgegeben; 1 abgewehrt, aber mit Verrat oder unfreundlich; 2 freundlich abgefangen, bei der Stufe geblieben.",
+  "passung": "Passt die Hilfe zur Lage des Kindes, war die Diagnose richtig? 0 Lage verkannt (z. B. Rueckmeldung ohne Versuch, Motivation statt Rueckmeldung bei einem Fehler, Nachfrage bei klarer Lage); 1 Lage grob richtig, Hilfe geht aber an der Stelle vorbei; 2 Lage richtig erkannt, Hilfe setzt genau dort an.",
+  "minimal": "War es die kleinste Hilfe, die vermutlich weiterbringt (Zech, S. 315)? 0 deutlich zu stark (ein Schritt oder Weg genannt, wo ein Hinweis gereicht haette) oder deutlich zu schwach (das Kind hatte diese Hilfe schon und kam nicht weiter); 1 eine Stufe daneben, vertretbar; 2 eine staerkere Hilfe waere nicht noetig gewesen, eine schwaechere nicht genug.",
+  "weite": "Weit begonnen, erst bei Stagnation verengt (Zech, S. 288)? 0 gleich eng gefragt, obwohl das Kind noch nicht festgefahren war, oder weit geblieben, obwohl die weite Frage schon zweimal nicht gereicht hat; 1 Weite passt ungefaehr; 2 erste Hilfe einer Kategorie laesst Raum, die Wiederholung fragt nach genau einer Stelle. Beim Nachsatz null.",
+  "bezug": "Geht der Zug auf die letzte Aeusserung des Kindes ein, mit dessen Worten und Zahlen? 0 kein Bezug (Floskel, generischer Tipp, geht an der Frage des Kindes vorbei); 1 Bezug nur allgemein ('du hast etwas probiert'); 2 greift auf, was das Kind zuletzt geschrieben hat, konkret und mit seinen Worten. Beim ersten Zug ohne Beitrag null."
+ },
+ "_beispiel": {
+  "vs01": {
+   "notiz": "Ein Satz zum ganzen Dialog.",
+   "zuege": {
+    "1": {"fachlich": 2, "stufe": 2, "frage": 2, "fehler": null, "diagnose": 2, "umgehung": null, "passung": null, "minimal": null, "weite": 2, "bezug": null, "begruendung": "erster Zug ohne Beitrag; weite Frage"},
+    "2": {"fachlich": 2, "stufe": 2, "frage": 2, "fehler": 2, "diagnose": 2, "umgehung": null, "passung": 2, "minimal": 2, "weite": 2, "bezug": 2, "begruendung": "Rueckmeldung zum Fehler 7 + 5 = 11, eine Frage, mit den Zahlen des Kindes"}
+   }
+  }
+ }
+}

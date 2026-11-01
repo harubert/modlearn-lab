@@ -1,0 +1,13 @@
+{% comment %}Beenden loescht alles, was in der Sitzung entstanden ist. Auf der
+Uebersicht liegen die Knoepfe dicht beieinander, deshalb fragt nachfrage.js
+vorher nach. Ohne Skript wird die Frage nicht gestellt und der Knopf
+funktioniert trotzdem: Die Beschriftung sagt, was passiert.{% endcomment %}
+<form class="karten-ende" method="post"
+      action="{% url 'tutoring:lehrperson_sitzung_beenden' sitzung.code %}"
+      data-nachfrage="Sitzung {{ sitzung.code }} beenden? Alles, was die Kinder darin geschrieben haben, wird gelöscht.">
+  {% csrf_token %}
+  <button type="submit" class="knopf-ende"
+          aria-label="Sitzung {{ sitzung.code }} beenden und alles löschen">
+    beenden
+  </button>
+</form>

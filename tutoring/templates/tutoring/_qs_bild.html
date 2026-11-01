@@ -1,0 +1,37 @@
+{% comment %}Der Bildweg einer Aufgabe (tutoring/bildkette.py), eingebettet
+in den Block der Qualitaetssicherung im Verlauf. Steht nur da, wenn die
+Bildkette gelaufen ist; ohne Freigabe oder ohne Foto gab es keinen Bildweg,
+und dann steht hier nichts.
+
+Links das Foto des Kindes, das im Haus bleibt, rechts der Ausschnitt, der
+hinausging. ``gesperrt`` sagt, dass der Textweg danach zu blieb: Dann ist
+auch der freigegebene Ausschnitt nicht hinausgegangen.{% endcomment %}
+{% if aufgabe.hat_bildpruefung %}
+  {% if aufgabe.bild_bestanden %}
+    <h4 class="qs-kopf">
+      {% if gesperrt %}Das Foto: der Ausschnitt war freigegeben, ging aber nicht hinaus{% else %}Das Foto: was davon hinausging{% endif %}
+    </h4>
+    <div class="qs-bilder">
+      <figure>
+        <img src="{{ aufgabe.image_data_url }}" alt="Das Foto des Kindes">
+        <figcaption>Das Foto des Kindes. Es bleibt im Haus.</figcaption>
+      </figure>
+      <figure>
+        <img class="qs-raus-bild" src="{{ aufgabe.checked_image_sent }}"
+             alt="{% if gesperrt %}Der freigegebene Ausschnitt{% else %}Der Ausschnitt, der hinausging{% endif %}">
+        <figcaption>
+          {% if gesperrt %}Der freigegebene Ausschnitt{% else %}Der Ausschnitt, der hinausging{% endif %}:
+          neu kodiert, ohne Metadaten{% if aufgabe.bild_masken_text %}, maskiert: {{ aufgabe.bild_masken_text }}{% else %}, nichts zu maskieren{% endif %}.
+          Bildprüfung bestanden in {{ aufgabe.checked_image_ms }} ms.
+          {% if gesperrt %}Der Weg war danach gesperrt, also blieb auch er im Haus.{% endif %}
+        </figcaption>
+      </figure>
+    </div>
+  {% else %}
+    <p class="qs-grund">Foto nicht hinausgegangen: {{ aufgabe.checked_image_reason }}</p>
+    <p class="qs-notiz">
+      Die Bildprüfung hat den Ausschnitt nicht freigegeben.
+      {% if not gesperrt %}Hinausgegangen ist nur der abgeschriebene Text.{% endif %}
+    </p>
+  {% endif %}
+{% endif %}

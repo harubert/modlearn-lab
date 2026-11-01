@@ -1,0 +1,3464 @@
+/* Gestaltung der Aufgabenhilfe.
+   Zuerst fuer das Handy entworfen, der grosse Bildschirm ist der Sonderfall.
+   Kein Aufbauwerkzeug, keine Schriftart aus dem Netz: die Seite darf nichts
+   nachladen, was ausserhalb der Hochschule liegt.
+   Die Akzentfarbe ist das Blau der Wortmarke der PH Vorarlberg. */
+
+:root {
+  --grund: #ffffff;
+  --flaeche: #f4f6f9;
+  --rand: #d9dfe8;
+  --schrift: #1a2230;
+  --schrift-leise: #545f71;
+  --akzent: #254287;          /* PH-Blau, Kontrast 9,7:1 auf Weiss */
+  --akzent-stark: #1b3369;
+  --akzent-leise: #e7ecf6;
+  --warnung: #8a2723;
+  --warnung-leise: #fbecea;
+  --fokus: #b4530a;
+  --logo-filter: none;
+  --schatten: 0 1px 2px rgba(26, 34, 48, .07), 0 4px 14px rgba(26, 34, 48, .05);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --grund: #131922;
+    --flaeche: #1b232e;
+    --rand: #2d3845;
+    --schrift: #e9eef5;
+    --schrift-leise: #a4b0bf;
+    --akzent: #9db6e8;        /* helle Fassung des PH-Blaus, Kontrast 7,4:1 */
+    --akzent-stark: #c3d3f3;
+    --akzent-leise: #1e2b41;
+    --warnung: #f2a9a2;
+    --warnung-leise: #2e1d1c;
+    --fokus: #ffb057;
+    /* Die dunkelblaue Wortmarke waere hier nicht mehr lesbar. */
+    --logo-filter: brightness(0) invert(1);
+    --schatten: none;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* Ohne diese Zeile setzt jedes spaetere display:block das hidden-Attribut
+   ausser Kraft. Im Browsertest stand deshalb ein kaputtes Vorschaubild
+   mitten auf der Seite des Kindes. */
+[hidden] { display: none !important; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--grund);
+  color: var(--schrift);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  overflow-wrap: break-word;
+}
+
+/* --- Tastaturbedienung ------------------------------------------------- */
+
+.sprungmarke {
+  position: absolute;
+  left: 8px;
+  top: -4rem;
+  z-index: 10;
+  padding: .7rem 1.1rem;
+  background: var(--akzent);
+  color: var(--grund);
+  border-radius: 0 0 8px 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top .15s ease-out;
+}
+
+.sprungmarke:focus { top: 0; }
+
+:focus-visible {
+  outline: 3px solid var(--fokus);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+.inhalt:focus { outline: none; }
+
+.nur-fuer-vorlesen {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+/* --- Kopf und Fuss ------------------------------------------------------ */
+
+.kopf {
+  border-bottom: 1px solid var(--rand);
+  background: var(--grund);
+}
+
+.kopf-innen, .fuss-innen {
+  margin: 0 auto;
+  max-width: 48rem;
+  padding: .8rem 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.marke {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.marke-logo {
+  width: 84px;
+  height: auto;
+  filter: var(--logo-filter);
+}
+
+.marke-text { display: flex; flex-direction: column; line-height: 1.25; }
+.marke-name { font-weight: 700; letter-spacing: -.01em; }
+.marke-zusatz { color: var(--schrift-leise); font-size: .8rem; }
+
+.inhalt {
+  margin: 0 auto;
+  max-width: 48rem;
+  padding: 2rem 16px 3.5rem;
+}
+
+.fuss {
+  border-top: 1px solid var(--rand);
+  background: var(--flaeche);
+  color: var(--schrift-leise);
+  font-size: .88rem;
+}
+
+.fuss-innen {
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1.6rem 16px 2.4rem;
+}
+
+.fuss-zusage { margin: 0; max-width: 42rem; }
+
+.fuss-wege {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem 1.2rem;
+  align-items: center;
+}
+
+.fuss-wege a, .knopf-als-weg {
+  color: var(--akzent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.abmelden { margin: 0; }
+
+.knopf-als-weg {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.fuss-foerderung { margin-top: .4rem; }
+
+.fuss-foerderung img {
+  width: 232px;
+  height: auto;
+  display: block;
+}
+
+@media (prefers-color-scheme: dark) {
+  /* Das Emblem der Union darf nicht umgefaerbt werden. Es bekommt deshalb
+     eine helle Flaeche, damit der dunkelblaue Schriftzug lesbar bleibt. */
+  .fuss-foerderung {
+    background: #ffffff;
+    padding: .6rem .8rem;
+    border-radius: 8px;
+    display: inline-block;
+  }
+}
+
+/* --- Ueberschriften und Text ------------------------------------------- */
+
+h1 {
+  margin: 0 0 1rem;
+  font-size: 1.65rem;
+  line-height: 1.25;
+  letter-spacing: -.02em;
+}
+
+h2 { margin: 2.2rem 0 .8rem; font-size: 1.18rem; letter-spacing: -.01em; }
+h3 { margin: 1.4rem 0 .5rem; font-size: 1rem; }
+.hero h1 { margin-top: .5rem; }
+.lead { margin: 0; color: var(--schrift-leise); }
+a { color: var(--akzent); text-underline-offset: 2px; }
+
+/* --- Formulare ---------------------------------------------------------- */
+
+.feld { margin: 0 0 1.3rem; }
+
+.feld label, .feld legend {
+  display: block;
+  margin-bottom: .2rem;
+  font-weight: 600;
+}
+
+.feld-zusatz { font-weight: 400; color: var(--schrift-leise); }
+
+.feld-hilfe {
+  margin: 0 0 .45rem;
+  color: var(--schrift-leise);
+  font-size: .88rem;
+}
+
+input[type="text"], input[type="password"], textarea, select {
+  width: 100%;
+  min-height: 44px;
+  padding: .6rem .75rem;
+  border: 1px solid var(--rand);
+  border-radius: 8px;
+  background: var(--grund);
+  color: var(--schrift);
+  font: inherit;
+}
+
+textarea { min-height: 8rem; resize: vertical; }
+
+input:focus, textarea:focus, select:focus { border-color: var(--akzent); }
+
+fieldset { margin: 0 0 1.3rem; padding: 0; border: 0; }
+
+.wahl {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  min-height: 44px;
+}
+
+.wahl input { width: 1.25rem; height: 1.25rem; accent-color: var(--akzent); }
+.wahl label { margin: 0; font-weight: 400; }
+
+.code-eingabe {
+  font-size: 1.9rem;
+  letter-spacing: .3em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  padding: .5rem;
+}
+
+.code-formular { max-width: 22rem; }
+
+.knopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: .7rem 1.4rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--akzent);
+  color: var(--grund);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@media (prefers-color-scheme: dark) {
+  .knopf { color: #10182a; }
+}
+
+.knopf:hover { background: var(--akzent-stark); }
+.knopf[disabled] { opacity: .55; cursor: progress; }
+.knopf-gross { width: 100%; font-size: 1.05rem; padding: .9rem 1.4rem; }
+.knopf-warnung { background: var(--warnung); color: #ffffff; }
+.knopf-hilfe { margin: .5rem 0 0; color: var(--schrift-leise); font-size: .88rem; }
+
+/* --- Meldungen und Karten ---------------------------------------------- */
+
+.meldung {
+  margin: 0 0 1.2rem;
+  padding: .8rem 1rem;
+  border-radius: 8px;
+  border-left: 4px solid;
+}
+
+.meldung-fehler {
+  background: var(--warnung-leise);
+  border-left-color: var(--warnung);
+  color: var(--schrift);
+}
+
+.karte {
+  margin: 1.2rem 0 2rem;
+  padding: 1.3rem;
+  border: 1px solid var(--rand);
+  border-radius: 12px;
+  background: var(--flaeche);
+  box-shadow: var(--schatten);
+}
+
+.karte h2 { margin-top: 0; }
+.karte-warnung { border-color: var(--warnung); }
+.leerhinweis { color: var(--schrift-leise); }
+
+.hervorgehoben {
+  padding: .8rem 1rem;
+  border-radius: 8px;
+  background: var(--akzent-leise);
+}
+
+/* --- Stufenliste auf der Startseite ------------------------------------ */
+
+.stufenliste { list-style: none; margin: 0; padding: 0; }
+
+.stufenliste li {
+  display: flex;
+  gap: .85rem;
+  align-items: baseline;
+  padding: .7rem 0;
+  border-bottom: 1px solid var(--rand);
+}
+
+.stufenliste li:last-child { border-bottom: 0; }
+
+.stufe-nr {
+  flex: 0 0 1.85rem;
+  height: 1.85rem;
+  border-radius: 50%;
+  background: var(--akzent-leise);
+  color: var(--akzent);
+  font-weight: 700;
+  font-size: .9rem;
+  line-height: 1.85rem;
+  text-align: center;
+}
+
+.stufe-text { flex: 1; }
+.quelle { margin: 1rem 0 0; color: var(--schrift-leise); font-size: .88rem; }
+
+/* --- Seite der Lehrperson ---------------------------------------------- */
+
+.sitzungsliste { list-style: none; margin: 0; padding: 0; }
+
+.sitzungsliste li {
+  padding: .7rem 0;
+  border-bottom: 1px solid var(--rand);
+}
+
+.sitzungsliste a {
+  display: flex;
+  align-items: baseline;
+  gap: .8rem;
+  min-height: 44px;
+  text-decoration: none;
+}
+
+.listen-code {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+
+.listen-titel {
+  color: var(--schrift);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.listen-zusatz { display: block; color: var(--schrift-leise); font-size: .85rem; }
+
+.leinwand {
+  margin: 1.2rem 0 2rem;
+  padding: 1.4rem;
+  border: 1px solid var(--rand);
+  border-radius: 14px;
+  background: var(--flaeche);
+}
+
+.leinwand-gitter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.code-vorspann, .code-nachspann {
+  margin: 0;
+  color: var(--schrift-leise);
+  font-size: .95rem;
+}
+
+.code-gross {
+  margin: .2rem 0;
+  font-size: clamp(3rem, 16vw, 5.5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: .04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--akzent);
+}
+
+.qr-kachel img {
+  width: clamp(180px, 42vw, 260px);
+  height: auto;
+  background: #ffffff;
+  padding: .6rem;
+  border-radius: 10px;
+  display: block;
+}
+
+.leinwand-adresse {
+  margin: 1rem 0 0;
+  text-align: center;
+  color: var(--schrift-leise);
+  font-size: .9rem;
+  word-break: break-all;
+}
+
+.zaehler-hinweis { color: var(--schrift-leise); font-size: .9rem; margin-top: 0; }
+
+.zaehlerliste {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: .8rem;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+}
+
+.zaehlerliste li {
+  padding: .9rem 1rem;
+  border: 1px solid var(--rand);
+  border-radius: 10px;
+  background: var(--flaeche);
+}
+
+.zaehlerwert {
+  display: block;
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  color: var(--akzent);
+}
+
+.zaehlername { display: block; color: var(--schrift-leise); font-size: .85rem; }
+
+/* --- Arbeitsplatz des Kindes ------------------------------------------- */
+
+.sitzungsleiste {
+  margin: 0 0 1.5rem;
+  padding-bottom: .8rem;
+  border-bottom: 1px solid var(--rand);
+}
+
+.sitzungstitel { margin: 0; font-weight: 600; }
+.obergrenze-hinweis { margin: .2rem 0 0; color: var(--schrift-leise); font-size: .9rem; }
+
+.aufgabentext {
+  margin: 0 0 1rem;
+  padding: .9rem 1.1rem;
+  border-left: 4px solid var(--akzent);
+  border-radius: 0 8px 8px 0;
+  background: var(--akzent-leise);
+  font-size: 1.05rem;
+}
+
+.hilfe {
+  margin: 0 0 1rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--rand);
+  border-radius: 10px;
+  background: var(--flaeche);
+}
+
+.hilfe-kopf {
+  margin: 0 0 .5rem;
+  font-size: .9rem;
+  color: var(--schrift-leise);
+  font-weight: 600;
+}
+
+.hilfe-stufe {
+  display: inline-block;
+  margin-right: .4rem;
+  padding: .1rem .5rem;
+  border-radius: 999px;
+  background: var(--akzent-leise);
+  color: var(--akzent);
+  font-size: .8rem;
+}
+
+.hilfe-text { white-space: pre-wrap; }
+.hilfe-neu { border-style: dashed; }
+.grenzhinweis { padding: .9rem 1.1rem; border-radius: 8px; background: var(--akzent-leise); }
+
+.neue-aufgabe {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rand);
+}
+
+/* --- Rechtstexte -------------------------------------------------------- */
+
+.rechtstext { max-width: 40rem; }
+.rechtstext .stand { color: var(--schrift-leise); font-size: .9rem; margin-top: -.4rem; }
+.rechtstext ul { padding-left: 1.2rem; }
+.rechtstext li { margin-bottom: .5rem; }
+
+.rechtstext code {
+  padding: .1rem .35rem;
+  border-radius: 4px;
+  background: var(--akzent-leise);
+  font-size: .92em;
+}
+
+/* --- Grosser Bildschirm ------------------------------------------------- */
+
+@media (min-width: 40rem) {
+  h1 { font-size: 2.05rem; }
+  .marke-logo { width: 104px; }
+  .inhalt { padding-top: 2.6rem; }
+  .knopf-gross { width: auto; min-width: 16rem; }
+  .fuss-innen { gap: 1.2rem; }
+}
+
+/* --- Erklaerte Auswahl auf der Seite der Lehrperson --------------------- */
+
+.wahl-erklaert {
+  align-items: flex-start;
+  padding: .7rem 0;
+  border-bottom: 1px solid var(--rand);
+}
+
+.wahl-erklaert:last-of-type { border-bottom: 0; }
+.wahl-erklaert input { margin-top: .45rem; flex: 0 0 auto; }
+.wahl-erklaert label { font-weight: 600; }
+
+.wahl-text {
+  margin: .2rem 0 0;
+  color: var(--schrift-leise);
+  font-size: .9rem;
+}
+
+/* Gespraechsaufgaben beim Anlegen und die Zahlen des Sprechcoachs in der
+ * Sitzungsansicht. Ruhig mit Absicht: Die Zahlen beschreiben, sie bewerten
+ * nicht (Regel 14 des Berichts), darum keine Ampelfarben. */
+.aufgabe-marke {
+  display: inline-block;
+  margin-right: .35rem;
+  padding: 0 .45rem;
+  border: 1px solid var(--rand);
+  border-radius: 999px;
+  font-size: .78rem;
+  color: var(--schrift-leise);
+}
+.aufgabe-fuer { font-size: .8rem; }
+
+.sprechzahlen {
+  margin: .15rem 0 0;
+  font-size: .85rem;
+  color: var(--schrift-leise);
+  font-variant-numeric: tabular-nums;
+}
+.sprechzahlen span + span::before { content: " · "; }
+.sprechrueckblick { margin: .3rem 0 0; padding-left: 1.1rem; font-size: .85rem; }
+.sprechrueckblick li { margin: .1rem 0; }
+.sprechrueckblick .englisch { font-style: italic; }
+
+/* --- Kennwort sichtbar machen ------------------------------------------ */
+
+.kennwort-zeile { display: flex; gap: .5rem; align-items: stretch; }
+.kennwort-zeile input { flex: 1; }
+
+.augenknopf {
+  flex: 0 0 auto;
+  width: 48px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--rand);
+  border-radius: 8px;
+  background: var(--flaeche);
+  color: var(--schrift-leise);
+  cursor: pointer;
+}
+
+.augenknopf:hover { color: var(--akzent); border-color: var(--akzent); }
+.augenknopf[aria-pressed="true"] { color: var(--akzent); border-color: var(--akzent); }
+
+/* --- Seite mit der Erklaerung der Stufen ------------------------------- */
+
+.stufenliste-erklaert li { align-items: flex-start; padding: 1rem 0; }
+.stufenliste-erklaert .stufe-nr { margin-top: .1rem; }
+
+.stufe-beispiel {
+  display: block;
+  margin-top: .4rem;
+  padding-left: .8rem;
+  border-left: 3px solid var(--rand);
+  color: var(--schrift-leise);
+  font-style: italic;
+}
+
+.literatur { padding-left: 1.2rem; }
+.literatur li { margin-bottom: .6rem; line-height: 1.5; }
+
+/* --- Tiere als Kennzeichen der Teilnehmenden --------------------------- */
+
+.tierabzeichen {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  margin: 0;
+  padding: .35rem .75rem .35rem .5rem;
+  border: 1px solid var(--rand);
+  border-radius: 999px;
+  background: var(--flaeche);
+  font-weight: 600;
+}
+
+.tier-bild { width: 72px; height: 72px; display: block; }
+.tier-bild-klein { width: 36px; height: 36px; display: block; border-radius: 8px; }
+
+.tierfeld { margin: 0; }
+
+.tierliste {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: .6rem;
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+}
+
+.tierknopf {
+  width: 100%;
+  min-height: 88px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .2rem;
+  padding: .7rem .4rem;
+  border: 1px solid var(--rand);
+  border-radius: 12px;
+  background: var(--flaeche);
+  color: var(--schrift);
+  font: inherit;
+  cursor: pointer;
+}
+
+.tierknopf .tier-bild { width: 64px; height: 64px; }
+.tierknopf .tier-name { font-size: .85rem; font-weight: 600; }
+.tierknopf:hover:enabled { border-color: var(--akzent); background: var(--akzent-leise); }
+
+.tierknopf:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+  filter: grayscale(1);
+}
+
+.tier-vergeben { font-size: .7rem; color: var(--schrift-leise); }
+
+/* --- Klassenliste der Lehrperson --------------------------------------- */
+
+.klassenliste {
+  width: 100%;
+  margin-top: 1rem;
+  border-collapse: collapse;
+  font-size: .95rem;
+}
+
+.klassenliste th, .klassenliste td {
+  padding: .6rem .5rem;
+  border-bottom: 1px solid var(--rand);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.klassenliste thead th {
+  font-size: .8rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--schrift-leise);
+}
+
+.klassenliste .zahl { text-align: right; font-variant-numeric: tabular-nums; }
+
+.tierzelle {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-weight: 600;
+}
+
+.klassenliste a { display: inline-flex; align-items: center; min-height: 44px; }
+
+/* Die Ampel steht nie allein: neben dem Punkt steht immer der Text. */
+.ampelpunkt {
+  display: inline-block;
+  width: .7rem;
+  height: .7rem;
+  margin-right: .35rem;
+  border-radius: 50%;
+  vertical-align: baseline;
+}
+
+.ampelpunkt-gruen { background: #1d7a4a; }
+.ampelpunkt-gelb { background: #c08a00; }
+.ampelpunkt-orange { background: #c2560f; }
+.ampelpunkt-rot { background: #a52a24; }
+.ampelpunkt-ungeprueft { background: var(--schrift-leise); }
+
+.klassenliste tr.ampel-gelb { background: #fdf6e3; }
+.klassenliste tr.ampel-orange { background: #fdeee2; }
+.klassenliste tr.ampel-rot { background: #fbeae8; }
+
+@media (prefers-color-scheme: dark) {
+  .klassenliste tr.ampel-gelb { background: #2b2618; }
+  .klassenliste tr.ampel-orange { background: #2f2119; }
+  .klassenliste tr.ampel-rot { background: #2f1d1c; }
+  .ampelpunkt-gruen { background: #63c58f; }
+  .ampelpunkt-gelb { background: #e2b53d; }
+  .ampelpunkt-orange { background: #ef8a4c; }
+  .ampelpunkt-rot { background: #f08079; }
+}
+
+.meldung-achtung {
+  background: var(--akzent-leise);
+  border-left-color: var(--akzent);
+  color: var(--schrift);
+}
+
+/* --- Eigener Versuch des Kindes ---------------------------------------- */
+
+.eigenerversuch {
+  margin: 0 0 1rem 1.5rem;
+  padding: .9rem 1.1rem;
+  border: 1px dashed var(--rand);
+  border-radius: 10px;
+  background: var(--grund);
+}
+
+.versuch-kopf {
+  margin: 0 0 .4rem;
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--schrift-leise);
+}
+
+.versuchsformular {
+  margin-top: 1.2rem;
+  padding: 1rem 1.1rem;
+  border: 2px solid var(--akzent);
+  border-radius: 12px;
+  background: var(--akzent-leise);
+}
+
+.versuchsformular .feld { margin-bottom: .8rem; }
+.versuchsformular textarea { min-height: 5rem; }
+
+/* --- Verlauf beim Lehrer ------------------------------------------------ */
+
+.zurueck { margin: 0 0 1rem; }
+.verlauf-titel { display: flex; align-items: center; gap: .6rem; }
+.verlaufsaufgabe { margin-bottom: 2.5rem; }
+
+.verlauf-zeit {
+  float: right;
+  font-weight: 400;
+  font-size: .8rem;
+  color: var(--schrift-leise);
+  font-variant-numeric: tabular-nums;
+}
+
+.ampelrand-gelb { border-left-color: #c08a00 !important; }
+.ampelrand-orange { border-left-color: #c2560f !important; }
+.ampelrand-rot { border-left-color: #a52a24 !important; }
+
+.ampelnotiz {
+  margin: -.5rem 0 1rem 1.5rem;
+  font-size: .85rem;
+  color: var(--schrift-leise);
+}
+
+/* --- Zustimmung zur Forschungsaufzeichnung ----------------------------- */
+
+.zustimmungsknoepfe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .8rem;
+  margin-top: 1.5rem;
+}
+
+.knopf-still {
+  background: var(--flaeche);
+  color: var(--schrift);
+  border-color: var(--rand);
+}
+
+.knopf-still:hover { background: var(--rand); }
+
+@media (prefers-color-scheme: dark) {
+  .knopf-still { color: var(--schrift); }
+}
+
+/* --- Der Arbeitsplatz als Chat ----------------------------------------- */
+
+.sitzungsleiste {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.plusknopf {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  min-height: 44px;
+  padding: .4rem .9rem;
+  border: 1px solid var(--rand);
+  border-radius: 999px;
+  background: var(--flaeche);
+  color: var(--akzent);
+  font: inherit;
+  font-weight: 600;
+  font-size: .9rem;
+  cursor: pointer;
+}
+
+.plusknopf:hover { border-color: var(--akzent); }
+.plusknopf span[aria-hidden] { font-size: 1.2rem; line-height: 1; }
+
+.chatraum { padding-bottom: 1rem; }
+
+.aufgabenblase {
+  margin: 0 0 1.2rem;
+  padding: .9rem 1.1rem;
+  border-left: 4px solid var(--akzent);
+  border-radius: 0 10px 10px 0;
+  background: var(--akzent-leise);
+}
+
+.blasen-kopf { margin: 0 0 .4rem; font-size: 1rem; }
+
+/* Die Eingabe bleibt unten stehen, egal wie lang der Verlauf wird.
+   Kein eigener Scrollbereich: Auf dem Handy ist die Seite selbst der
+   Scrollbereich, und verschachteltes Scrollen ist dort ein Ärgernis. */
+.verfasser {
+  margin: 1.5rem -16px 0;
+  padding: 1rem 16px 1.5rem;
+  border-top: 2px solid var(--rand);
+  background: var(--flaeche);
+}
+
+.verfasser-zeile { display: flex; gap: .5rem; align-items: flex-end; }
+.verfasser-zeile textarea { flex: 1; min-height: 44px; }
+.verfasser-zeile .knopf { flex: 0 0 auto; }
+.verfasser label { display: block; font-weight: 600; margin-bottom: .2rem; }
+.verfasser .feld-hilfe { margin: 0 0 .45rem; }
+.verfasser .knopf-hilfe { margin: .4rem 0 0; }
+.neue-aufgabe-form { margin-bottom: .8rem; }
+
+@media (min-width: 40rem) {
+  .verfasser { margin: 0; padding-left: 0; padding-right: 0; }
+}
+
+/* --- Wer gerade arbeitet ------------------------------------------------ */
+
+.pulspunkt {
+  display: inline-block;
+  width: .6rem;
+  height: .6rem;
+  margin-right: .3rem;
+  border-radius: 50%;
+  background: #1d7a4a;
+  animation: pulsieren 1.8s ease-in-out infinite;
+}
+
+@media (prefers-color-scheme: dark) {
+  .pulspunkt { background: #63c58f; }
+}
+
+@keyframes pulsieren {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .3; }
+}
+
+.aktivzeile { margin: .6rem 0 0; color: var(--schrift-leise); font-size: .9rem; }
+.aktivzelle { white-space: nowrap; }
+.stillzeit { color: var(--schrift-leise); font-size: .85rem; }
+.mitlaufhinweis { color: var(--schrift-leise); font-size: .85rem; margin-top: -.4rem; }
+
+.wartehinweis {
+  margin: 0 0 1rem 1.5rem;
+  padding: .5rem .8rem;
+  border-radius: 8px;
+  background: var(--flaeche);
+  color: var(--schrift-leise);
+  font-size: .9rem;
+}
+
+/* --- Erklaerung der Stufen fuer die Lehrperson ------------------------- */
+
+.stufenerklaerung {
+  margin: .6rem 0 1.3rem;
+  padding: .8rem 1rem;
+  border: 1px solid var(--rand);
+  border-radius: 10px;
+  background: var(--grund);
+}
+
+.stufenerklaerung > summary {
+  cursor: pointer;
+  font-weight: 600;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.erklaerungsliste { list-style: none; margin: .6rem 0 0; padding: 0; }
+
+.erklaerungsliste li {
+  padding: .8rem 0;
+  border-top: 1px solid var(--rand);
+}
+
+.erklaerungsliste h4 { margin: 0 0 .4rem; font-size: .95rem; }
+.erklaerungsliste p { margin: 0 0 .35rem; font-size: .9rem; }
+.erklaerung-nicht, .erklaerung-danach { color: var(--schrift-leise); }
+
+/* --- Foto der Aufgabe --------------------------------------------------- */
+
+.fotozeile { margin-bottom: .5rem; }
+
+.fotoknopf {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  min-height: 44px;
+  padding: .45rem 1rem;
+  border: 1px solid var(--rand);
+  border-radius: 999px;
+  background: var(--flaeche);
+  color: var(--akzent);
+  font: inherit;
+  font-weight: 600;
+  font-size: .9rem;
+  cursor: pointer;
+}
+
+.fotoknopf:hover:enabled { border-color: var(--akzent); }
+.fotoknopf:disabled { opacity: .55; cursor: progress; }
+.fotoknopf span[aria-hidden] { font-size: 1.1rem; }
+
+.fotostand {
+  margin: .4rem 0;
+  font-size: .88rem;
+  color: var(--schrift-leise);
+}
+
+.fotostand.meldung-fehler {
+  padding: .5rem .8rem;
+  border-radius: 8px;
+  border-left: 4px solid var(--warnung);
+  background: var(--warnung-leise);
+  color: var(--schrift);
+}
+
+.fotovorschau, .aufgabenfoto {
+  display: block;
+  max-width: 100%;
+  max-height: 14rem;
+  width: auto;
+  margin: .5rem 0;
+  border: 1px solid var(--rand);
+  border-radius: 8px;
+}
+
+.sprachknopf.nimmt-auf {
+  background: var(--warnung-leise);
+  border-color: var(--warnung);
+  color: var(--warnung);
+}
+
+.sprachknopf.nimmt-auf .werkzeug-zeichen { animation: pulsieren 1.2s ease-in-out infinite; }
+.fotozeile { display: flex; flex-wrap: wrap; gap: .5rem; }
+
+/* --- Die Schritte sichtbar trennen ------------------------------------- */
+
+.schritte { list-style: none; margin: 0; padding: 0; }
+
+.schritt {
+  position: relative;
+  margin: 0 0 1.4rem;
+  padding: .9rem 1.1rem .9rem 1.1rem;
+  border: 1px solid var(--rand);
+  border-radius: 12px;
+  background: var(--flaeche);
+}
+
+.schritt-kopf {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin: 0 0 .5rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid var(--rand);
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--schrift-leise);
+}
+
+.schritt-nummer {
+  flex: 0 0 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background: var(--akzent);
+  color: var(--grund);
+  font-size: .85rem;
+  line-height: 1.6rem;
+  text-align: center;
+}
+
+@media (prefers-color-scheme: dark) {
+  .schritt-nummer { color: #10182a; }
+}
+
+.schritt-name { flex: 1; }
+
+.schritt-versuch {
+  margin: .9rem -1.1rem -.9rem;
+  padding: .8rem 1.1rem;
+  border-top: 1px dashed var(--rand);
+  border-radius: 0 0 11px 11px;
+  background: var(--grund);
+}
+
+/* --- Fortschritt: wo stehe ich, was kommt noch ------------------------- */
+
+.fortschritt {
+  list-style: none;
+  display: flex;
+  gap: .4rem;
+  margin: 0 0 .7rem;
+  padding: 0;
+}
+
+.fortschritt-punkt {
+  flex: 1;
+  min-width: 2rem;
+  padding: .3rem 0;
+  border-radius: 999px;
+  border: 1px solid var(--rand);
+  background: var(--grund);
+  color: var(--schrift-leise);
+  font-size: .8rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.fortschritt-punkt.ist-erledigt {
+  background: var(--akzent);
+  border-color: var(--akzent);
+  color: var(--grund);
+}
+
+@media (prefers-color-scheme: dark) {
+  .fortschritt-punkt.ist-erledigt { color: #10182a; }
+}
+
+.fortschritt-punkt.ist-aktuell {
+  border-color: var(--akzent);
+  border-width: 2px;
+  color: var(--akzent);
+}
+
+/* --- Vor der Loesung wird gefragt -------------------------------------- */
+
+.loesungsabfrage {
+  padding: .9rem 1.1rem;
+  border: 2px solid var(--akzent);
+  border-radius: 12px;
+  background: var(--akzent-leise);
+}
+
+.loesungsfrage { margin: 0 0 .3rem; font-weight: 700; }
+.loesungsknoepfe { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .8rem; }
+
+/* --- Rueckfragen nach der letzten Stufe -------------------------------- */
+
+.nachfrageformular {
+  padding: .9rem 1.1rem;
+  border: 1px solid var(--akzent);
+  border-radius: 12px;
+  background: var(--akzent-leise);
+}
+
+.nachfragenblock { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--rand); }
+
+.nachfrage-frage {
+  margin: 0 0 .6rem 1.5rem;
+  padding: .8rem 1rem;
+  border: 1px dashed var(--rand);
+  border-radius: 10px;
+  background: var(--grund);
+}
+
+.nachfrage-antwort {
+  margin: 0 0 1.2rem;
+  padding: .8rem 1rem;
+  border: 1px solid var(--rand);
+  border-radius: 10px;
+  background: var(--flaeche);
+}
+
+.stufe-verbot {
+  display: block;
+  margin-top: .35rem;
+  font-size: .88rem;
+  color: var(--schrift-leise);
+}
+
+/* --- Der eine Eingabebereich ------------------------------------------- */
+
+.verfasser-form { margin: 0; }
+.verfasser-form > label { display: block; font-weight: 600; margin-bottom: .2rem; }
+
+.werkzeuge { display: flex; gap: .4rem; margin: 0 0 .5rem; }
+
+.werkzeug {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  min-height: 44px;
+  padding: .4rem .8rem;
+  border: 1px solid var(--rand);
+  border-radius: 999px;
+  background: var(--flaeche);
+  color: var(--akzent);
+  font: inherit;
+  font-weight: 600;
+  font-size: .85rem;
+  cursor: pointer;
+}
+
+.werkzeug:hover:enabled { border-color: var(--akzent); }
+.werkzeug:disabled { opacity: .55; cursor: progress; }
+.werkzeug-zeichen { width: 20px; height: 20px; flex: 0 0 auto; }
+
+.sprachknopf.nimmt-auf {
+  background: var(--warnung-leise);
+  border-color: var(--warnung);
+  color: var(--warnung);
+}
+
+.willkommen { color: var(--schrift-leise); }
+
+/* Am schmalen Gerät zählt jede Zeile. */
+@media (max-width: 26rem) {
+  /* Nur optisch ausblenden, nicht aus dem Dokument nehmen. Mit display:none
+     haette der Knopf gar keinen Namen mehr, und ein Vorlesewerkzeug meldete
+     nur "Schaltflaeche". */
+  .werkzeug-wort {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .werkzeug { padding: .4rem .9rem; }
+  .schritt { padding: .8rem .9rem; }
+  .schritt-versuch { margin-left: -.9rem; margin-right: -.9rem; padding: .7rem .9rem; }
+}
+
+.herkunft {
+  display: inline-block;
+  margin-left: .5rem;
+  padding: .05rem .45rem;
+  border-radius: 999px;
+  background: var(--rand);
+  color: var(--schrift-leise);
+  font-size: .72rem;
+  vertical-align: middle;
+}
+
+/* --- Weg zur Anmeldung -------------------------------------------------- */
+
+.kopfweg {
+  color: var(--akzent);
+  font-size: .88rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 .2rem;
+}
+
+.kopfweg:hover { text-decoration: underline; }
+
+.lehrbereich {
+  margin: 2.5rem 0;
+  padding: 1.3rem;
+  border: 1px solid var(--rand);
+  border-radius: 12px;
+  background: var(--flaeche);
+}
+
+.lehrbereich h2 { margin-top: 0; }
+.lehrbereich p { color: var(--schrift-leise); }
+
+.lehrbereich-wege {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+/* --- Startseite: zuerst die Kinder, dann die Lehrpersonen -------------- */
+
+h1.gross { font-size: 2rem; margin-bottom: 1.2rem; }
+
+.einstieg {
+  padding: 1.3rem;
+  border: 2px solid var(--akzent);
+  border-radius: 14px;
+  background: var(--akzent-leise);
+}
+
+.einstieg h2 { margin-top: 0; font-size: 1.35rem; }
+.einstieg-text { margin: 0 0 1rem; }
+.code-formular { max-width: 100%; }
+.code-formular label { display: block; font-weight: 600; margin-bottom: .3rem; }
+.code-formular .knopf-gross { margin-top: .7rem; }
+
+.ablauf { margin-top: 2.5rem; }
+.ablaufliste { list-style: none; margin: 0; padding: 0; }
+
+.ablaufliste li {
+  display: flex;
+  gap: .9rem;
+  align-items: flex-start;
+  padding: .7rem 0;
+}
+
+.ablauf-nr {
+  flex: 0 0 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--akzent);
+  color: var(--grund);
+  font-weight: 700;
+  line-height: 2rem;
+  text-align: center;
+}
+
+@media (prefers-color-scheme: dark) {
+  .ablauf-nr { color: #10182a; }
+}
+
+.ablauf-nachsatz { color: var(--schrift-leise); }
+
+.ruhig {
+  margin-top: 2rem;
+  padding: 1.1rem 1.3rem;
+  border-radius: 12px;
+  background: var(--flaeche);
+}
+
+.ruhig h2 { margin-top: 0; }
+
+/* --- Kompakt ------------------------------------------------------------
+   Aus dem Browserdurchlauf: Auf dem iPad war die halbe Seite leer und der
+   Fuss nahm mehr Platz ein als der Inhalt. Am Handy musste man fuer jeden
+   Schritt scrollen. Alles enger, ohne die 44 Pixel Zielflaeche anzutasten. */
+
+.kopf-innen { padding: .5rem 16px; }
+.marke-logo { width: 62px; }
+.marke-name { font-size: .95rem; }
+.marke-zusatz { font-size: .72rem; }
+
+.inhalt { padding: 1.2rem 16px 1.5rem; }
+
+h1 { font-size: 1.4rem; margin-bottom: .7rem; }
+h1.gross { font-size: 1.6rem; margin-bottom: .8rem; }
+h2 { margin: 1.4rem 0 .5rem; font-size: 1.05rem; }
+h3 { margin: 1rem 0 .35rem; }
+body { font-size: 16px; line-height: 1.5; }
+
+.sitzungsleiste { margin-bottom: .8rem; padding-bottom: .5rem; }
+.sitzungstitel { font-size: .95rem; }
+
+.aufgabenblase { margin-bottom: .8rem; padding: .7rem .9rem; }
+.schritt { margin-bottom: .8rem; padding: .7rem .9rem; }
+.schritt-kopf { margin-bottom: .35rem; padding-bottom: .35rem; font-size: .78rem; }
+.schritt-nummer { flex: 0 0 1.35rem; height: 1.35rem; line-height: 1.35rem; font-size: .78rem; }
+.schritt-versuch { margin: .7rem -.9rem -.7rem; padding: .6rem .9rem; }
+.versuch-kopf { font-size: .78rem; margin-bottom: .25rem; }
+
+.verfasser { margin-top: 1rem; padding: .8rem 16px 1rem; }
+.verfasser-form > label { font-size: .95rem; }
+.werkzeuge { margin-bottom: .4rem; }
+.werkzeug { min-height: 44px; padding: .35rem .7rem; font-size: .82rem; }
+.fortschritt { margin-bottom: .5rem; gap: .3rem; }
+.fortschritt-punkt { padding: .25rem 0; font-size: .75rem; }
+.verfasser-zeile textarea { min-height: 44px; }
+.knopf-hilfe { font-size: .82rem; margin-top: .3rem; }
+
+.einstieg { padding: 1rem; }
+.einstieg h2 { font-size: 1.15rem; }
+.ablauf { margin-top: 1.5rem; }
+.ablaufliste li { padding: .45rem 0; }
+.ablauf-nr { flex: 0 0 1.7rem; height: 1.7rem; line-height: 1.7rem; font-size: .9rem; }
+.ruhig { margin-top: 1.5rem; padding: .8rem 1rem; }
+.lehrbereich { margin: 1.5rem 0 0; padding: 1rem; }
+
+.tierliste { gap: .45rem; grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr)); }
+.tierknopf { min-height: 74px; padding: .45rem .3rem; gap: .1rem; }
+.tierknopf .tier-bild { width: 46px; height: 46px; }
+.tierknopf .tier-name { font-size: .75rem; }
+
+.fuss { font-size: .8rem; }
+.fuss-innen { padding: .9rem 16px 1.2rem; gap: .5rem; }
+.fuss-wege { gap: .2rem .9rem; }
+.fuss-wege a, .knopf-als-weg { min-height: 34px; font-size: .8rem; }
+.fuss-foerderung img { width: 168px; }
+
+.tierabzeichen { padding: .25rem .6rem .25rem .3rem; font-size: .85rem; }
+.tier-bild-klein { width: 30px; height: 30px; }
+
+@media (min-width: 40rem) {
+  .inhalt { max-width: 42rem; padding-top: 1.6rem; }
+  .kopf-innen, .fuss-innen { max-width: 42rem; }
+}
+
+/* --- Angemeldet als ----------------------------------------------------- */
+
+.angemeldet { display: flex; align-items: center; gap: .6rem; }
+
+.angemeldet-name {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--schrift);
+}
+
+.angemeldet-zeichen {
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  background: var(--akzent);
+  color: var(--grund);
+  font-size: .8rem;
+  line-height: 1.7rem;
+  text-align: center;
+}
+
+@media (prefers-color-scheme: dark) {
+  .angemeldet-zeichen { color: #10182a; }
+}
+
+@media (max-width: 30rem) {
+  .angemeldet-name { font-size: .8rem; }
+  .angemeldet { gap: .4rem; }
+}
+
+/* --- Sitzungen als Karten ----------------------------------------------- */
+
+.sitzungskarten { list-style: none; margin: 0; padding: 0; display: grid; gap: .7rem; }
+
+.sitzungskarte {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: .9rem;
+  padding: .8rem .9rem;
+  border: 1px solid var(--rand);
+  border-radius: 12px;
+  background: var(--grund);
+}
+
+.karten-code {
+  flex: 0 0 auto;
+  align-self: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  font-variant-numeric: tabular-nums;
+  color: var(--akzent);
+  text-decoration: none;
+}
+
+.karten-mitte { flex: 1 1 8rem; min-width: 0; }
+.karten-titel { margin: 0; font-weight: 600; }
+.karten-titel a { color: var(--schrift); text-decoration: none; }
+.karten-titel a:hover { text-decoration: underline; }
+
+.marken { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .3rem; }
+
+.marke-chip {
+  padding: .1rem .5rem;
+  border-radius: 999px;
+  background: var(--flaeche);
+  border: 1px solid var(--rand);
+  color: var(--schrift-leise);
+  font-size: .72rem;
+}
+
+.marke-chip.ist-aktiv { border-color: #1d7a4a; color: #1d7a4a; }
+
+@media (prefers-color-scheme: dark) {
+  .marke-chip.ist-aktiv { border-color: #63c58f; color: #63c58f; }
+}
+
+.karten-zahlen {
+  flex: 0 0 auto;
+  align-self: center;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  color: var(--schrift-leise);
+  font-size: .78rem;
+  line-height: 1.35;
+}
+
+.karten-zahl { font-weight: 700; color: var(--schrift); font-size: .95rem; }
+
+details.anlegen > summary {
+  cursor: pointer;
+  font-weight: 600;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+
+/* --- Seitenkopf der Lehrpersonenseite ----------------------------------- */
+
+.seitenkopf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .2rem .8rem;
+  margin-bottom: .9rem;
+}
+
+.seitenkopf h1 { margin: 0; }
+
+.seitenkopf-zusatz { margin: 0; color: var(--schrift-leise); font-size: .85rem; }
+
+.karten-leise { color: var(--schrift-leise); font-size: .72rem; }
+
+details.anlegen { padding: .9rem 1.1rem; }
+details.anlegen[open] { padding-bottom: 1.3rem; }
+
+/* --- Angelegte, aber leere Sitzungen ------------------------------------ */
+
+.leere-sitzungen { margin-top: 1.8rem; }
+
+.seitenkopf-klein { align-items: center; justify-content: space-between; margin-bottom: .5rem; }
+.seitenkopf-klein h2 { margin: 0; font-size: 1rem; }
+.seitenkopf-klein form { margin: 0; }
+
+.knopf-leise {
+  background: none;
+  border: 1px solid var(--rand);
+  color: var(--schrift-leise);
+  font-size: .8rem;
+  padding: .3rem .7rem;
+  min-height: 36px;
+}
+
+.knopf-leise:hover { border-color: var(--warnung); color: var(--warnung); }
+
+.leerliste { list-style: none; margin: 0; padding: 0; }
+
+.leerliste li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .3rem .8rem;
+  padding: .35rem 0;
+  border-bottom: 1px solid var(--rand);
+}
+
+.leerliste a { display: flex; gap: .6rem; align-items: baseline; text-decoration: none; }
+.leerliste-code { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--akzent); }
+.leerliste-titel { color: var(--schrift); font-size: .88rem; }
+.leerliste li .karten-leise { margin-left: auto; }
+
+/* --- Weitere offene Sitzungen, Beenden je Zeile ------------------------- */
+
+details.weitere { margin-top: 1.6rem; }
+
+details.weitere > summary {
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  color: var(--schrift-leise);
+  font-size: .9rem;
+}
+
+.leere-weg { margin: .4rem 0 .8rem; }
+
+.karten-ende { margin: 0; align-self: center; flex: 0 0 auto; }
+
+.knopf-ende {
+  background: none;
+  border: 1px solid var(--rand);
+  border-radius: 8px;
+  color: var(--schrift-leise);
+  font: inherit;
+  font-size: .78rem;
+  padding: .25rem .6rem;
+  min-height: 36px;
+  cursor: pointer;
+}
+
+.knopf-ende:hover { border-color: var(--warnung); color: var(--warnung); }
+
+/* Am Handy reicht die Breite nicht fuer vier Spalten: Zahlen und Beenden
+   ruecken in eine zweite Zeile, die Zahlen nebeneinander. */
+@media (max-width: 30rem) {
+  .sitzungskarte { gap: .45rem .7rem; padding: .7rem .8rem; }
+  .karten-code { font-size: 1.25rem; }
+  .karten-zahlen {
+    flex: 1 1 auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .1rem .7rem;
+  }
+  .karten-ende { margin-left: auto; }
+  .leerliste li .karten-leise { margin-left: 0; }
+}
+
+/* Ein Winkel statt des Dreiecks: Sobald summary auf display:flex steht,
+   zeichnet Chromium den Marker nicht mehr, und beide Aufklapper sahen im
+   Bildschirmfoto aus wie unbewegliche Kaesten. */
+details.anlegen > summary,
+details.weitere > summary,
+details.stufenerklaerung > summary { list-style: none; }
+
+details.anlegen > summary::-webkit-details-marker,
+details.weitere > summary::-webkit-details-marker,
+details.stufenerklaerung > summary::-webkit-details-marker { display: none; }
+
+/* Die Stufenerklaerung stand im Bildschirmfoto vom 19.10.2026 als Kasten
+   ohne Winkel neben den "Weiteren Einstellungen" mit Winkel: Sie sah aus
+   wie eine Ueberschrift, die nichts tut. */
+details.stufenerklaerung > summary { gap: .5rem; }
+
+details.anlegen > summary::before,
+details.weitere > summary::before,
+details.stufenerklaerung > summary::before {
+  content: "";
+  flex: 0 0 auto;
+  width: .45rem;
+  height: .45rem;
+  margin-right: .15rem;
+  border-right: 2px solid var(--akzent);
+  border-bottom: 2px solid var(--akzent);
+  transform: rotate(-45deg);
+  transition: transform .15s ease;
+}
+
+details[open].anlegen > summary::before,
+details[open].weitere > summary::before,
+details[open].stufenerklaerung > summary::before { transform: rotate(45deg); }
+
+/* --- Eine Aufgabe beginnen und abschliessen ----------------------------- */
+
+.sitzungsleiste form { margin: 0; }
+
+.aufgabenkopf {
+  display: flex;
+  align-items: baseline;
+  gap: .5rem;
+  margin: 0 0 .35rem;
+}
+
+.aufgabenmarke {
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--akzent);
+}
+
+.erledigtmarke {
+  padding: .05rem .45rem;
+  border-radius: 999px;
+  background: var(--grund);
+  border: 1px solid var(--rand);
+  color: var(--schrift-leise);
+  font-size: .72rem;
+}
+
+.aufgabenblase.ist-erledigt {
+  border-left-color: var(--rand);
+  background: var(--flaeche);
+}
+
+.fertigform { margin: .5rem 0 0; text-align: center; }
+
+.fertighinweis {
+  margin: .6rem 0 0;
+  padding: .7rem .9rem;
+  border-radius: 10px;
+  background: var(--flaeche);
+  color: var(--schrift-leise);
+  text-align: center;
+}
+
+/* --- Ist alles bereit? -------------------------------------------------- */
+
+.seitenkopf-weg { margin: 0; font-size: .85rem; }
+.seitenkopf-weg a { color: var(--akzent); }
+
+.meldung-gut {
+  border-color: #1d7a4a;
+  background: #eef7f1;
+  color: #14502f;
+}
+
+@media (prefers-color-scheme: dark) {
+  .meldung-gut { background: #12241a; color: #8fd9b0; border-color: #2f6a4a; }
+}
+
+.pruefliste { list-style: none; margin: 1rem 0; padding: 0; display: grid; gap: .7rem; }
+
+.pruefzeile {
+  display: flex;
+  align-items: flex-start;
+  gap: .8rem;
+  padding: .8rem .9rem;
+  border: 1px solid var(--rand);
+  border-radius: 12px;
+  background: var(--grund);
+}
+
+.pruefpunkt {
+  flex: 0 0 auto;
+  width: .8rem;
+  height: .8rem;
+  margin-top: .45rem;
+  border-radius: 50%;
+  background: #1d7a4a;
+}
+
+.pruefzeile.ist-aus { border-color: var(--warnung); }
+.pruefzeile.ist-aus .pruefpunkt { background: var(--warnung); }
+
+.pruefmitte { flex: 1; min-width: 0; }
+.pruefname { margin: 0; font-weight: 600; }
+.pruefwozu { margin: .1rem 0 0; color: var(--schrift-leise); font-size: .82rem; }
+
+.pruefauskunft {
+  margin: .25rem 0 0;
+  font-size: .78rem;
+  color: var(--schrift-leise);
+  overflow-wrap: anywhere;
+}
+
+.pruefzeit {
+  flex: 0 0 auto;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.pruefeinheit { font-size: .7rem; font-weight: 400; color: var(--schrift-leise); }
+
+/* --- Die Leinwand im Hoersaal ------------------------------------------- */
+/* Der Inhalt bleibt sonst auf 48rem stehen, auch auf einem Beamer mit 1920
+   Punkten. Der Beitrittsblock ist aber genau das, was aus der letzten Reihe
+   lesbar sein muss: Code mit den Augen, QR-Code mit der Handykamera. */
+
+@media (min-width: 62rem) {
+  .leinwand {
+    max-width: none;
+    margin-left: -8vw;
+    margin-right: -8vw;
+    padding: 2rem;
+  }
+
+  .leinwand-gitter { gap: 3rem; }
+
+  .code-gross { font-size: clamp(5.5rem, 9vw, 8rem); }
+
+  .qr-kachel img { width: clamp(260px, 22vw, 380px); }
+
+  .code-vorspann, .code-nachspann, .leinwand-adresse { font-size: 1.1rem; }
+}
+
+/* Die Trainer-Sitzung ist auf der Karte sofort zu erkennen: Sie verhaelt
+   sich grundlegend anders als die Aufgabenhilfe. */
+.marke-chip.ist-trainer {
+  border-color: var(--akzent);
+  color: var(--akzent);
+  font-weight: 600;
+}
+
+/* --- Beigetreten, aber ohne Tier ---------------------------------------- */
+/* Wer den QR-Code scannt und die Tierwahl wieder verlaesst, hat kein Bild.
+   Im Betrieb war das eine Person von 28 - und weil {% static "" %} einen
+   Fehler wirft, war die ganze Sitzungsseite nicht mehr zu oeffnen. */
+
+.tier-ohne {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--flaeche);
+  border: 1px dashed var(--rand);
+  color: var(--schrift-leise);
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+.ohne-tier { color: var(--schrift-leise); font-style: italic; }
+
+/* --- Der Austausch mit der externen KI im Verlauf ----------------------- */
+/* Er gehoert in den Verlauf, weil die Hilfen sich darauf stuetzen.
+   Eingeklappt, weil er aufgeschlagen laenger waere als das Gespraech. */
+
+.qsblock {
+  margin: .8rem 0;
+  border: 1px solid var(--rand);
+  border-left: 4px solid var(--akzent);
+  border-radius: 8px;
+  background: var(--flaeche);
+  padding: .6rem .9rem;
+}
+
+.qsblock.ist-gesperrt { border-left-color: var(--schrift-leise); }
+
+.qsblock > summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: .9rem;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  list-style: none;
+}
+
+.qsblock > summary::-webkit-details-marker { display: none; }
+
+.qsblock > summary::before {
+  content: "";
+  flex: 0 0 auto;
+  width: .45rem;
+  height: .45rem;
+  margin-right: .15rem;
+  border-right: 2px solid var(--akzent);
+  border-bottom: 2px solid var(--akzent);
+  transform: rotate(-45deg);
+  transition: transform .15s ease;
+}
+
+.qsblock[open] > summary::before { transform: rotate(45deg); }
+
+.qs-zahlen {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .15rem .8rem;
+  margin: .4rem 0 .8rem;
+  font-size: .85rem;
+}
+
+.qs-zahlen dt { color: var(--schrift-leise); }
+.qs-zahlen dd { margin: 0; }
+.qs-zahlen .zahl { font-variant-numeric: tabular-nums; }
+
+.qs-kopf {
+  margin: .7rem 0 .25rem;
+  font-size: .78rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--schrift-leise);
+}
+
+.qs-text {
+  margin: 0;
+  padding: .5rem .7rem;
+  border-radius: 6px;
+  background: var(--grund);
+  border: 1px solid var(--rand);
+  font-size: .88rem;
+  overflow-wrap: anywhere;
+}
+
+/* Die Richtung ist die Information: was hinausging, was zurueckkam. */
+.qs-raus { border-left: 3px solid var(--warnung); }
+.qs-rein { border-left: 3px solid var(--akzent); }
+
+.qs-grund { margin: .4rem 0 0; font-weight: 600; }
+
+.qs-notiz {
+  margin: .5rem 0 0;
+  font-size: .82rem;
+  color: var(--schrift-leise);
+}
+
+/* Der Bildweg: links das Foto des Kindes, das im Haus bleibt, rechts der
+   Ausschnitt, der hinausging. Nebeneinander, weil der Vergleich die
+   Information ist; am Handy untereinander. */
+.qs-bilder {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .8rem;
+  margin: .3rem 0 .6rem;
+}
+
+.qs-bilder figure { margin: 0; min-width: 0; }
+
+.qs-bilder img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--rand);
+  border-radius: 6px;
+  background: var(--grund);
+}
+
+.qs-bilder .qs-raus-bild { border-left: 3px solid var(--warnung); }
+
+.qs-bilder figcaption {
+  margin-top: .25rem;
+  font-size: .78rem;
+  color: var(--schrift-leise);
+}
+
+@media (max-width: 600px) {
+  .qs-bilder { grid-template-columns: 1fr; }
+}
+
+/* Der zweite Schalter rueckt unter den ersten ein, an dem er haengt. */
+.wahl-unter { margin-left: 1.6rem; }
+.wahl-unter input:disabled + label { color: var(--schrift-leise); }
+
+/* === Die Lehrpersonenseite: erst das Fach, dann die Einstellungen ======= */
+/* Die PH hat es so gesagt: „generell ist das Interface eine Katastrophe da
+   kennt sich niemand aus", und dazu: „Es muss voellig egal sein, ob Tablet,
+   PC oder Handy." Die erste Haelfte der Antwort steht in der Vorlage (zwei
+   Schritte), die zweite hier (drei Breiten).
+
+   Die Datei gehoert allen Seiten, was hier dazukommt ruehrt aber keine
+   andere an: Die drei Breitenregeln haengen an .lehrseite, und die
+   uebrigen Klassennamen kommen nur in lehrperson_uebersicht.html vor. */
+
+/* --- Die Breite ---------------------------------------------------------
+   .inhalt steht ab 40rem bei 42rem, und fuer eine Textseite ist das richtig.
+   Die Lehrpersonenseite ist keine Textseite: Hier stehen vier
+   Fachschaltflaechen nebeneinander und ein Formular in zwei Spalten, sonst
+   ist es am 27-Zoll-Schirm eine Handy-Saeule in der Bildschirmmitte.
+
+   Verbreitert wird deshalb genau die Seite, die .lehrseite enthaelt - mit
+   :has(), weil base.html keine Klasse am Koerper vergibt und ich sie dort
+   nicht hinschreiben darf. Kennt ein Browser :has() nicht, fallen die drei
+   Regeln weg und die Seite sieht aus wie bisher: schmal, aber vollstaendig
+   bedienbar. Kopf und Fuss wandern mit, sonst sitzt eine 42rem-Leiste ueber
+   einem 72rem-Inhalt. */
+@media (min-width: 64rem) {
+  .inhalt:has(.lehrseite) { max-width: 72rem; }
+  body:has(.lehrseite) .kopf-innen { max-width: 72rem; }
+  body:has(.lehrseite) .fuss-innen { max-width: 72rem; }
+}
+
+/* Lange Saetze bleiben lesbar, auch wenn der Kasten darunter breit ist. */
+.lehrseite .leerhinweis,
+.lehrseite .anlegen-vorspann,
+.lehrseite .fachkopf-satz { max-width: 44rem; }
+
+/* --- Schritt 1: die Fachwahl -------------------------------------------
+   Grosse Flaechen, kein Auswahlfeld: Die vier Faecher sind die Frage der
+   Seite, und ein <select> versteckt sie hinter einem Klick. Jede Flaeche ist
+   ein Link, also auch mit der Tastatur und ohne Skript erreichbar. */
+.fachliste {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: .7rem;
+}
+
+.fachknopf {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: .15rem .9rem;
+  align-items: start;
+  min-height: 44px;
+  padding: .9rem 1rem;
+  border: 1px solid var(--rand);
+  border-radius: 12px;
+  background: var(--grund);
+  color: var(--schrift);
+  text-decoration: none;
+}
+
+.fachknopf:hover,
+.fachknopf:focus-visible {
+  border-color: var(--akzent);
+  background: var(--akzent-leise);
+}
+
+/* Das Symbol steht neben den zwei Textzeilen, nicht darueber: Am Telefon
+   waere die Schaltflaeche sonst eine halbe Bildschirmhoehe hoch. */
+.fach-symbol {
+  grid-row: span 2;
+  font-size: 2rem;
+  line-height: 1.1;
+  color: var(--akzent);
+}
+
+/* Die Linienzeichnungen fuer Faecher und Konzepte (_fachsymbol.html,
+   _konzeptsymbol.html). 1em gross und in currentColor, also gelten die
+   Schriftgroessen und Farben, die vorher fuer die Emojis da standen. Etwas
+   unter die Grundlinie gesetzt, damit sie neben Text nicht hochstehen. */
+.linien-symbol { display: inline-block; vertical-align: -.14em; flex: 0 0 auto; }
+.fach-symbol .linien-symbol { display: block; }
+
+.fach-name { font-weight: 700; font-size: 1.05rem; }
+.fach-satz { color: var(--schrift-leise); font-size: .88rem; line-height: 1.45; }
+
+/* Tablet: zwei Spalten. */
+@media (min-width: 34rem) {
+  .fachliste { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
+}
+
+/* PC: alle in einer Reihe, seit der Musik sind es fuenf. auto-fit statt
+   einer festen Zahl, damit ein sechstes Fach nicht wieder hier eine Zahl
+   aendern muss und eine schmal gebliebene Seite (ohne :has) umbricht. Dort
+   hat der Satz die ganze Spaltenbreite, deshalb rueckt das Symbol nach oben. */
+@media (min-width: 64rem) {
+  .fachliste { grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 1rem; }
+  .fachknopf { grid-template-columns: minmax(0, 1fr); padding: 1.1rem 1.2rem; gap: .25rem; }
+  .fach-symbol { grid-row: auto; font-size: 2.4rem; }
+}
+
+/* --- Schritt 2: das gewaehlte Fach und der Weg zurueck ----------------- */
+.schrittmarke {
+  margin: 0 0 .35rem;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--schrift-leise);
+}
+
+.fachkopf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .3rem .8rem;
+  margin: 0 0 1.2rem;
+  padding-bottom: .9rem;
+  border-bottom: 1px solid var(--rand);
+}
+
+.fachkopf .fach-symbol { grid-row: auto; font-size: 1.9rem; }
+.fachkopf-name { margin: 0; font-size: 1.2rem; }
+.fachkopf-satz { flex: 1 1 100%; margin: 0; color: var(--schrift-leise); font-size: .88rem; }
+
+/* Rechts aussen und 44px hoch: Wer das falsche Fach erwischt hat, muss den
+   Weg zurueck finden, ohne die Seite neu zu laden. */
+.fachzurueck {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  min-height: 44px;
+  margin-left: auto;
+  padding: .3rem .8rem;
+  border: 1px solid var(--rand);
+  border-radius: 8px;
+  background: var(--grund);
+  color: var(--akzent);
+  font-size: .9rem;
+  text-decoration: none;
+}
+
+.fachzurueck:hover { border-color: var(--akzent); background: var(--akzent-leise); }
+
+.spaltenkopf {
+  margin: 0 0 .8rem;
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--schrift-leise);
+}
+
+/* Am Telefon trennt eine Linie die zweite Spalte ab, am PC tut das der
+   Abstand. Ohne sie laufen die acht Felder dort in einem Zug durch. */
+.formspalte + .formspalte {
+  margin-top: .4rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--rand);
+}
+
+.anlegen-abschluss { margin-top: .4rem; }
+
+@media (min-width: 64rem) {
+  .formspalten {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 2.6rem;
+    align-items: start;
+  }
+
+  /* Die Lesbarkeitsgrenze: eine Spalte wird nie breiter als etwa 70
+     Zeichen, auch wenn der Kasten 72rem hat. */
+  .formspalte { max-width: 34rem; }
+
+  .formspalte + .formspalte { margin-top: 0; padding-top: 0; border-top: 0; }
+
+  /* knopf-gross ist 100 % breit - am Handy richtig, hier ein Balken ueber
+     die ganze Seite. */
+  .anlegen-abschluss {
+    margin-top: 1rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--rand);
+  }
+
+  .anlegen-abschluss .knopf-gross { width: auto; min-width: 18rem; }
+
+  /* Zwei Karten nebeneinander: 72rem fuer eine Zeile mit Code, Titel und
+     zwei Zahlen sind zu viel. */
+  .lehrseite .sitzungskarten { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Das Fach gehoert auf die Karte wie die Betriebsart vorher: Es ist das
+   Erste, woran die Lehrperson ihre Sitzung wiedererkennt. */
+.marke-chip.ist-fach {
+  border-color: var(--akzent);
+  color: var(--akzent);
+  font-weight: 600;
+}
+
+/* Am Telefon zaehlt jeder Millimeter Innenraum. 16px Seitenabstand kommen
+   von .inhalt, hier wird nur der Kasten schmaler gepolstert. */
+@media (max-width: 30rem) {
+  section.anlegen { padding: 1rem; }
+  .fachknopf { padding: .8rem .9rem; }
+  .fach-symbol { font-size: 1.8rem; }
+}
+
+/* Die Diagnose unter einem Versuch im Verlauf: Ergebnis, Lage, Absicht und
+   die Hilfe, die danach gewaehlt wurde. Eine Zeile, die umbricht; die
+   Einschaetzung steht als eigener Satz dazwischen. */
+.diagnosenotiz {
+  margin: .4rem 0 0;
+  font-size: .85rem;
+  color: var(--schrift-leise);
+}
+
+.diagnose-einschaetzung { display: block; }
+
+/* Im Verlauf der Lehrperson: Zuege des Tutors, die keine Stufe sind
+   (Nachfrage, Bestaetigung, Nachsatz), gestrichelt gerahmt; die Form einer
+   Hilfe (direkt oder indirekt, weit oder eng) klein hinter dem Namen. */
+.hilfe-zug { border-style: dashed; }
+.hilfe-bestaetigung { border-color: var(--akzent); }
+
+.hilfe-form {
+  margin-left: .3rem;
+  font-weight: 400;
+  font-size: .8rem;
+  color: var(--schrift-leise);
+}
+
+.wartehinweis-still { background: transparent; padding-left: 0; }
+
+/* --- Testecke Musik-KI (/labor/musik/) --------------------------------- */
+/* Eine Werkbank, keine Schauseite: dieselben Karten und Knoepfe wie sonst,
+   nur die Stilkarten und die Liste brauchen eigene Regeln. */
+.musik-gesund { margin: 0 0 1rem; color: var(--schrift-leise); }
+.musik-gesund-ja { color: var(--akzent); }
+.musik-gesund-nein { color: var(--warnung); }
+
+.musik-form fieldset { border: 0; margin: 0 0 1.2rem; padding: 0; }
+.musik-form legend { font-weight: 600; margin-bottom: .5rem; }
+
+.musik-stilraster {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: .7rem;
+}
+.musik-stil {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+  padding: .8rem .9rem;
+  border: 1px solid var(--rand);
+  border-radius: 10px;
+  background: var(--grund);
+  cursor: pointer;
+}
+.musik-stil:has(input:checked) { border-color: var(--akzent); box-shadow: 0 0 0 2px var(--akzent-leise); }
+.musik-stil input { position: absolute; opacity: 0; pointer-events: none; }
+.musik-stil:focus-within { outline: 3px solid var(--fokus); outline-offset: 2px; }
+.musik-stil-name { font-weight: 600; }
+.musik-stil-text, .musik-stil-werte, .musik-stil-tags { font-size: .85rem; color: var(--schrift-leise); }
+.musik-stil-tags { overflow-wrap: anywhere; }
+
+.musik-zeile { display: flex; flex-wrap: wrap; gap: .8rem; margin-bottom: 1rem; }
+.musik-feld { display: flex; flex-direction: column; gap: .3rem; font-weight: 600; flex: 1 1 8rem; min-width: 0; }
+.musik-feld-breit { flex-basis: 100%; margin-bottom: 1rem; }
+.musik-feld input[type=text], .musik-feld input[type=number], .musik-feld select, .musik-feld textarea {
+  font: inherit;
+  font-weight: 400;
+  padding: .55rem .7rem;
+  border: 1px solid var(--rand);
+  border-radius: 8px;
+  background: var(--grund);
+  color: var(--schrift);
+  width: 100%;
+  box-sizing: border-box;
+}
+.musik-feld input[type=range] { width: 100%; }
+.musik-marken { display: flex; flex-wrap: wrap; gap: .4rem; }
+.musik-fassung { display: inline-flex; gap: .4rem; align-items: center; margin-right: 1.2rem; }
+.musik-schaetzung, .musik-meldung { min-height: 1.4em; color: var(--schrift-leise); }
+
+.musik-lieder { list-style: none; margin: 0; padding: 0; }
+.musik-lied { padding: .8rem 0; border-top: 1px solid var(--rand); }
+.musik-lied:first-child { border-top: 0; }
+.musik-lied p { margin: .2rem 0; }
+.musik-lied-stand, .musik-lied-meldung { color: var(--schrift-leise); font-size: .9rem; }
+.musik-lied-spieler audio { width: 100%; margin: .4rem 0; }
+
+/* --- Musikstunde (tutoring/musik.html, Lehrpersonenseite) -------------- */
+/* Lieder je Kind als Knopfreihe: fuenf Zahlen nebeneinander statt
+   untereinander, jede Wahl bleibt 44px hoch. */
+.wahl-inline { display: inline-flex; margin-right: 1.1rem; }
+
+/* Das Thema der Stunde steht oben auf der Seite des Kindes, gross genug,
+   dass es beim Schreiben im Blick bleibt. */
+.musik-thema { margin: 0 0 1rem; font-size: 1.15rem; }
+.musik-thema-wort { font-weight: 700; }
+.musik-noch { margin: .2rem 0 .8rem; color: var(--schrift-leise); }
+.musik-lied-text {
+  margin: .3rem 0;
+  white-space: pre-line;
+  font-size: .9rem;
+  overflow-wrap: anywhere;
+}
+.musik-lied-kopf { display: flex; flex-wrap: wrap; gap: .3rem .8rem; align-items: center; }
+.musik-lied-kopf .ampelpunkt { flex: 0 0 auto; }
+
+/* Die Seite des Kindes benutzt die Bauteile der Probierecke aus
+   projekt.css (Stilkarten, Markenknoepfe, Masslinie). Deren Variablen
+   haengen dort an .projektseite, die aber auch die Seite verbreitert. Hier
+   dieselben drei Werte ohne die Verbreiterung: Die Musikstunde ist eine
+   Handyseite wie Chat und Sprechcoach. */
+.musikstunde {
+  --projekt-grenze: var(--fokus);
+  --projekt-titel: Bahnschrift, "DIN Alternate", "DIN 2014", system-ui, sans-serif;
+  --projekt-mono: ui-monospace, "Cascadia Mono", Consolas, "SF Mono", Menlo, monospace;
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
+}
+.musikstunde .projekt-musik textarea { width: 100%; box-sizing: border-box; }
+
+/* Seit 19.10.2026: zwei Wege zum Text, Stile in Gruppen, ein freies
+   Stilfeld. Alles unter .musikstunde, damit die Probierecke auf /projekt/
+   unveraendert bleibt. Linien statt Flaechen, wie auf dem Bauplan. */
+.musikstunde .musik-wege {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: .6rem;
+  margin-bottom: .9rem;
+}
+.musikstunde .musik-weg {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  min-height: 44px;
+  padding: .5rem .8rem;
+  border: 1.5px dashed var(--akzent);
+  cursor: pointer;
+}
+.musikstunde .musik-weg input { width: 1.1rem; height: 1.1rem; margin: 0; accent-color: var(--akzent); }
+.musikstunde .musik-weg:has(input:checked) { border-style: solid; }
+.musikstunde .musik-weg:has(input:focus-visible) { outline: 3px solid var(--fokus); outline-offset: 2px; }
+.musikstunde .musik-spark {
+  display: grid;
+  gap: .5rem;
+  margin-bottom: 1rem;
+  padding: .8rem;
+  border: 1.5px solid var(--akzent);
+}
+.musikstunde .musik-spark label,
+.musikstunde .musik-eigen label,
+.musikstunde .musik-textlabel { display: block; font-weight: 600; }
+.musikstunde .musik-textlabel { margin-bottom: .4rem; }
+.musikstunde .musik-spark input[type="text"],
+.musikstunde .musik-eigen input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1.5px solid var(--akzent);
+  border-radius: 0;
+}
+.musikstunde .musik-spark .knopf { justify-self: start; border-radius: 0; }
+.musikstunde .musik-spark .projekt-musik-hilfe { margin-top: 0; }
+.musikstunde .musik-stilgruppen { display: grid; gap: 1.1rem; }
+.musikstunde .musik-stilgruppe {
+  margin: 0 0 .45rem;
+  font-family: var(--projekt-mono);
+  font-size: .74rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--schrift-leise);
+}
+/* Dichter als auf /projekt/: ueber dreissig Karten statt sechs. Am Handy
+   zwei Spalten, am Tablet drei bis vier. */
+.musikstunde .projekt-stile {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 9.5rem), 1fr));
+  gap: .5rem;
+}
+.musikstunde .projekt-stil { padding: .55rem .6rem; gap: .15rem .5rem; }
+.musikstunde .projekt-stil-name { font-size: .98rem; }
+.musikstunde .projekt-stil-text { font-size: .8rem; }
+.musikstunde .musik-eigen { display: grid; gap: .3rem; margin-top: 1.1rem; }
+.musikstunde .musik-eigen .feld-zusatz { font-size: .88rem; }
+
+/* === Lehrperson nach dem Benchmark (19.10.2026) ========================= */
+/* Bildschirm 1: eine Karte, drei Fragen, ein Knopf. Bildschirm 2: Code und
+   Titel oben, das Klassenbild darunter. Alles unter .lehrseite; die Seiten
+   der Kinder ruehren diese Regeln nicht an. Farbe nur fuer die Ampel, die
+   Zeichnungen in currentColor, jede Beruehrungsflaeche 44 px, und nichts
+   springt: Es wird nichts ein- oder ausgeblendet, was die Hoehe aendert. */
+
+/* --- Die drei Fragen ----------------------------------------------------- */
+.fragen { max-width: 46rem; }
+.frage { margin: 0 0 1.7rem; padding: 0; border: 0; min-width: 0; }
+
+/* Auch als label: ".feld label" setzt sonst display:block und die Nummer
+   klebt am Text (Bildschirmfoto 19.10.2026, Frage 3). */
+.frage-titel,
+.feld label.frage-titel {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  margin: 0 0 .65rem;
+  padding: 0;
+  font-size: 1.08rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+/* Die Nummer: ein Ring mit Ziffer, kein farbiger Kreis. Sie sagt der
+   Lehrperson, dass es drei Fragen sind und nicht acht Bloecke. */
+.frage-nummer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 1.65rem;
+  height: 1.65rem;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  font-size: .82rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.frage .feld-zusatz { font-size: .9rem; }
+.feld-hilfe-unten { margin: .4rem 0 0; }
+
+/* Die Karten zur Wahl: ein Radio in einem Label, die Karte ist das Label.
+   Der Radio bleibt im Dokument, nur unsichtbar - so prueft der Browser
+   "required" und zeigt die Meldung an der Karte, und die Tastatur geht mit
+   den Pfeiltasten durch. Der Zustand steht auf der Karte selbst (Rand,
+   Ring rechts oben), nicht auf einem Knopf daneben. */
+.wahlkarten { display: grid; gap: .7rem; }
+
+.wahlkarte {
+  position: relative;
+  display: block;
+  margin: 0;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.wahlkarte input {
+  position: absolute;
+  top: .95rem;
+  right: .9rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin: 0;
+  opacity: 0;
+}
+
+.wahlkarte-inhalt {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  height: 100%;
+  min-height: 44px;
+  padding: .9rem 2.7rem .95rem 1rem;
+  border: 1.5px solid var(--rand);
+  border-radius: 12px;
+  background: var(--grund);
+  color: var(--schrift);
+}
+
+.wahlkarte-inhalt::before {
+  content: "";
+  position: absolute;
+  top: .95rem;
+  right: .9rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 1.5px solid var(--schrift-leise);
+  border-radius: 50%;
+  background: var(--grund);
+}
+
+.wahlkarte:hover .wahlkarte-inhalt { border-color: var(--akzent); }
+
+.wahlkarte input:checked + .wahlkarte-inhalt {
+  border-color: var(--akzent);
+  box-shadow: inset 0 0 0 1px var(--akzent);
+  background: var(--akzent-leise);
+}
+
+.wahlkarte input:checked + .wahlkarte-inhalt::before {
+  border: .36rem solid var(--akzent);
+}
+
+.wahlkarte input:focus-visible + .wahlkarte-inhalt {
+  outline: 3px solid var(--fokus);
+  outline-offset: 2px;
+}
+
+.wahlkarte-name { font-weight: 700; line-height: 1.3; }
+.wahlkarte-zusatz { font-weight: 400; color: var(--schrift-leise); font-size: .9rem; white-space: nowrap; }
+.wahlkarte-satz { color: var(--schrift-leise); font-size: .85rem; line-height: 1.45; }
+.wahlkarte-bild { color: var(--akzent); line-height: 0; margin: .1rem 0 .25rem; }
+
+/* Tablet: zwei nebeneinander. PC: die drei Schulstufen in einer Reihe. */
+@media (min-width: 34rem) {
+  .wahlkarten-2, .wahlkarten-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 48rem) {
+  .wahlkarten-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* Die Stufenpunkte (_stufenpunkte.html): auf den Karten und im Klassenbild. */
+.stufenpunkte { display: inline-block; vertical-align: middle; max-width: 100%; }
+.stufenpunkte-linie { opacity: .35; }
+.stufenpunkte-gesperrt { opacity: .45; }
+
+/* Der Fehler steht an der Frage, nicht oben auf der Seite: Dort, wo die
+   Lehrperson hinschauen muss, und der erste Knopf hat den Fokus. */
+.frage.hat-fehler .wahlkarte-inhalt { border-color: var(--warnung); }
+
+.feld-fehler {
+  margin: 0 0 .7rem;
+  padding: .6rem .85rem;
+  border-left: 4px solid var(--warnung);
+  border-radius: 6px;
+  background: var(--warnung-leise);
+  font-size: .92rem;
+}
+
+.frage .stufenerklaerung { margin-top: .9rem; margin-bottom: 0; }
+
+/* --- Weitere Einstellungen, eingeklappt --------------------------------- */
+details.weitere-einstellungen {
+  margin: .2rem 0 1.2rem;
+  border-top: 1px solid var(--rand);
+}
+
+details.weitere-einstellungen > summary {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .2rem .6rem;
+  min-height: 44px;
+  padding: .7rem 0;
+  cursor: pointer;
+}
+
+details.weitere-einstellungen > summary::-webkit-details-marker { display: none; }
+
+/* Derselbe Winkel wie bei details.weitere, damit beide Aufklapper der
+   Seite gleich aussehen. */
+details.weitere-einstellungen > summary::before {
+  content: "";
+  flex: 0 0 auto;
+  width: .45rem;
+  height: .45rem;
+  margin-right: .15rem;
+  border-right: 2px solid var(--akzent);
+  border-bottom: 2px solid var(--akzent);
+  transform: rotate(-45deg);
+  transition: transform .15s ease;
+}
+
+details[open].weitere-einstellungen > summary::before { transform: rotate(45deg); }
+
+.weitere-titel { font-weight: 600; }
+.weitere-leise { color: var(--schrift-leise); font-size: .85rem; }
+.weitere-innen { padding: .4rem 0 .2rem; }
+
+@media (min-width: 64rem) {
+  .weitere-innen {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 34rem));
+    gap: 0 2.6rem;
+    align-items: start;
+  }
+}
+
+/* --- Bildschirm 2: Code, Titel, Marken ---------------------------------- */
+.stundenkopf {
+  display: grid;
+  gap: 1.2rem;
+  margin: 0 0 1.6rem;
+  padding: 1.2rem;
+  border: 1px solid var(--rand);
+  border-radius: 14px;
+  background: var(--flaeche);
+}
+
+.stundenkopf-code {
+  display: grid;
+  justify-items: center;
+  gap: .35rem;
+  text-align: center;
+}
+
+.stundenkopf-code .code-gross { margin: 0; font-size: clamp(2.6rem, 13vw, 4.4rem); }
+.stundenkopf-code .code-nachspann { font-size: .88rem; }
+.stundenkopf-code .leinwand-adresse { margin: 0; font-size: .82rem; }
+
+.stundenkopf-qr {
+  width: clamp(150px, 36vw, 200px);
+  height: auto;
+  padding: .5rem;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.stundenkopf-text { min-width: 0; }
+
+.titelzeile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .3rem .8rem;
+}
+
+.titelzeile .sitzung-titel {
+  margin: 0;
+  font-size: 1.55rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+/* Der Stift: ein Aufklapper neben dem Titel. Geschlossen ein Knopf, offen
+   rueckt er in eine eigene Zeile und zeigt das Feld. */
+details.titel-stift { flex: 0 1 auto; min-width: 0; }
+details[open].titel-stift { flex-basis: 100%; }
+
+details.titel-stift > summary {
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  min-height: 44px;
+  padding: .3rem .8rem;
+  border: 1px solid var(--rand);
+  border-radius: 8px;
+  background: var(--grund);
+  color: var(--akzent);
+  font-size: .9rem;
+  cursor: pointer;
+}
+
+details.titel-stift > summary::-webkit-details-marker { display: none; }
+details.titel-stift > summary:hover { border-color: var(--akzent); }
+
+.titelform {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .6rem;
+}
+
+.titelform input { flex: 1 1 14rem; }
+
+.stundenkopf .marken { margin-top: .8rem; gap: .35rem; }
+.marken-gross .marke-chip { font-size: .85rem; padding: .2rem .7rem; }
+
+@media (min-width: 48rem) {
+  .stundenkopf {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: 1.4rem 2.2rem;
+  }
+  .titelzeile .sitzung-titel { font-size: 1.8rem; }
+}
+
+/* --- Das Klassenbild ------------------------------------------------------ */
+.klassenzahlen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .2rem 1.1rem;
+  margin: 0 0 .9rem;
+  color: var(--schrift-leise);
+  font-size: .9rem;
+}
+
+.klassenzahlen strong { color: var(--schrift); font-variant-numeric: tabular-nums; }
+
+.klassenbild {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: .8rem;
+}
+
+/* Am Handy eine Spalte, am Tablet zwei, am PC drei. Die Kachel bleibt
+   dieselbe; nur das Raster aendert sich. */
+@media (min-width: 34rem) {
+  .klassenbild { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 64rem) {
+  .klassenbild { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+.kachel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  min-width: 0;
+  padding: .9rem 1rem;
+  border: 1px solid var(--rand);
+  border-radius: 12px;
+  background: var(--grund);
+}
+
+/* Der Rahmen fuer die drei Zustaende: in Schriftfarbe, nicht in einer
+   Signalfarbe. Die einzige Farbe auf der Kachel bleibt die Ampel. Der
+   Rand wird dicker, die Polsterung schmaler, damit nichts rutscht. */
+.kachel.ist-markiert {
+  border: 2px solid var(--schrift);
+  padding: calc(.9rem - 1px) calc(1rem - 1px);
+}
+
+.kachel:focus-within { outline: 3px solid var(--fokus); outline-offset: 2px; }
+.kachel p { margin: 0; }
+
+.kachel-grund {
+  font-size: .76rem;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.kachel-kopf {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  min-width: 0;
+  font-weight: 700;
+}
+
+.kachel-name {
+  color: var(--schrift);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+/* Die ganze Kachel ist der Weg in den Verlauf; der Link selbst bleibt der
+   Name, damit Vorleser nicht die ganze Kachel als Linktext bekommen. */
+.kachel-name::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+.kachel-name:focus-visible { outline: none; }
+
+.kachel-fertig {
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding: .05rem .55rem;
+  border: 1px solid var(--rand);
+  border-radius: 999px;
+  color: var(--schrift-leise);
+  font-size: .74rem;
+  font-weight: 600;
+}
+
+.kachel-aufgabe,
+.kachel-beitrag {
+  font-size: .92rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kachel-punkte { margin: .15rem 0 !important; color: var(--akzent); line-height: 0; }
+.kachel-diagnose { min-height: 1.4em; font-size: .86rem; color: var(--schrift-leise); }
+
+/* Zusatztext nur auf Wunsch (Thomas, 22.10.2026: die Sitzungsseite war zu
+   kompliziert, zu viel Text). Erklaerungen, mehr Zahlen und die Lieder der
+   ganzen Klasse stehen in Aufklappern; die Seite selbst zeigt Code, Klasse
+   und den Knopf zum Beenden. */
+details.erklaerung-aufklapper,
+details.mehr-zahlen { margin: .9rem 0 0; }
+
+details.erklaerung-aufklapper > summary,
+details.mehr-zahlen > summary {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  min-height: 44px;
+  cursor: pointer;
+  list-style: none;
+  font-size: .92rem;
+  font-weight: 600;
+  color: var(--schrift-leise);
+}
+
+details.erklaerung-aufklapper > summary::-webkit-details-marker,
+details.mehr-zahlen > summary::-webkit-details-marker { display: none; }
+
+details.erklaerung-aufklapper > summary::before,
+details.mehr-zahlen > summary::before {
+  content: "";
+  flex: 0 0 auto;
+  width: .45rem;
+  height: .45rem;
+  margin-right: .15rem;
+  border-right: 2px solid var(--akzent);
+  border-bottom: 2px solid var(--akzent);
+  transform: rotate(-45deg);
+  transition: transform .15s ease;
+}
+
+details[open].erklaerung-aufklapper > summary::before,
+details[open].mehr-zahlen > summary::before { transform: rotate(45deg); }
+
+details.erklaerung-aufklapper > p {
+  max-width: 62ch;
+  margin: .3rem 0 .8rem;
+  font-size: .92rem;
+  color: var(--schrift-leise);
+}
+
+details.erklaerung-aufklapper .stufenerklaerung { margin-top: .4rem; }
+details.lieder-aufklapper .musik-lieder { margin-top: .4rem; }
+
+.klassenzahlen-achtung { color: var(--warnung); font-weight: 600; }
+
+/* Beenden: ein Knopf und ein Satz, keine Karte mit Ueberschrift. */
+.beenden-zeile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem 1rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rand);
+}
+
+.beenden-hinweis { margin: 0; font-size: .88rem; color: var(--schrift-leise); }
+
+/* Der Verlauf in Trainer und Sprechcoach: Uebersetzung und Notizen leise
+   unter dem Zug, ein nicht verstandener Coachzug gestrichelt. */
+.uebersetzung { margin: .35rem 0 0; font-size: .9rem; color: var(--schrift-leise); }
+.verlauf-notiz { font-weight: 400; font-size: .85rem; color: var(--schrift-leise); }
+.verlauf-frage { font-weight: 600; }
+.hilfe.ist-nicht-verstanden { border-style: dashed; }
+.kachel-leer { color: var(--schrift-leise); font-style: italic; }
+
+.kachel-fuss {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .2rem .8rem;
+  margin-top: .2rem !important;
+  color: var(--schrift-leise);
+  font-size: .8rem;
+}
+
+.kachel-ampel { display: inline-flex; align-items: center; }
+.kachel-zeit { margin-left: auto; white-space: nowrap; }
+.kachel-fuss .pulspunkt { width: .5rem; height: .5rem; }
+
+/* === Das Kind nach dem Benchmark (19.10.2026) ============================ */
+/* Ein Bildschirm, drei Teile, auf jedem Geraet in derselben Reihenfolge:
+   die Aufgabe, das Gespraech, der Verfasser. Am Handy eine Spalte, der Weg
+   durch die Hilfen als Punktreihe unter der Aufgabe; ab 900 px (56.25rem)
+   zwei Spalten, Aufgabe und Weg rechts, fest. Hilfen links mit Stufenmarke
+   ("Tipp 1 · Worum geht es?"), Beitraege des Kindes rechts. Unten, immer
+   sichtbar, der Verfasser mit einem Feld und zwei Knoepfen.
+
+   Alles unter .arbeitsplatz, damit der Trainer (.fortschritt) und die
+   Lehrpersonenseite nichts davon abbekommen. Keine Farbflaechen ausser der
+   Akzentfarbe der Marke, Zeichnungen in currentColor, jede
+   Beruehrungsflaeche 44 px, sichtbarer Fokus, und nichts springt: Die Karte,
+   in die eine Hilfe einlaeuft, wird an derselben Stelle zur fertigen Karte. */
+
+.arbeitsplatz {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+}
+
+.arbeitsplatz .sitzungsleiste { margin-bottom: .6rem; }
+.arbeitsplatz > .meldung { margin-bottom: .8rem; }
+
+/* --- Die Aufgabe als Karte oben ------------------------------------------ */
+.aufgabenkarte {
+  margin: 0 0 .9rem;
+  padding: .8rem .95rem;
+  border: 1px solid var(--rand);
+  border-left: 4px solid var(--akzent);
+  border-radius: 0 12px 12px 0;
+  background: var(--akzent-leise);
+}
+
+.aufgabenkarte.ist-erledigt {
+  border-left-color: var(--rand);
+  background: var(--flaeche);
+}
+
+.aufgabenkarte .aufgabenkopf { margin-bottom: .25rem; }
+.aufgabenwortlaut { font-size: 1.02rem; }
+
+/* --- Der Weg: fuenf Punkte mit den Kindernamen --------------------------- */
+/* Am Handy eine Reihe mit Linie dazwischen; der Name steht nur bei der
+   Stufe, die als Naechstes kommt. Am PC eine Liste mit allen Namen. */
+.wegkarte { margin: 0 0 1rem; }
+
+.weg-titel {
+  margin: 0 0 .35rem;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--schrift-leise);
+}
+
+.arbeitsplatz .fortschritt {
+  list-style: none;
+  display: flex;
+  gap: 0;
+  align-items: flex-start;
+  margin: 0;
+  padding: 0;
+}
+
+.arbeitsplatz .fortschritt-punkt {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .3rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--schrift-leise);
+  font-size: .72rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.arbeitsplatz .fortschritt-punkt + .fortschritt-punkt::before {
+  content: "";
+  position: absolute;
+  top: .8rem;
+  left: -50%;
+  width: 100%;
+  height: 1.5px;
+  background: var(--rand);
+}
+
+.arbeitsplatz .punkt {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  border: 1.5px solid var(--rand);
+  border-radius: 50%;
+  background: var(--grund);
+  color: var(--schrift-leise);
+  font-size: .78rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.arbeitsplatz .fortschritt-punkt.ist-erledigt {
+  background: none;
+  border: 0;
+  color: var(--schrift-leise);
+}
+
+.arbeitsplatz .fortschritt-punkt.ist-erledigt .punkt {
+  background: var(--akzent);
+  border-color: var(--akzent);
+  color: var(--grund);
+}
+
+.arbeitsplatz .fortschritt-punkt.ist-aktuell {
+  border: 0;
+  color: var(--akzent);
+}
+
+.arbeitsplatz .fortschritt-punkt.ist-aktuell .punkt {
+  border: 2px solid var(--akzent);
+  color: var(--akzent);
+}
+
+/* Schon gegeben UND als Naechstes dran (die Diagnose geht zurueck): gefuellt
+   mit heller Ziffer, dazu ein Ring. Ohne diese Regel stand die Ziffer in
+   Akzentfarbe auf Akzentfarbe und war unsichtbar. */
+.arbeitsplatz .fortschritt-punkt.ist-erledigt.ist-aktuell .punkt {
+  color: var(--grund);
+  border-color: var(--akzent);
+  box-shadow: 0 0 0 2px var(--grund), 0 0 0 3.5px var(--akzent);
+}
+
+.arbeitsplatz .punkt-name { display: none; line-height: 1.25; }
+.arbeitsplatz .fortschritt-punkt.ist-aktuell .punkt-name { display: block; }
+
+/* --- Das Gespraech: Hilfen links, Beitraege des Kindes rechts ------------- */
+.arbeitsplatz .karten { list-style: none; margin: 0; padding: 0; }
+
+.arbeitsplatz .karte-hilfe,
+.arbeitsplatz .hilfe-neu {
+  position: relative;
+  max-width: 92%;
+  margin: 0 0 .8rem;
+  padding: .75rem .95rem;
+  border: 1px solid var(--rand);
+  border-radius: 14px 14px 14px 4px;
+  background: var(--flaeche);
+}
+
+.arbeitsplatz .hilfe-neu { border-style: dashed; min-height: 3.2rem; }
+
+.arbeitsplatz .karte-kind {
+  position: relative;
+  width: fit-content;
+  min-width: 40%;
+  max-width: 88%;
+  margin: 0 0 .8rem auto;
+  padding: .7rem .95rem;
+  border: 1px solid var(--akzent-leise);
+  border-radius: 14px 14px 4px 14px;
+  background: var(--akzent-leise);
+}
+
+.arbeitsplatz .schritt-kopf {
+  margin: 0 0 .35rem;
+  padding: 0;
+  border: 0;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+  color: var(--akzent);
+}
+
+.schritt-marke { display: inline-flex; align-items: center; gap: .4rem; }
+
+/* Die Marke traegt einen kleinen Ring, wie der Punkt im Weg. */
+.schritt-marke::before {
+  content: "";
+  flex: 0 0 auto;
+  width: .55rem;
+  height: .55rem;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+}
+
+.arbeitsplatz .karte-antwort .schritt-kopf { color: var(--schrift-leise); }
+
+.arbeitsplatz .versuch-kopf {
+  margin: 0 0 .25rem;
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--schrift-leise);
+}
+
+.arbeitsplatz .karte-kind .hilfe-text { color: var(--schrift); }
+.arbeitsplatz .aufgabenfoto { max-height: 12rem; }
+
+/* --- "Das stimmt." ------------------------------------------------------- */
+.fertigkarte {
+  display: flex;
+  align-items: flex-start;
+  gap: .8rem;
+  max-width: 92%;
+  margin: .2rem 0 1rem;
+  padding: .9rem 1rem;
+  border: 2px solid var(--akzent);
+  border-radius: 14px;
+  background: var(--grund);
+}
+
+.fertig-zeichen { flex: 0 0 auto; margin-top: .1rem; color: var(--akzent); }
+.fertig-inhalt { min-width: 0; }
+.fertig-titel { margin: 0; font-size: 1.15rem; font-weight: 700; }
+.fertig-text { margin: .2rem 0 .7rem; }
+.fertig-inhalt .knopf { text-decoration: none; }
+
+/* Die Bestaetigung mit der Warum-Frage laeuft in dieselbe Karte ein
+   (30.10.2026). Solange sie unterwegs ist, stehen drei Punkte da, kein
+   Kasten. Leer nimmt der Block keinen Platz. */
+.fertig-tutor { margin: 0 0 .7rem; }
+.fertig-tutor:empty { margin: 0; }
+.fertigkarte[aria-busy="true"] .fertig-tutor:empty::before {
+  content: "…";
+  display: block;
+  margin: 0 0 .7rem;
+  color: var(--schrift-leise);
+}
+
+/* --- Zuege, die keine Stufe sind: Nachfrage, Nachsatz ------------------- */
+/* Dieselbe Karte wie eine Hilfe, aber ohne Stufe und mit leiser Marke: Der
+   Tutor fragt oder antwortet, er hilft nicht. Der Ring bleibt, er nimmt die
+   leise Schriftfarbe an. */
+.arbeitsplatz .karte-nachfrage .schritt-kopf,
+.arbeitsplatz .karte-nachsatz .schritt-kopf { color: var(--schrift-leise); }
+.arbeitsplatz .karte-nachfrage { border-style: dashed; }
+.arbeitsplatz .hilfe-neu.karte-nachfrage,
+.arbeitsplatz .hilfe-neu.karte-nachsatz { border-style: dashed; }
+
+.arbeitsplatz .loesungsabfrage { max-width: 92%; margin: .2rem 0 1rem; }
+.arbeitsplatz .fertighinweis { margin: .2rem 0 1rem; text-align: left; }
+
+/* --- Der Verfasser: unten, immer sichtbar -------------------------------- */
+/* Sticky, nicht fixed: Er nimmt seinen Platz im Fluss ein und deckt nichts
+   zu, was man nicht durch Scrollen freilegen kann. */
+.arbeitsplatz .verfasser {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  margin: .4rem -16px 0;
+  padding: .7rem 16px .8rem;
+  border-top: 2px solid var(--rand);
+  background: var(--flaeche);
+}
+
+.tippzeile { margin: 0 0 .6rem; }
+
+.knopf-tipp {
+  width: 100%;
+  gap: .5rem;
+  border: 1.5px solid var(--akzent);
+  background: var(--grund);
+  color: var(--akzent);
+}
+
+.knopf-tipp:hover { background: var(--akzent-leise); }
+.knopf-tipp[disabled] { opacity: .55; }
+.knopf-zeichen { flex: 0 0 auto; }
+
+.arbeitsplatz .verfasser-form > label { font-size: 1rem; margin-bottom: .15rem; }
+.arbeitsplatz .verfasser .feld-hilfe { margin: 0 0 .4rem; }
+.arbeitsplatz .werkzeuge { margin-bottom: .45rem; }
+
+.arbeitsplatz .verfasser-form textarea {
+  width: 100%;
+  min-height: 44px;
+  margin: 0 0 .5rem;
+  resize: vertical;
+}
+
+.verfasser-knoepfe { display: flex; flex-wrap: wrap; gap: .5rem; }
+.verfasser-knoepfe .knopf { flex: 1 1 10rem; }
+.knopf-hauptsache { font-size: 1.02rem; }
+
+.arbeitsplatz .fertigform { margin: .55rem 0 0; text-align: right; }
+
+.fertigweg {
+  min-height: 34px;
+  color: var(--schrift-leise);
+  font-size: .85rem;
+  text-decoration: underline;
+  text-underline-offset: .15em;
+}
+
+.fertigweg:hover { color: var(--schrift); }
+
+@media (min-width: 40rem) {
+  .arbeitsplatz .verfasser {
+    margin: .4rem 0 0;
+    padding: .7rem .9rem .8rem;
+    border: 1px solid var(--rand);
+    border-radius: 14px 14px 0 0;
+  }
+}
+
+/* --- Zwei Spalten ab 900 px --------------------------------------------- */
+/* Gespraech und Verfasser links, Aufgabe und Weg rechts und fest. Die Seite
+   wird dafuer breiter, wie die Lehrpersonenseite: ueber :has(), weil
+   base.html keine Klasse am Koerper vergibt. Ohne :has() bleibt es bei einer
+   Spalte, vollstaendig bedienbar. */
+@media (min-width: 56.25rem) {
+  .inhalt:has(.arbeitsplatz) { max-width: 64rem; }
+  body:has(.arbeitsplatz) .kopf-innen { max-width: 64rem; }
+  body:has(.arbeitsplatz) .fuss-innen { max-width: 64rem; }
+
+  .arbeitsplatz.hat-aufgabe {
+    grid-template-columns: minmax(0, 1fr) 18rem;
+    grid-template-areas:
+      "leiste leiste"
+      "meldung meldung"
+      "gespraech seite"
+      "verfasser seite";
+    column-gap: 2rem;
+    align-items: start;
+  }
+
+  .arbeitsplatz.hat-aufgabe > .sitzungsleiste { grid-area: leiste; }
+  .arbeitsplatz.hat-aufgabe > .meldung { grid-area: meldung; }
+  .arbeitsplatz.hat-aufgabe > .gespraech { grid-area: gespraech; min-width: 0; }
+  .arbeitsplatz.hat-aufgabe > .verfasser { grid-area: verfasser; }
+
+  .arbeitsplatz.hat-aufgabe > .seitenspalte {
+    grid-area: seite;
+    position: sticky;
+    top: 1rem;
+  }
+
+  .arbeitsplatz .fortschritt { flex-direction: column; gap: .45rem; }
+
+  .arbeitsplatz .fortschritt-punkt {
+    flex: 0 0 auto;
+    flex-direction: row;
+    align-items: center;
+    gap: .6rem;
+    font-size: .88rem;
+    text-align: left;
+  }
+
+  .arbeitsplatz .fortschritt-punkt + .fortschritt-punkt::before { display: none; }
+  .arbeitsplatz .punkt-name { display: block; }
+}
+
+/* === Der Safe Chat ====================================================== */
+/* Thomas (23.10.2026): ein offener Chat am Spark; ein Knopf schickt einen
+   Beitrag durch den Filter nach draussen, und jeder Schritt dieses Weges
+   steht fuer Kind und Lehrperson sichtbar im Chat. Dieselben Karten wie in
+   den anderen Verlaeufen (hilfe, eigenerversuch); neu sind die Marken, der
+   Aufklapper "Der Weg nach draussen" mit seiner Schrittliste und der unten
+   haftende Verfasser. Farbe nur fuer die Ampel: Die Urteilsmarke ist gruen,
+   orange oder grau, alles andere kommt aus den Variablen. Eine Spalte auf
+   Handy, Tablet und PC; die Karten werden nicht breiter als 46rem. */
+
+.safechat { max-width: 46rem; margin: 0 auto; }
+
+.safechat-thema { margin: 0 0 1rem; color: var(--schrift-leise); font-size: .9rem; }
+
+.safechat-willkommen {
+  margin: 0 0 1rem;
+  padding: .9rem 1.1rem;
+  border-left: 4px solid var(--akzent);
+  border-radius: 0 12px 12px 0;
+  background: var(--akzent-leise);
+}
+
+.safechat-willkommen p { margin: 0; }
+
+/* --- Alles aufklappen --------------------------------------------------- */
+
+.safechat-werkzeuge { display: flex; justify-content: flex-end; margin: 0 0 .5rem; }
+
+.protokoll-alle {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  min-height: 44px;
+  padding: .4rem .9rem;
+  border: 1px solid var(--rand);
+  border-radius: 999px;
+  background: var(--flaeche);
+  color: var(--akzent);
+  font: inherit;
+  font-weight: 600;
+  font-size: .88rem;
+  cursor: pointer;
+}
+
+.protokoll-alle:hover { border-color: var(--akzent); }
+
+.protokoll-alle[aria-pressed="true"] {
+  background: var(--akzent-leise);
+  border-color: var(--akzent);
+}
+
+/* --- Die Zuege ---------------------------------------------------------- */
+
+.safechat-zuege { list-style: none; margin: 0 0 1rem; padding: 0; }
+.chatzug { margin: 0; scroll-margin-top: 1rem; }
+.chatzug .hilfe, .chatzug .eigenerversuch { margin-bottom: .8rem; }
+
+.chatzug .hilfe-kopf, .chatzug .versuch-kopf {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .6rem;
+}
+
+.chatzug .verlauf-zeit { float: none; }
+
+/* Die Ampelnotiz steht hier in der Karte, nicht unter ihr. */
+.chatzug .ampelnotiz { margin: .5rem 0 0; }
+
+/* Eine Antwort, die draussen entstanden ist, hat einen Akzentrand links.
+   Das Wort im Kopf sagt es ausserdem, die Farbe allein traegt nichts. */
+.chatzug .hilfe-aussen { border-left: 4px solid var(--akzent); }
+
+/* --- Die Marken --------------------------------------------------------- */
+
+.safechat-marken { margin: .7rem 0 0; align-items: center; gap: .35rem; }
+
+.safechat-marken .marke-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  min-height: 1.6rem;
+  font-size: .76rem;
+}
+
+.safechat-marken .linien-symbol { width: 1.05em; height: 1.05em; }
+
+.marke-chip.marke-aussen { border-color: var(--akzent); color: var(--akzent); font-weight: 600; }
+.marke-chip.marke-urteil-ohne { border-color: #1d7a4a; color: #1d7a4a; }
+.marke-chip.marke-urteil-offen { color: var(--schrift-leise); }
+
+.marke-chip.marke-urteil-mit, .marke-chip.marke-gesperrt {
+  border-color: #c2560f;
+  color: #c2560f;
+  background: #fdeee2;
+  font-weight: 600;
+}
+
+.marke-grund { font-size: .85rem; color: var(--schrift-leise); }
+
+@media (prefers-color-scheme: dark) {
+  .marke-chip.marke-urteil-ohne { border-color: #63c58f; color: #63c58f; }
+
+  .marke-chip.marke-urteil-mit, .marke-chip.marke-gesperrt {
+    border-color: #ef8a4c;
+    color: #ef8a4c;
+    background: #2f2119;
+  }
+}
+
+/* --- Der Weg nach draussen: der Aufklapper ------------------------------ */
+/* Derselbe Winkel wie details.erklaerung-aufklapper. */
+
+details.protokoll {
+  margin: .7rem 0 0;
+  padding: 0 .9rem;
+  border: 1px solid var(--rand);
+  border-radius: 8px;
+  background: var(--grund);
+}
+
+details.protokoll > summary {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  min-height: 44px;
+  cursor: pointer;
+  list-style: none;
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--schrift-leise);
+}
+
+details.protokoll > summary::-webkit-details-marker { display: none; }
+
+details.protokoll > summary::before {
+  content: "";
+  flex: 0 0 auto;
+  width: .45rem;
+  height: .45rem;
+  margin-right: .15rem;
+  border-right: 2px solid var(--akzent);
+  border-bottom: 2px solid var(--akzent);
+  transform: rotate(-45deg);
+  transition: transform .15s ease;
+}
+
+details[open].protokoll > summary::before { transform: rotate(45deg); }
+
+/* Die Schritte: nummeriert mit einem gezeichneten Kreis statt der
+   Browserzahl, dazwischen eine Linie - der Weg. Strich, keine Flaeche. */
+.protokoll-schritte {
+  list-style: none;
+  margin: 0 0 .6rem;
+  padding: 0;
+  counter-reset: schritt;
+}
+
+.protokoll-schritt {
+  position: relative;
+  padding: .3rem 0 .7rem 2.1rem;
+  counter-increment: schritt;
+}
+
+.protokoll-schritt::before {
+  content: counter(schritt);
+  position: absolute;
+  left: 0;
+  top: .3rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1.5px solid var(--akzent);
+  border-radius: 50%;
+  color: var(--akzent);
+  font-size: .78rem;
+  font-weight: 700;
+  line-height: 1.3rem;
+  text-align: center;
+}
+
+.protokoll-schritt:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: calc(.75rem - 1px);
+  top: 1.95rem;
+  bottom: -.1rem;
+  border-left: 1.5px solid var(--rand);
+}
+
+.protokoll-schritt.ist-halt::before { border-color: #c2560f; color: #c2560f; }
+
+.schritt-titel {
+  margin: 0 0 .3rem;
+  font-size: .78rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--schrift-leise);
+}
+
+.schritt-text {
+  margin: 0;
+  padding: .5rem .7rem;
+  border: 1px solid var(--rand);
+  border-radius: 6px;
+  background: var(--flaeche);
+  font-size: .9rem;
+  overflow-wrap: anywhere;
+}
+
+/* Die Richtung ist die Information: was hinausging, was zurueckkam. */
+.schritt-raus { border-left: 3px solid var(--warnung); }
+.schritt-rein { border-left: 3px solid var(--akzent); }
+
+.schritt-notiz, .schritt-leise {
+  margin: .3rem 0 0;
+  font-size: .82rem;
+  color: var(--schrift-leise);
+}
+
+.schritt-leise { font-style: italic; }
+.schritt-grund { margin: 0; font-weight: 600; }
+.schritt-urteil { margin: 0 0 .3rem; font-weight: 600; }
+.schritt-urteil-ohne { color: #1d7a4a; }
+.schritt-urteil-mit { color: #c2560f; }
+.schritt-urteil-offen { color: var(--schrift-leise); }
+
+@media (prefers-color-scheme: dark) {
+  .schritt-urteil-ohne { color: #63c58f; }
+  .schritt-urteil-mit { color: #ef8a4c; }
+  .protokoll-schritt.ist-halt::before { border-color: #ef8a4c; color: #ef8a4c; }
+}
+
+.protokoll-fuss {
+  margin: 0;
+  padding: .5rem 0 .7rem;
+  border-top: 1px dashed var(--rand);
+  font-size: .78rem;
+  color: var(--schrift-leise);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Der Verfasser, unten haftend --------------------------------------- */
+/* Kein eigener Scrollbereich: Die Seite selbst scrollt, der Verfasser
+   bleibt am unteren Rand stehen, egal wie lang das Gespraech wird. */
+
+.safechat .verfasser {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  margin-top: .5rem;
+  padding: .7rem 16px .8rem;
+}
+
+.safechat-form { margin: 0; }
+
+.safechat-form textarea {
+  width: 100%;
+  min-height: 44px;
+  margin: 0 0 .5rem;
+  resize: vertical;
+}
+
+.safechat-knoepfe .knopf { flex: 1 1 10rem; gap: .5rem; }
+
+.knopf-aussen {
+  border: 1.5px solid var(--akzent);
+  background: var(--grund);
+  color: var(--akzent);
+}
+
+.knopf-aussen:hover { background: var(--akzent-leise); }
+.knopf-aussen .knopf-zeichen { flex: 0 0 auto; }
+.safechat-knopfhilfe { margin: .45rem 0 0; }
+
+.safechat-status {
+  margin: 0 0 .5rem;
+  font-size: .9rem;
+  color: var(--schrift-leise);
+}
+
+.safechat-status:empty { display: none; }
+.safechat-status.ist-fehler { color: var(--warnung); font-weight: 600; }
+
+.safechat-status.ist-wartend::before {
+  content: "";
+  display: inline-block;
+  width: .6rem;
+  height: .6rem;
+  margin-right: .4rem;
+  border-radius: 50%;
+  background: var(--akzent);
+  animation: pulsieren 1.8s ease-in-out infinite;
+}
+
+@media (min-width: 40rem) {
+  .safechat .verfasser { padding-left: 0; padding-right: 0; }
+}
+
+/* --- Offene Karten: Umgehungsversuche auf der Kachel (31.10.2026) ------- */
+
+.kachel-umgehung { color: #c2560f; font-weight: 600; }
+
+@media (prefers-color-scheme: dark) {
+  .kachel-umgehung { color: #ef8a4c; }
+}
+
+/* --- Die Protokollansicht der Lehrperson (Abschnitt 3b, 31.10.2026) ----- */
+
+.protokoll-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1rem;
+  align-items: center;
+  margin: .8rem 0;
+  font-size: .88rem;
+}
+
+.protokoll-filter select { min-height: 36px; margin-left: .3rem; }
+
+.protokoll-summe { margin: .4rem 0 1rem; font-size: .88rem; color: var(--schrift-leise); }
+
+.protokollzeile > summary { flex-wrap: wrap; font-size: .85rem; }
+.protokollzeile.ist-cloud { border-left-color: var(--warnung); }
+.protokoll-zeit { font-variant-numeric: tabular-nums; color: var(--schrift-leise); }
+.protokoll-kurz { flex: 1 1 12rem; font-weight: 400; color: var(--schrift-leise); overflow-wrap: anywhere; }
+
+.protokoll-anweisung > summary { cursor: pointer; list-style: none; }
+.protokoll-anweisung > summary::-webkit-details-marker { display: none; }
+.protokoll-anweisung > summary::before { content: "+ "; }
+.protokoll-anweisung[open] > summary::before { content: "\2013 "; }
+
+/* Eigenanteil und Weg nach draussen (1.11.2026): Kachel, Verlauf. */
+.kachel-anteil { font-size: .86rem; color: var(--schrift-leise); margin: 0; }
+.anteilnotiz { font-size: .92rem; margin: .2rem 0 .8rem; color: var(--schrift-leise); }
+.aussenweg { margin: 0 0 1.5rem; }
+.aussenweg-titel { font-size: 1.05rem; margin: 0 0 .3rem; }
+
+/* Die Notenleiste des Kindes (1.11.2026). */
+.notenleiste { margin: .6rem 0 .2rem; padding: .7rem .9rem; border: 1px solid var(--rand, #d8d6cf); border-radius: 10px; background: var(--flaeche-leise, rgba(0,0,0,.03)); }
+.noten-frage { margin: 0 0 .5rem; font-size: .95rem; }
+.noten-knoepfe { display: flex; gap: .5rem; flex-wrap: wrap; }
+.notenknopf { min-width: 44px; min-height: 44px; font-size: 1.1rem; font-weight: 600; border: 1px solid var(--rand, #bbb); border-radius: 8px; background: var(--flaeche, #fff); color: inherit; cursor: pointer; }
+.notenknopf:hover, .notenknopf:focus-visible { border-color: currentColor; }
+
+/* Der Aufgabenpool der Lehrperson und die Wahl auf der Kinderseite (1.11.2026). */
+.aufgabenpool { margin: 0 0 1.6rem; }
+.poolform { display: grid; gap: .4rem; max-width: 46rem; margin: .4rem 0 1rem; }
+.poolform textarea { width: 100%; font: inherit; padding: .5rem; border: 1px solid var(--rand, #bbb); border-radius: 8px; }
+.poolliste { list-style: none; padding: 0; margin: 0; display: grid; gap: .8rem; }
+.poolaufgabe { border: 1px solid var(--rand, #d8d6cf); border-radius: 10px; padding: .7rem .9rem; }
+.pool-kopf { display: flex; flex-wrap: wrap; gap: .5rem .8rem; align-items: center; margin: 0 0 .3rem; }
+.pool-zahl { color: var(--schrift-leise); font-size: .9rem; }
+.pool-pruefung { margin: .3rem 0; font-size: .95rem; }
+.poolaufgabe.status-uneinig .pool-status, .poolaufgabe.status-offen .pool-status { border-color: #c2560f; color: #c2560f; }
+.pool-entfernen { margin: .4rem 0 0; }
+.aufgabenwahl { margin: .4rem 0 1rem; }
+.wahl-titel { font-size: 1.05rem; margin: 0 0 .4rem; }
+.wahlliste { list-style: none; padding: 0; margin: 0; display: grid; gap: .5rem; }
+.wahlaufgabe { border: 1px solid var(--rand, #d8d6cf); border-radius: 10px; padding: .6rem .8rem; }
+.wahlaufgabe.ist-erledigt { opacity: .8; }
+.wahl-text { margin: 0 0 .4rem; }
+.wahlform { display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; }
+.erledigtmarke { color: var(--schrift-leise); font-size: .9rem; }
+.qs-kopf { margin: .6rem 0 .2rem; font-size: .95rem; }

@@ -1,0 +1,958 @@
+/* Der Sprechcoach: ein Gespraech in einer Fremdsprache.
+
+   Nur Farben und Masse aus app.css, keine einzige eigene Farbe: Damit
+   stimmt der dunkle Modus hier von selbst, und wenn sich das PH-Blau
+   einmal aendert, aendert es sich auch hier.
+
+   Zuerst fuer 360 Pixel Breite entworfen, der grosse Bildschirm ist der
+   Sonderfall. Zielflaechen bleiben bei 44 Pixeln, auch eng.
+
+   Drei Gewichtungen tragen diese Seite und erklaeren fast jede Regel darin:
+
+   1. Zuhoeren ist der Ruhezustand. Der groesste Kasten der Seite ist der
+      Zustandsanzeiger mit dem Ring, nicht das Textfeld. Im Gespraech gibt
+      es keinen Knopf; der Ring sagt, was gerade ist -- "Ich hoere zu",
+      "Ich denke nach", "Ich spreche" --, und eine Pause schickt ab.
+   2. Der Verlauf bleibt lesbar schmal. Ueber etwa 70 Zeichen verliert das
+      Auge beim Zeilenruecksprung die Spur, und eine fremde Sprache liest
+      man ohnehin Buchstabe fuer Buchstabe.
+   3. Nichts in diesem Gespraech sieht nach Fehler aus. Die Korrektur ist
+      das kleinste Element im Zug, und das "Sorry, I don't understand" des
+      Coaches ist ein Gespraechsbeitrag und keine Warnung.
+
+   Die ruhige Fassung des Pegels ist aus aufnahme.css uebernommen: derselbe
+   Ersatzbalken bei prefers-reduced-motion. Eigene Klassennamen (coach-*),
+   damit die alte Tafel in Chat und Trainer unberuehrt bleibt. */
+
+/* --- Die Seite ---------------------------------------------------------- */
+
+/* Die Textbreite steht an genau einer Stelle. 34rem sind bei dieser
+   Schriftgroesse etwa 65 Zeichen -- darum liegt sie hier und nicht am
+   einzelnen Kasten. */
+.coach-seite {
+  max-width: 34rem;
+  margin: 0 auto;
+}
+
+/* --- Worueber gesprochen wird ------------------------------------------- */
+
+.coach-leiste {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .5rem .9rem;
+  margin: 0 0 1rem;
+  padding: .7rem .9rem;
+  border: 1px solid var(--rand);
+  border-radius: 12px;
+  background: var(--flaeche);
+}
+
+/* min-width: 0 erlaubt dem langen Thema, umzubrechen. Ohne diese Zeile
+   sprengt ein einziges langes Thema die Leiste am Handy nach rechts. */
+.coach-lage { flex: 1 1 11rem; min-width: 0; }
+
+.coach-sprachzeile {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: .2rem .5rem;
+  margin: 0;
+}
+
+.coach-sprache { font-weight: 700; font-size: 1.05rem; }
+
+/* Das Niveau als Pille: Es ist die zweite Vorgabe der Lehrperson und
+   gehoert sichtbar daneben, aber nicht gleich laut. */
+.coach-niveau {
+  padding: .05rem .5rem;
+  border: 1px solid var(--rand);
+  border-radius: 999px;
+  background: var(--grund);
+  color: var(--schrift-leise);
+  font-size: .75rem;
+  font-weight: 700;
+}
+
+.coach-thema { margin: .25rem 0 0; color: var(--schrift-leise); font-size: .85rem; }
+
+.coach-stand {
+  margin: .15rem 0 0;
+  color: var(--schrift-leise);
+  font-size: .85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Welche Stimme spricht ---------------------------------------------- */
+/* Rueckmeldung aus dem Betrieb: "schlechtes MaschinenEnglisch". Welche
+   Stimme gut klingt, weiss nur die Person vor dem Geraet -- die Liste je
+   Geraet ist voellig verschieden. Also waehlt sie. Aber sie waehlt nicht im
+   Gespraech, darum liegt die Wahl zugeklappt am Rand und nicht im Weg. */
+
+.coach-stimmwahl { flex: 0 0 auto; max-width: 100%; }
+
+.coach-stimmwahl > summary {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  min-height: 44px;
+  padding: 0 .2rem;
+  cursor: pointer;
+  color: var(--schrift-leise);
+  font-size: .82rem;
+}
+
+/* Wie in app.css: Mit display: flex zeichnet Chromium den Marker nicht
+   mehr, also kommt ein eigener. */
+.coach-stimmwahl > summary { list-style: none; }
+.coach-stimmwahl > summary::-webkit-details-marker { display: none; }
+
+.coach-stimmwahl > summary::before {
+  content: "";
+  flex: 0 0 auto;
+  width: .4rem;
+  height: .4rem;
+  border-right: 2px solid var(--akzent);
+  border-bottom: 2px solid var(--akzent);
+  transform: rotate(-45deg);
+  transition: transform .15s ease;
+}
+
+.coach-stimmwahl[open] > summary::before { transform: rotate(45deg); }
+
+.coach-stimmwahl-inhalt { padding: .2rem 0 .4rem; }
+
+.coach-stimmwahl label {
+  display: block;
+  margin-bottom: .2rem;
+  font-size: .8rem;
+  color: var(--schrift-leise);
+}
+
+.coach-stimmwahl select {
+  min-height: 44px;
+  max-width: 100%;
+  font-size: .85rem;
+}
+
+.coach-stimmhinweis {
+  margin: .5rem 0 0;
+  max-width: 24rem;
+  font-size: .8rem;
+  color: var(--schrift-leise);
+  line-height: 1.45;
+}
+
+/* Kein Rot und kein Warnkasten: Dass dieses Geraet keine englische Stimme
+   hat, ist kein Fehler der lernenden Person. Es ist eine Auskunft. */
+.coach-stumm {
+  margin: 0 0 1rem;
+  padding: .7rem .9rem;
+  border: 1px dashed var(--rand);
+  border-radius: 12px;
+  color: var(--schrift-leise);
+  font-size: .88rem;
+}
+
+/* --- Der erste Gruss ---------------------------------------------------- */
+
+.coach-willkommen {
+  margin: 0 0 1rem;
+  padding: .9rem 1.1rem;
+  border-left: 4px solid var(--akzent);
+  border-radius: 0 12px 12px 0;
+  background: var(--akzent-leise);
+}
+
+.coach-willkommen p { margin: 0; }
+.coach-willkommen p + p { margin-top: .5rem; }
+
+/* --- Das Gespraech ------------------------------------------------------ */
+
+.coach-verlauf { list-style: none; margin: 0 0 1rem; padding: 0; }
+
+.zug {
+  margin: 0 0 .8rem;
+  padding: .75rem .9rem;
+  border: 1px solid var(--rand);
+  border-radius: 12px;
+  background: var(--flaeche);
+}
+
+/* Coach und lernende Person sind auf drei Wegen zu unterscheiden: durch das
+   Wort im Kopf, durch die Farbe des linken Streifens und durch den Einzug.
+   Wer Farben nicht unterscheiden kann, hat noch zwei Wege. */
+.zug-coach { border-left: 4px solid var(--akzent); }
+
+.zug-lernend {
+  margin-left: 1.2rem;
+  border-left: 4px solid var(--rand);
+  background: var(--grund);
+}
+
+.zug-kopf {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .4rem;
+  margin: 0 0 .4rem;
+  padding-bottom: .35rem;
+  border-bottom: 1px solid var(--rand);
+  font-size: .78rem;
+  color: var(--schrift-leise);
+}
+
+.zug-wer { font-weight: 700; }
+.zug-coach .zug-wer { color: var(--akzent); }
+
+/* Welche Sprache hier steht, sagt die Marke im Kopf. Das lang-Attribut sagt
+   es den Werkzeugen, diese Marke sagt es den Augen -- wer mitten im
+   Gespraech dazukommt, sieht sonst nur fremde Woerter. */
+.zug-sprachmarke { font-size: .72rem; }
+.zug-sprachmarke::before { content: "· "; }
+
+/* Der gesprochene Satz ist die Hauptsache des Zuges, also etwas groesser als
+   die Umgebung: Wer eine fremde Sprache liest, liest langsamer.
+
+   pre-wrap statt linebreaksbr in der Vorlage: So steht im Dokument genau der
+   Text, den der Coach geschickt hat -- und genau der wird vorgelesen. */
+.zug-text { white-space: pre-wrap; font-size: 1.05rem; }
+.zug-coach .zug-text { font-size: 1.15rem; }
+
+/* --- Die Sprachsperre --------------------------------------------------- */
+
+/* "Sorry, I don't understand that." Der Coach tut, als verstehe er kein
+   Deutsch, und das ist eine Lehrmethode und kein Fehler. Also sieht dieser
+   Zug aus wie jeder andere Zug des Coaches: dieselbe Flaeche, derselbe
+   blaue Streifen, kein Rot, kein Rahmen, kein Zeichen. Der einzige
+   Unterschied ist die deutsche Fussnote darunter -- damit niemand glaubt,
+   das Geraet sei kaputt. */
+.zug-nachfrage-hinweis {
+  margin: .55rem 0 0;
+  padding: .45rem .7rem;
+  border-radius: 8px;
+  background: var(--akzent-leise);
+  color: var(--schrift);
+  font-size: .85rem;
+  line-height: 1.5;
+}
+
+/* --- Nochmal hoeren und die Uebersetzung -------------------------------- */
+
+.zug-fuss {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .4rem .7rem;
+  margin-top: .55rem;
+}
+
+/* Ohne Stimme und ohne Uebersetzung bleibt die Fusszeile leer. Dann soll sie
+   auch keinen Abstand aufspannen. */
+.zug-fuss:empty { display: none; }
+
+/* Dieser Knopf ist der Unterschied zum Trainer: Beim Sprachenlernen hoert
+   man einen Satz drei-, viermal, bevor er sitzt. Er bleibt klein -- oft
+   gebraucht, aber nie wichtiger als der Satz darueber. */
+.zug-hoeren { flex: 0 0 auto; font-size: .8rem; padding: .35rem .75rem; }
+.zug-hoeren-zeichen { width: 18px; height: 18px; flex: 0 0 auto; }
+.zug-hoeren-wort { white-space: nowrap; }
+
+.zug-uebersetzung { flex: 1 1 8rem; min-width: 0; }
+
+/* Zugeklappt ist der Normalfall, nicht die Ausnahme: Wer die Uebersetzung
+   sofort sieht, liest sie statt zuzuhoeren. Darum ist auch die
+   Zusammenfassung leise gesetzt und zieht das Auge nicht. */
+.zug-uebersetzung > summary {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  min-height: 44px;
+  cursor: pointer;
+  color: var(--schrift-leise);
+  font-size: .82rem;
+}
+
+.zug-uebersetzung > summary { list-style: none; }
+.zug-uebersetzung > summary::-webkit-details-marker { display: none; }
+
+.zug-uebersetzung > summary::before {
+  content: "";
+  flex: 0 0 auto;
+  width: .4rem;
+  height: .4rem;
+  border-right: 2px solid var(--akzent);
+  border-bottom: 2px solid var(--akzent);
+  transform: rotate(-45deg);
+  transition: transform .15s ease;
+}
+
+.zug-uebersetzung[open] > summary::before { transform: rotate(45deg); }
+
+.zug-uebersetzung-text {
+  margin: 0 0 .2rem;
+  color: var(--schrift-leise);
+  font-size: .92rem;
+}
+
+/* --- Die beilaeufige Korrektur ------------------------------------------ */
+
+/* Das Kleinste im Zug, und absichtlich. Kein Rot, kein Rahmen, kein
+   Ausrufezeichen: Der Coach korrigiert nicht, er wiederholt die Wendung
+   richtig. Eine Fehlermeldung an dieser Stelle machte aus dem Gespraech eine
+   Pruefung, und genau das ist der Sprechcoach nicht. */
+.zug-korrektur {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: .1rem .45rem;
+  margin: .55rem 0 0;
+  padding: .3rem 0 .3rem .6rem;
+  border-left: 2px solid var(--rand);
+  color: var(--schrift-leise);
+  font-size: .88rem;
+}
+
+.korrektur-marke {
+  flex: 0 0 auto;
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+/* Kursiv statt farbig: Die richtige Wendung soll sich vom Hinweis abheben,
+   aber nicht leuchten. */
+.korrektur-text { font-style: italic; }
+
+/* --- Der stille Ausweg, aufgedeckt -------------------------------------- */
+
+/* Deutsch ist hier ausdruecklich erlaubt: Das ist der eine Ort in dieser
+   Betriebsart, an dem Deutsch die Hilfe ist und nicht der Fehler. Darum
+   sieht der Kasten anders aus als ein Zug -- gestrichelt, ohne
+   Sprachmarke -- und nicht wie ein Beitrag des Coaches. */
+.coach-hilfe {
+  margin: 0 0 1rem;
+  padding: .8rem .9rem;
+  border: 1px dashed var(--akzent);
+  border-radius: 12px;
+  background: var(--grund);
+}
+
+.coach-hilfe-kopf {
+  margin: 0 0 .3rem;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--schrift-leise);
+}
+
+.coach-hilfe-text { margin: 0; font-size: 1rem; }
+
+.coach-hilfe-beispiel {
+  display: flex;
+  flex-direction: column;
+  gap: .1rem;
+  margin: .6rem 0 0;
+  padding: .5rem .7rem;
+  border-radius: 8px;
+  background: var(--akzent-leise);
+}
+
+.coach-hilfe-marke {
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--schrift-leise);
+}
+
+.coach-hilfe-satz { font-size: 1.1rem; font-weight: 600; }
+
+.coach-hilfe-fuss {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem .6rem;
+  margin-top: .6rem;
+}
+
+.coach-hilfe-fuss .werkzeug { font-size: .8rem; padding: .35rem .75rem; }
+
+/* --- Der Zustandsanzeiger: Ring und Wort -------------------------------- */
+
+/* Die ruhige, feste Stelle. sticky und nicht fixed: Der Kasten gehoert zum
+   Lesefluss, bleibt aber im Bild, solange im Gespraech gescrollt wird. Am
+   Handy laeuft er bis an die Raender -- die 16px entsprechen dem
+   Seitenabstand von .inhalt, also entsteht kein waagrechter Scroll. */
+.coach-steuerung {
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+  margin: 1rem -16px 0;
+  padding: .7rem 16px .8rem;
+  border-top: 2px solid var(--rand);
+  background: var(--grund);
+}
+
+.coach-tafel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: .7rem .8rem .8rem;
+  border: 1px solid var(--rand);
+  border-radius: 12px;
+  background: var(--flaeche);
+}
+
+/* DER RING
+
+   Drei Zustaende, drei Bewegungen, immer dieselbe Form:
+
+     hoert    -- der Kern atmet mit dem Pegel (--pegel 0..1 vom Skript),
+                 der Hof leuchtet leise mit. Ein Kind, das nichts ankommen
+                 sieht, spricht leiser und bricht ab.
+     denkt    -- ein Bogen laeuft um den Ring. Nichts atmet: Es wird gerade
+                 nicht zugehoert.
+     spricht  -- der Ring pulst ruhig in der Akzentfarbe, im Takt eines
+                 langsamen Satzes.
+
+   Reines CSS, kein Bild, kein Canvas. 112 Pixel am Handy, mehr am
+   Rechner. Farbe allein traegt den Zustand nie: Darunter steht das Wort. */
+.coach-ring {
+  --pegel: 0;
+  position: relative;
+  width: 112px;
+  height: 112px;
+  margin: .2rem 0 .6rem;
+  border-radius: 50%;
+  border: 3px solid var(--rand);
+  flex: 0 0 auto;
+}
+
+.coach-ring-hof,
+.coach-ring-kern {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  border-radius: 50%;
+  display: block;
+}
+
+/* Der Hof: leicht und gross, waechst mit dem Pegel ueber den Rand hinaus. */
+.coach-ring-hof {
+  width: 100%;
+  height: 100%;
+  background: var(--akzent-leise);
+  opacity: 0;
+  transform: scale(calc(1 + var(--pegel) * .22));
+  transition: transform 90ms linear, opacity .3s ease;
+}
+
+/* Der Kern: die Stimme selbst. Zwischen 36 und 100 Prozent des Rings. */
+.coach-ring-kern {
+  width: 40%;
+  height: 40%;
+  background: var(--akzent);
+  transform: scale(calc(1 + var(--pegel) * 1.5));
+  transition: transform 90ms linear, background .3s ease, opacity .3s ease;
+}
+
+/* Vor dem Starttipp und ohne Mikrofon: ein stiller, leiser Ring. */
+.coach-tafel[data-lage="start"] .coach-ring-kern,
+.coach-tafel[data-lage="aus"] .coach-ring-kern,
+.coach-tafel[data-lage="weg"] .coach-ring-kern,
+.coach-tafel[data-lage="tippt"] .coach-ring-kern { background: var(--schrift-leise); opacity: .5; }
+
+/* Ich hoere zu: die Warnfarbe der alten Aufnahmetafel am Rand -- es wird
+   aufgenommen --, der Hof sichtbar, der Kern atmet. */
+.coach-tafel[data-lage="hoert"] .coach-ring { border-color: var(--warnung); }
+.coach-tafel[data-lage="hoert"] .coach-ring-hof { opacity: 1; }
+
+/* Ich denke nach: ein Bogen laeuft, der Kern steht klein und blass. */
+.coach-tafel[data-lage="denkt"] .coach-ring {
+  border-color: var(--rand);
+  border-top-color: var(--akzent);
+  animation: coach-drehen 1.1s linear infinite;
+}
+.coach-tafel[data-lage="denkt"] .coach-ring-kern { opacity: .35; transform: scale(1); }
+
+/* Ich spreche: der ganze Ring pulst in der Akzentfarbe. */
+.coach-tafel[data-lage="spricht"] .coach-ring { border-color: var(--akzent); }
+.coach-tafel[data-lage="spricht"] .coach-ring-hof {
+  opacity: 1;
+  animation: coach-pulsen 1.8s ease-in-out infinite;
+}
+.coach-tafel[data-lage="spricht"] .coach-ring-kern { transform: scale(1.1); }
+
+@keyframes coach-drehen {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes coach-pulsen {
+  0%, 100% { transform: scale(1); opacity: .6; }
+  50% { transform: scale(1.18); opacity: 1; }
+}
+
+/* Das Wort ist gross: Es ist die Hauptauskunft der Tafel, nicht ihr
+   Untertitel. */
+.coach-zustand {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.coach-zustand-zusatz {
+  max-width: 28rem;
+  margin: .3rem 0 .4rem;
+  color: var(--schrift-leise);
+  font-size: .88rem;
+  line-height: 1.45;
+}
+
+/* --- Der Pegel, ruhige Fassung ------------------------------------------ */
+
+/* Die ruhige Fassung liegt immer im Dokument und wird nur umgeschaltet:
+   Mit dem hidden-Attribut ginge das nicht, app.css setzt es hart durch. */
+.coach-pegel-ruhig { display: none; }
+
+.coach-ruhebahn {
+  flex: 1 1 auto;
+  height: 14px;
+  border: 1px solid var(--rand);
+  border-radius: 999px;
+  background: var(--grund);
+  overflow: hidden;
+}
+
+.coach-ruhefuellung {
+  display: block;
+  width: 3%;
+  height: 100%;
+  background: var(--akzent);
+}
+
+.coach-ruhewert {
+  font-variant-numeric: tabular-nums;
+  min-width: 2.8rem;
+  text-align: right;
+}
+
+/* --- Der eine Tipp ------------------------------------------------------ */
+
+/* Der einzige grosse Knopf der Seite, und er steht nur da, wo eine
+   Beruehrung noetig ist: am Anfang, nach dem Hintergrund, nach einem
+   verweigerten Mikrofon. 68 Pixel sind weit mehr als die geforderten 44: Er
+   ist der erste Handgriff im Gespraech und oft der einzige. */
+.coach-funk {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 22rem;
+  min-height: 68px;
+  margin-top: .5rem;
+  padding: .6rem 1rem;
+  border: 2px solid var(--akzent);
+  border-radius: 14px;
+  background: var(--akzent);
+  color: var(--grund);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.coach-funk-wort { font-size: 1.15rem; }
+
+.coach-funk:hover:enabled { background: var(--akzent-stark); border-color: var(--akzent-stark); }
+
+.coach-funk:disabled { opacity: .5; cursor: progress; }
+
+.coach-tafelhinweis {
+  max-width: 28rem;
+  margin: .6rem 0 0;
+  color: var(--schrift-leise);
+  font-size: .85rem;
+  line-height: 1.45;
+}
+
+/* --- Ein Beitrag, der noch waechst -------------------------------------- */
+
+/* Ein halber Satz wartet auf seinen Rest. Er steht schon im Verlauf, damit
+   das Kind sieht, dass es gehoert wurde -- leise, mit drei Punkten. */
+.zug-offen .zug-text { color: var(--schrift-leise); }
+.zug-offen .zug-text::after { content: " …"; }
+
+/* --- Die Nebenwege ------------------------------------------------------ */
+
+/* Leise, aber nicht unlesbar: beide Knoepfe in der leisen Schriftfarbe auf
+   der Grundflaeche, ohne Fuellung. Sie sollen findbar sein und nicht
+   verlocken -- der Hauptweg ist der grosse Knopf darueber. */
+.coach-nebenwege {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .4rem .6rem;
+  margin-top: .5rem;
+}
+
+.coach-ausweg-form { margin: 0; }
+
+.coach-nebenknopf {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  min-height: 44px;
+  padding: .3rem .6rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: none;
+  color: var(--schrift-leise);
+  font: inherit;
+  font-size: .82rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.coach-nebenknopf:hover:enabled {
+  border-color: var(--rand);
+  color: var(--akzent);
+  text-decoration: none;
+}
+
+.coach-ton-zeichen { width: 18px; height: 18px; flex: 0 0 auto; }
+
+/* Vorlesen aus ist der seltene Fall und darf deshalb der auffaellige sein:
+   Wer den Ton abgeschaltet hat, soll das sehen, bevor er sich fragt, warum
+   nichts kommt. Nicht nur Farbe -- das Wort wechselt mit. */
+.coach-ton:not(.ist-an) {
+  border-color: var(--rand);
+  background: var(--flaeche);
+  color: var(--schrift);
+  text-decoration: none;
+}
+
+/* Hat der Coach gerade nicht verstanden, tritt der Ausweg einen Schritt
+   vor: Rahmen und Akzentfarbe statt Unterstreichung. Er wird nicht zum
+   Hauptweg -- er hoert nur auf, sich zu verstecken. */
+.coach-ausweg.ist-naeher {
+  border-color: var(--akzent);
+  background: var(--akzent-leise);
+  color: var(--akzent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* --- Das Ende des Gespraechs -------------------------------------------- */
+
+.coach-fertig {
+  margin: 1rem 0 .8rem;
+  padding: .8rem .9rem;
+  border-radius: 10px;
+  background: var(--akzent-leise);
+  text-align: center;
+}
+
+.coach-fertig p { margin: 0; }
+
+#coach-fehler { margin: 1rem 0 0; }
+
+/* --- Die Rueckfallebene: tippen ----------------------------------------- */
+
+/* "oder tippen" ist leise gesetzt und steht unter der Steuerung: Wer nicht
+   sprechen kann, muss mitreden koennen, aber die Seite schlaegt es nicht
+   vor. Keine Scham, kein Warnton -- nur ein Aufklapper. */
+.coach-tippen { margin: 1rem 0 0; }
+
+.coach-tippen > summary {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  min-height: 44px;
+  cursor: pointer;
+  color: var(--schrift-leise);
+  font-size: .85rem;
+}
+
+.coach-tippen > summary { list-style: none; }
+.coach-tippen > summary::-webkit-details-marker { display: none; }
+
+/* Die Linie nach dem Wort macht aus "oder tippen" eine Trennlinie: Sie sagt
+   in einem Blick, dass hier die Nebenstrasse abzweigt. */
+.coach-tippen > summary::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--rand);
+}
+
+.coach-tippen > summary::before {
+  content: "";
+  flex: 0 0 auto;
+  width: .4rem;
+  height: .4rem;
+  border-right: 2px solid var(--akzent);
+  border-bottom: 2px solid var(--akzent);
+  transform: rotate(-45deg);
+  transition: transform .15s ease;
+}
+
+.coach-tippen[open] > summary::before { transform: rotate(45deg); }
+
+.coach-form { margin: .5rem 0 0; }
+.coach-label { display: block; font-weight: 600; margin-bottom: .2rem; }
+.coach-form .feld-hilfe { margin: 0 0 .45rem; }
+
+.coach-zeile { display: flex; align-items: flex-end; gap: .5rem; }
+.coach-zeile textarea { flex: 1; min-height: 44px; }
+.coach-zeile .knopf { flex: 0 0 auto; min-height: 44px; }
+
+/* Am schmalen Geraet nebeneinander hiesse: ein Feld von 190 Pixeln neben
+   einem Knopf. Untereinander bekommt beides die volle Breite. */
+@media (max-width: 26rem) {
+  .coach-zeile { flex-wrap: wrap; }
+  .coach-zeile textarea { flex: 1 1 100%; }
+  .coach-zeile .knopf { flex: 1 1 100%; }
+}
+
+/* --- Tablet und Rechner ------------------------------------------------- */
+
+/* Ab hier loest sich die Steuerung vom unteren Rand und wird eine Karte, die
+   mit Abstand ueber dem Rand stehen bleibt. Sie ist dort nicht "unten
+   verloren", sondern ein eigener, ruhiger Block mit Rahmen und Schatten --
+   an derselben Stelle wie am Handy, nur nicht angeklebt. */
+@media (min-width: 40rem) {
+  .coach-steuerung {
+    bottom: .9rem;
+    margin: 1.4rem 0 0;
+    padding: .9rem 1rem 1rem;
+    border: 1px solid var(--rand);
+    border-radius: 16px;
+    box-shadow: var(--schatten);
+  }
+
+  /* Ein Rahmen im Rahmen waere hier nur Laerm: Die Steuerung ist schon die
+     Karte, die Tafel darf dann flach sein. */
+  .coach-tafel { border: 0; padding: 0; background: none; }
+  .coach-ring { width: 148px; height: 148px; }
+  .coach-zustand { font-size: 1.6rem; }
+  .coach-funk { min-height: 76px; }
+  .coach-funk-wort { font-size: 1.25rem; }
+}
+
+/* --- Wer wenig Bewegung will ------------------------------------------- */
+
+/* app.css kuerzt jede Laufzeit auf beinahe null, das genuegt hier nicht:
+   Gekuerzt bliebe das Pulsen ein Flackern und das Atmen ein Zappeln. Also
+   steht der Ring still -- er wechselt nur noch die Farbe --, und an die
+   Stelle des Atmens tritt ein Balken mit Zahl, derselbe Ersatz wie in
+   aufnahme.css. */
+@media (prefers-reduced-motion: reduce) {
+  .coach-ring,
+  .coach-ring-hof,
+  .coach-ring-kern { animation: none !important; transition: none !important; }
+  .coach-ring-hof { transform: none !important; }
+  .coach-ring-kern { transform: none !important; }
+
+  .coach-pegel-ruhig {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin: 0;
+    min-height: 52px;
+    font-size: .85rem;
+    color: var(--schrift-leise);
+  }
+
+  /* Das hidden-Attribut muss weiter gelten: Vor dem ersten Zuhoeren ist auch
+     die ruhige Fassung nicht zu zeigen. */
+  .coach-pegel-ruhig[hidden] { display: none; }
+
+  .zug-uebersetzung > summary::before,
+  .coach-stimmwahl > summary::before,
+  .coach-tippen > summary::before { transition: none; }
+}
+
+/* --- Der Ablauf: Planen, Gespraech, Noch einmal, Rueckblick -------------
+
+   Regel 12 des Berichts. Die Anzeige ist eine ruhige Zeile mit Zahlen und
+   Woertern, keine Symbole: Das Kind soll sehen, wo es steht, nicht
+   gefeiert werden. Der laufende Schritt ist fett und unterstrichen, nicht
+   nur farbig. */
+
+.coach-ablauf { margin: 0 0 .9rem; }
+
+.coach-phasen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .3rem .9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: schritt;
+  font-size: .85rem;
+  color: var(--schrift-leise);
+}
+
+.coach-phase { counter-increment: schritt; }
+.coach-phase::before {
+  content: counter(schritt) ". ";
+  font-variant-numeric: tabular-nums;
+}
+
+.coach-phase.ist-jetzt {
+  color: var(--schrift);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: var(--akzent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: .25em;
+}
+
+.coach-phasenhinweis { margin: .3rem 0 0; font-size: .9rem; }
+
+/* Das Ziel: sichtbar, solange gesprochen wird (Regel 11). */
+.coach-ziel {
+  margin: 0 0 1rem;
+  padding: .7rem .9rem;
+  border: 1px solid var(--rand);
+  border-left: 4px solid var(--akzent);
+  border-radius: 12px;
+  background: var(--flaeche);
+}
+.coach-ziel-marke {
+  margin: 0;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--schrift-leise);
+}
+.coach-ziel-text { margin: .2rem 0 0; font-size: 1.1rem; font-weight: 600; }
+
+.coach-redemittel { margin-top: .5rem; }
+.coach-redemittel > summary {
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  color: var(--akzent);
+  font-size: .9rem;
+}
+.coach-redemittel-liste { margin: .2rem 0 0; padding-left: 1.2rem; }
+.coach-redemittel-liste li { margin: .15rem 0; font-size: 1.05rem; }
+
+/* --- Die Planungsminute ------------------------------------------------- */
+
+.coach-planen {
+  padding: 1rem;
+  border: 1px solid var(--rand);
+  border-radius: 16px;
+  background: var(--flaeche);
+}
+.coach-planen-titel { margin: 0 0 .4rem; font-size: 1.5rem; }
+.coach-planen-deutsch { margin: 0 0 .9rem; }
+.coach-planen-zwischen { margin: .4rem 0 .2rem; font-size: 1rem; }
+.coach-planen-tipp { color: var(--schrift-leise); font-size: .9rem; }
+.coach-planen-noch {
+  margin: .6rem 0 0;
+  padding: .5rem .7rem;
+  border-radius: 10px;
+  background: var(--akzent-leise);
+}
+.coach-planen-form { margin-top: 1rem; }
+
+/* Die Minute als Balken. Reine CSS-Animation: ohne Skript, und bei
+   prefers-reduced-motion steht er still (siehe unten). */
+.coach-planuhr {
+  height: 8px;
+  margin: .8rem 0 0;
+  border-radius: 999px;
+  background: var(--grund);
+  overflow: hidden;
+}
+.coach-planuhr-fuellung {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--akzent);
+  transform-origin: left center;
+  animation: coach-planuhr 60s linear forwards;
+}
+@keyframes coach-planuhr {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* Volksschule: alles groesser (Cameron 2001: konkret und sichtbar). */
+.ist-gross .coach-planen-titel,
+.ist-gross .coach-rueckblick-titel { font-size: 2rem; }
+.ist-gross .coach-ziel-text { font-size: 1.45rem; }
+.ist-gross .coach-redemittel-liste li { font-size: 1.35rem; margin: .35rem 0; }
+.ist-gross .coach-planen-deutsch,
+.ist-gross .rueckblick-englisch { font-size: 1.2rem; }
+
+/* --- Der Rueckblick ---------------------------------------------------- */
+
+.coach-rueckblick {
+  padding: 1rem;
+  border: 1px solid var(--rand);
+  border-radius: 16px;
+  background: var(--flaeche);
+}
+.coach-rueckblick-titel { margin: 0 0 .4rem; font-size: 1.5rem; }
+.coach-rueckblick-aufgabe { color: var(--schrift-leise); font-size: .9rem; }
+
+.rueckblick-liste { margin: .6rem 0; padding: 0; list-style: none; }
+.rueckblick-punkt {
+  display: flex;
+  gap: .6rem;
+  align-items: flex-start;
+  padding: .6rem 0;
+  border-top: 1px solid var(--rand);
+}
+.rueckblick-punkt:first-child { border-top: 0; }
+.rueckblick-zeichen {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  margin-top: .1rem;
+  color: var(--akzent);
+}
+.rueckblick-besser .rueckblick-zeichen { color: var(--schrift-leise); }
+.rueckblick-inhalt { min-width: 0; }
+.rueckblick-deutsch { margin: 0; font-size: .9rem; color: var(--schrift-leise); }
+.rueckblick-vorher { margin: .15rem 0 0; font-size: .85rem; color: var(--schrift-leise); }
+.rueckblick-englisch { margin: .15rem 0 0; font-size: 1.1rem; font-weight: 600; }
+
+.coach-reflexion {
+  margin: .8rem 0 0;
+  padding: .5rem .7rem;
+  border-left: 4px solid var(--akzent);
+  background: var(--akzent-leise);
+}
+.coach-rueckblick-fuss { color: var(--schrift-leise); font-size: .85rem; }
+
+.coach-nachlesen { margin: .6rem 0; }
+.coach-nachlesen > summary {
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  color: var(--akzent);
+  font-size: .9rem;
+}
+.coach-nachlesen-liste { margin: 0; padding-left: 1.2rem; font-size: .9rem; }
+.nachlesen-wer { font-weight: 700; }
+.coach-rueckblick-form { margin-top: .8rem; }
+
+.coach-aufhoeren { margin: .8rem 0 0; text-align: center; }
+
+@media (prefers-reduced-motion: reduce) {
+  .coach-planuhr-fuellung { animation: none; transform: none; opacity: .35; }
+}

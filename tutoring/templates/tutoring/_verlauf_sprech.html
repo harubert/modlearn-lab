@@ -1,0 +1,60 @@
+{% comment %}Der Verlauf eines Kindes beim Sprechcoach: das Gespraech in der
+Zielsprache, Coach links, Kind rechts, die Uebersetzung des Coachs leise
+darunter, die beilaeufige Verbesserung als Notiz beim Beitrag. Am Ende der
+Rueckblick (lauf.review: art, englisch, vorher), wie ihn das Kind gesehen
+hat.{% endcomment %}
+{% if sprachlaeufe %}
+  {% for lauf in sprachlaeufe %}
+    <section class="verlaufsaufgabe" aria-labelledby="gespraech-{{ lauf.pk }}">
+      <h2 id="gespraech-{{ lauf.pk }}">
+        Gespräch {{ forloop.counter }}
+        <span class="verlauf-zeit">{{ lauf.created_at|time:"H:i" }}</span>
+        <span class="erledigtmarke">
+          {% if lauf.finished_at %}beendet {{ lauf.finished_at|time:"H:i" }}{% else %}{{ lauf.get_phase_display }}{% endif %}
+        </span>
+      </h2>
+      {% for zug in lauf.zuege.all %}
+        {% if zug.role == "coach" %}
+          <article class="hilfe{% if zug.not_understood %} ist-nicht-verstanden{% endif %}">
+            <h3 class="hilfe-kopf">
+              Coach{% if zug.not_understood %} <span class="verlauf-notiz">hat nicht verstanden</span>{% endif %}
+              <span class="verlauf-zeit">{{ zug.created_at|time:"H:i" }}</span>
+            </h3>
+            <div class="hilfe-text" lang="{{ lauf.sprache_code }}">{{ zug.text|linebreaksbr }}</div>
+            {% if zug.translation %}<p class="uebersetzung">{{ zug.translation }}</p>{% endif %}
+          </article>
+        {% else %}
+          <article class="eigenerversuch ampelrand-{{ zug.flag }}">
+            <h3 class="versuch-kopf">{{ teilnahme.tier_name }} <span class="verlauf-zeit">{{ zug.created_at|time:"H:i" }}</span></h3>
+            <div class="hilfe-text" lang="{{ lauf.sprache_code }}">{{ zug.text|linebreaksbr }}
+              <span class="herkunft">{{ zug.get_source_display }}</span>
+            </div>
+            {% if zug.correction %}
+              <p class="diagnosenotiz"><strong>Beiläufig verbessert:</strong> <span lang="{{ lauf.sprache_code }}">{{ zug.correction }}</span></p>
+            {% endif %}
+            {% if zug.flag != "gruen" %}
+              <p class="ampelnotiz">
+                <span class="ampelpunkt ampelpunkt-{{ zug.flag }}" aria-hidden="true"></span>
+                Eingestuft als {{ zug.flag }}{% if zug.flag_reason %}: {{ zug.flag_reason }}{% endif %}
+              </p>
+            {% endif %}
+          </article>
+        {% endif %}
+      {% endfor %}
+      {% if lauf.review %}
+        <article class="hilfe">
+          <h3 class="hilfe-kopf">Rückblick</h3>
+          <ul class="sprechrueckblick">
+            {% for p in lauf.review %}
+              <li>{% if p.art == "gut" %}gelungen{% else %}als Nächstes{% endif %}:
+                <span lang="{{ lauf.sprache_code }}">{{ p.englisch }}</span>{% if p.vorher %}
+                (statt <span lang="{{ lauf.sprache_code }}">{{ p.vorher }}</span>){% endif %}</li>
+            {% endfor %}
+          </ul>
+        </article>
+      {% endif %}
+    </section>
+  {% endfor %}
+{% else %}
+  <p class="leerhinweis">{{ teilnahme.tier_name }} hat noch nicht gesprochen.</p>
+{% endif %}

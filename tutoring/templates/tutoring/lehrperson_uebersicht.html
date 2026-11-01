@@ -1,0 +1,685 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titel %}Meine Sitzungen{% endblock %}
+
+{% block inhalt %}
+{% comment %}ZWEI SCHRITTE, UND IM ZWEITEN DREI FRAGEN
+
+Vorher stand das ganze Anlegen auf einmal da, darunter ein Block „Nur fuer den
+Sprechcoach" und einer „Gilt nur fuer die Aufgabenhilfe". Jetzt waehlt die
+Lehrperson zuerst das Fach; danach steht nur noch da, was dieses Fach braucht.
+Die Betriebsart wird nicht mehr gewaehlt, sie folgt aus dem Fach.
+
+Seit dem Benchmark (19.10.2026, docs/Mathe-Benchmark und Konfiguration.md,
+Abschnitt 6.3) ist der zweite Schritt in Mathematik eine einzige Karte mit
+drei Fragen und einem Knopf: Fuer wen ist die Stunde? Was bekommen die Kinder?
+Worum geht es heute? Drei Beruehrungen (Fach, Schulstufe, Start), und zwischen
+Fachwahl und Start ist nichts anderes Pflicht. Titel, Qualitaetssicherung,
+Aufzeichnung und Gueltigkeit des Codes bleiben in der Anwendung, aber in jedem
+Fach eingeklappt unter „Weitere Einstellungen", mit Vorgaben, die fast immer
+stimmen.
+
+Welcher Block erscheint, entscheidet ausschliesslich `braucht`, das aus
+faecher.braucht() kommt. Die Vorlage zaehlt nirgends selbst auf, was ein Fach
+hat: Ein sechstes Fach ist eine Zeile in FAECHER und keine Aenderung hier.
+
+Beide Schritte sind gewoehnliches HTML, Schritt 1 sind Links (?fach=...),
+Schritt 2 ist ein Formular mit verstecktem Feld. Kein Skript blendet etwas
+ein oder aus: Ein Formular, das ohne Skript eine falsch eingestellte Sitzung
+abschickt, waere keine Verlaesslichkeit. Die Pflicht der Schulstufe prueft
+der Browser (required) und der Server noch einmal.{% endcomment %}
+
+<div class="lehrseite">
+
+  <div class="seitenkopf">
+    <h1>Sitzungen</h1>
+    <p class="seitenkopf-weg">
+      <a href="{% url 'tutoring:lehrperson_bereitschaft' %}">Ist alles bereit?</a>
+    </p>
+    <p class="seitenkopf-zusatz">
+      {% if offene %}
+        Zuletzt benutzt &middot; jede bleibt offen, bis du sie beendest
+      {% else %}
+        Noch keine Sitzung offen
+      {% endif %}
+    </p>
+  </div>
+
+  {% if fehler %}
+    <p class="meldung meldung-fehler" role="alert" id="titel-fehler">{{ fehler }}</p>
+  {% endif %}
+
+  <section aria-labelledby="offen-titel">
+    <h2 id="offen-titel" class="nur-fuer-vorlesen">Offene Sitzungen</h2>
+    {% if offene %}
+      <ul class="sitzungskarten">
+        {% for z in offene %}
+          <li class="sitzungskarte">
+            <a class="karten-code"
+               href="{% url 'tutoring:lehrperson_sitzung' z.sitzung.code %}"
+               aria-label="Sitzung {{ z.sitzung.title }}, Code {{ z.sitzung.code }} öffnen">{{ z.sitzung.code }}</a>
+            <div class="karten-mitte">
+              <p class="karten-titel">
+                <a href="{% url 'tutoring:lehrperson_sitzung' z.sitzung.code %}">{{ z.sitzung.title }}</a>
+              </p>
+              <p class="marken">
+                {% if z.laeuft %}<span class="marke-chip ist-aktiv">arbeitet gerade</span>{% endif %}
+                {% comment %}Auf der Karte steht das Fach, nicht die
+                Betriebsart: Die Lehrperson hat ein Fach angelegt und sucht
+                hier ihre Mathematikstunde wieder. Danach ihre Entscheidungen
+                in denselben Worten wie auf der Sitzungsseite
+                (stundenform.marken): bei Mathematik Schulstufe, Lernen oder
+                Ueben, Thema.{% endcomment %}
+                {% if z.fach %}
+                  <span class="marke-chip ist-fach">{% include "tutoring/_fachsymbol.html" with symbol=z.fach.symbol %} {{ z.fach.name }}</span>
+                {% elif z.sitzung.ist_sprechcoach %}
+                  <span class="marke-chip ist-fach">Sprechcoach
+                    {{ z.sitzung.get_target_language_display }}</span>
+                {% elif z.sitzung.ist_trainer %}
+                  <span class="marke-chip ist-fach">Trainer</span>
+                {% endif %}
+                {% for marke in z.marken %}
+                  <span class="marke-chip">{{ marke }}</span>
+                {% endfor %}
+                {% if z.sitzung.verfaellt_um %}
+                  <span class="marke-chip">verfällt {{ z.sitzung.verfaellt_um|time:"H:i" }}</span>
+                {% endif %}
+              </p>
+            </div>
+            {% comment %}Drei Spannen statt Zeilenumbruechen: Am Bildschirm
+            stehen sie untereinander, am Handy nebeneinander. Mit <br> waere die
+            Karte dort dreimal so hoch.{% endcomment %}
+            <p class="karten-zahlen">
+              <span><span class="karten-zahl">{{ z.beigetreten }}</span> dabei</span>
+              {% if z.sitzung.ist_musik %}
+                <span><span class="karten-zahl">{{ z.lieder }}</span> Lied{{ z.lieder|pluralize:"er" }}</span>
+              {% else %}
+                <span><span class="karten-zahl">{{ z.aufgaben }}</span> Aufgabe{{ z.aufgaben|pluralize:"n" }}</span>
+              {% endif %}
+              <span class="karten-leise">{{ z.zuletzt|date:"d.m." }}, {{ z.zuletzt|time:"H:i" }}</span>
+            </p>
+            {% include "tutoring/_beenden_knopf.html" with sitzung=z.sitzung %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="leerhinweis">
+        Leg unten eine Stunde an. Du wählst ein Fach, dann bekommst du einen
+        sechsstelligen Code und einen QR-Code für die Leinwand.
+      </p>
+    {% endif %}
+  </section>
+
+  {% if weitere %}
+    {% comment %}Alles Aeltere als schmale Liste. Als Karten waren es im
+    Browsertest siebenundvierzig uebereinander.{% endcomment %}
+    <details class="weitere">
+      <summary>{{ weitere|length }} weitere offene Sitzung{{ weitere|length|pluralize:"en" }}</summary>
+      {% if leere_anzahl %}
+        <form class="leere-weg" method="post"
+              action="{% url 'tutoring:lehrperson_leere_beenden' %}">
+          {% csrf_token %}
+          <button type="submit" class="knopf knopf-leise">
+            {{ leere_anzahl }} Sitzung{{ leere_anzahl|pluralize:"en" }} ohne Beitritt beenden
+          </button>
+        </form>
+      {% endif %}
+      <ul class="leerliste">
+        {% for z in weitere %}
+          <li>
+            <a href="{% url 'tutoring:lehrperson_sitzung' z.sitzung.code %}">
+              <span class="leerliste-code">{{ z.sitzung.code }}</span>
+              <span class="leerliste-titel">{{ z.sitzung.title }}</span>
+            </a>
+            <span class="karten-leise">
+              {{ z.beigetreten }} dabei &middot;
+              {{ z.zuletzt|date:"d.m." }}, {{ z.zuletzt|time:"H:i" }}
+            </span>
+            {% include "tutoring/_beenden_knopf.html" with sitzung=z.sitzung %}
+          </li>
+        {% endfor %}
+      </ul>
+    </details>
+  {% endif %}
+
+  {% comment %}Das Anlegen ist nicht eingeklappt: Schritt 1 sind fuenf
+  Schaltflaechen, und die sind kuerzer als die Sitzungsliste darueber. Ein
+  Aufklapper waere nur ein Klick mehr vor der eigentlichen Frage.{% endcomment %}
+  <section class="karte anlegen" id="anlegen" aria-labelledby="anlegen-titel">
+    {% if fach %}
+      <p class="schrittmarke">Schritt 2 von 2</p>
+
+      {% comment %}Das gewaehlte Fach bleibt sichtbar, samt Weg zurueck. Ohne
+      ihn muesste die Lehrperson die Seite neu laden, um sich zu
+      korrigieren.{% endcomment %}
+      <div class="fachkopf">
+        <span class="fach-symbol" aria-hidden="true">{% include "tutoring/_fachsymbol.html" with symbol=fach.symbol %}</span>
+        <h2 class="fachkopf-name" id="anlegen-titel">{{ fach.name }}</h2>
+        <a class="fachzurueck" href="{% url 'tutoring:lehrperson_uebersicht' %}#anlegen">
+          <span aria-hidden="true">&larr;</span> Anderes Fach wählen
+        </a>
+        <p class="fachkopf-satz">{{ fach.satz }}
+          {% if fach.betriebsart == "trainer" %}
+            <a href="{% url 'trainer_erklaerung' %}">Was der Trainer macht</a>
+          {% elif fach.betriebsart == "sprache" %}
+            <a href="{% url 'sprechcoach_erklaerung' %}">Was der Sprechcoach macht</a>
+          {% endif %}
+        </p>
+        {% if fach.erklaerung %}
+          <p class="fachkopf-satz">{{ fach.erklaerung }}</p>
+        {% endif %}
+      </div>
+
+      <form method="post" class="anlegenform" id="stundenform">
+        {% csrf_token %}
+        {% comment %}Das Fach reist im versteckten Feld mit, damit das
+        Abschicken keine Abfrage im Pfad braucht und ein zweites Mal
+        Zurueckblaettern nichts verstellt.{% endcomment %}
+        <input type="hidden" name="fach" value="{{ fach.schluessel }}">
+
+        <div class="{% if braucht.alter %}formspalten{% else %}fragen{% endif %}">
+          <div class="{% if braucht.alter %}formspalte{% else %}fragen-spalte{% endif %}">
+
+            {% comment %}FRAGE 1: Fuer wen ist die Stunde? Drei Karten, keine
+            Vorauswahl, Pflicht. Der graue Satz unter jeder Karte sagt, was die
+            Wahl veraendert. Alle drei Saetze bleiben stehen: Verschwaenden
+            zwei nach der Wahl, rutschte am Handy alles darunter nach oben.
+            Ohne Wahl haelt der Browser das Abschicken an (required) und sagt
+            es an der Karte; schickt ein Browser trotzdem ab, kommt die Frage
+            vom Server mit dem Fehler daneben zurueck, der Rest bleibt
+            ausgefuellt, und der erste Knopf bekommt den Fokus, damit die
+            Seite dort steht und nicht oben.{% endcomment %}
+            {% if braucht.schulstufe %}
+              <fieldset class="frage{% if fehler_feld == 'schulstufe' %} hat-fehler{% endif %}">
+                <legend class="frage-titel">
+                  <span class="frage-nummer" aria-hidden="true">1</span>Für wen ist die Stunde?
+                </legend>
+                {% if fehler_feld == "schulstufe" %}
+                  <p class="feld-fehler" id="schulstufe-fehler" role="alert">
+                    Bitte wähl, für wen die Stunde ist. Dann kann sie starten.
+                  </p>
+                {% endif %}
+                <div class="wahlkarten wahlkarten-3">
+                  {% for s in schulstufen %}
+                    <label class="wahlkarte">
+                      <input type="radio" name="schulstufe" value="{{ s.schluessel }}" required
+                             {% if schulstufe == s.schluessel %}checked{% endif %}
+                             {% if fehler_feld == "schulstufe" and forloop.first %}autofocus aria-describedby="schulstufe-fehler"{% endif %}>
+                      <span class="wahlkarte-inhalt">
+                        <span class="wahlkarte-name">{{ s.name }}{% if s.zusatz %}
+                          <span class="wahlkarte-zusatz">({{ s.zusatz }})</span>{% endif %}</span>
+                        <span class="wahlkarte-satz">{{ s.satz }}</span>
+                      </span>
+                    </label>
+                  {% endfor %}
+                </div>
+              </fieldset>
+            {% endif %}
+
+            {% comment %}FRAGE 2: Was bekommen die Kinder? Zwei Karten, Lernen
+            vorgewaehlt. Die Zeichnung sagt es ohne Worte: fuenf Punkte, der
+            letzte hohl, gegen drei Punkte. "Loesung bei Bedarf" gibt es hier
+            nicht mehr (stundenform.py). Die Erklaerung der Stufen bleibt,
+            eingeklappt, darunter.{% endcomment %}
+            {% if braucht.stufen %}
+              <fieldset class="frage">
+                <legend class="frage-titel">
+                  <span class="frage-nummer" aria-hidden="true">2</span>Was bekommen die Kinder?
+                </legend>
+                <div class="wahlkarten wahlkarten-2">
+                  {% for u in umfang_karten %}
+                    <label class="wahlkarte">
+                      <input type="radio" name="umfang" value="{{ u.schluessel }}"
+                             {% if umfang == u.schluessel %}checked{% endif %}>
+                      <span class="wahlkarte-inhalt">
+                        <span class="wahlkarte-bild">{% include "tutoring/_stufenpunkte.html" with punkte=u.punkte breite=u.breite stumm=True %}</span>
+                        <span class="wahlkarte-name">{{ u.name }}</span>
+                        <span class="wahlkarte-satz">{{ u.satz }}</span>
+                      </span>
+                    </label>
+                  {% endfor %}
+                </div>
+                {% include "tutoring/_stufenerklaerung.html" %}
+              </fieldset>
+            {% endif %}
+
+            {% comment %}SAFE CHAT, FRAGE 1: Duerfen die Kinder nach draussen
+            fragen? Derselbe Haken wie die Qualitaetssicherung der anderen
+            Faecher (ein Feld, ein Name: qualitaetssicherung), hier aber
+            vorne und vorgewaehlt, weil er in diesem Fach den zweiten Knopf
+            des Kindes bedeutet und nicht eine stille zweite Einschaetzung.
+            Unter "Weitere Einstellungen" steht er deshalb nicht noch einmal.
+            Ohne eingerichteten Zugang gibt es keinen Haken, sondern den
+            Satz, was dann gilt.{% endcomment %}
+            {% if fach.schluessel == "safechat" %}
+              <fieldset class="frage">
+                <legend class="frage-titel">
+                  <span class="frage-nummer" aria-hidden="true">1</span>Dürfen die Kinder nach draußen fragen?
+                </legend>
+                {% if qualitaet_moeglich %}
+                  <div class="wahl">
+                    <input type="checkbox" id="qualitaetssicherung" name="qualitaetssicherung"
+                           value="ja" checked aria-describedby="draussen-hilfe">
+                    <label for="qualitaetssicherung">
+                      Ja, mit dem Knopf „Draußen fragen“{% if qualitaet_modell %}
+                        <span class="feld-zusatz">({{ qualitaet_modell }})</span>{% endif %}
+                    </label>
+                  </div>
+                {% else %}
+                  <p class="leerhinweis">
+                    Es ist kein Zugang zur Gegenstelle eingerichtet; in dieser
+                    Stunde bleibt alles am Spark.
+                  </p>
+                {% endif %}
+                <p class="feld-hilfe feld-hilfe-unten" id="draussen-hilfe">
+                  Ein Beitrag geht dann nur durch den Filter am Spark an OpenAI:
+                  Der Spark schreibt ihn ohne Personen neu, ersetzt, was trotzdem
+                  dasteht, und prüft, dass nichts durchrutscht. Kind und
+                  Lehrperson sehen danach zu jedem solchen Beitrag das ganze
+                  Protokoll und das Urteil der Gegenstelle, ob sie einen
+                  Personenbezug gesehen hat.
+                </p>
+              </fieldset>
+            {% endif %}
+
+            {% comment %}FRAGE 3: Worum geht es heute? Freiwillig. In
+            Mathematik in den Worten des Berichts (faecher.thema_frage), in den
+            anderen Faechern die allgemeine Beschriftung. Im Safe Chat ist es
+            die zweite Frage.{% endcomment %}
+            {% if braucht.thema %}
+              <div class="frage feld">
+                <label for="task_hint" class="frage-titel">
+                  {% if braucht.schulstufe %}<span class="frage-nummer" aria-hidden="true">3</span>{% elif fach.schluessel == "safechat" %}<span class="frage-nummer" aria-hidden="true">2</span>{% endif %}{{ fach.thema_frage|default:"Thema dieser Stunde" }}
+                  <span class="feld-zusatz">(freiwillig)</span>
+                </label>
+                <input type="text" id="task_hint" name="task_hint" maxlength="200"
+                       value="{{ thema|default:'' }}"
+                       placeholder="{{ fach.thema_beispiel }}"
+                       aria-describedby="hint-hilfe">
+                <p class="feld-hilfe feld-hilfe-unten" id="hint-hilfe">
+                  {{ fach.thema_hilfe|default:"Ein Stichwort genügt. Es gibt der Stunde die Richtung." }}
+                </p>
+              </div>
+            {% endif %}
+
+            {% comment %}Die drei Einstellungen der Musikstunde. Die Dauer als
+            Auswahlfeld: vier Werte, und die Vorgabe stimmt fast immer. Die
+            Lieder je Kind als Knopfreihe, weil die Zahl die Wartezeit der
+            ganzen Klasse bestimmt und sichtbar sein soll.{% endcomment %}
+            {% if braucht.lieddauer %}
+              <div class="feld">
+                <label for="song_max_seconds">Wie lang darf ein Lied höchstens sein?</label>
+                <p class="feld-hilfe" id="lieddauer-hilfe">
+                  Die Kinder wählen bis zu dieser Dauer. Jede Minute Musik
+                  kostet am Spark etwa neun Sekunden Rechenzeit, und in dieser
+                  Zeit warten alle anderen.
+                </p>
+                <select id="song_max_seconds" name="song_max_seconds"
+                        aria-describedby="lieddauer-hilfe">
+                  {% for wert, beschriftung in lieddauern %}
+                    <option value="{{ wert }}" {% if wert == lieddauer_vorgabe %}selected{% endif %}>{{ beschriftung }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            {% endif %}
+
+            {% if braucht.lieder %}
+              <fieldset class="feld">
+                <legend>Wie viele Lieder darf jedes Kind machen?</legend>
+                <p class="feld-hilfe" id="lieder-hilfe">
+                  Die Grenze prüft der Server. Ein Lied, das der Spark nicht
+                  hinbekommt, zählt nicht mit.
+                </p>
+                {% for wert in lieder_wahl %}
+                  <div class="wahl wahl-inline">
+                    <input type="radio" id="lieder-{{ wert }}" name="songs_per_child"
+                           value="{{ wert }}" {% if wert == lieder_vorgabe %}checked{% endif %}
+                           aria-describedby="lieder-hilfe">
+                    <label for="lieder-{{ wert }}">{{ wert }}</label>
+                  </div>
+                {% endfor %}
+              </fieldset>
+            {% endif %}
+
+            {% if braucht.gesang %}
+              <fieldset class="feld">
+                <legend>In welcher Sprache wird gesungen?</legend>
+                <p class="feld-hilfe" id="gesang-hilfe">
+                  Gilt für alle Lieder dieser Stunde. Der Liedtext sollte in
+                  derselben Sprache sein.
+                </p>
+                {% for wert, beschriftung in gesangssprachen %}
+                  <div class="wahl">
+                    <input type="radio" id="gesang-{{ wert }}" name="song_language"
+                           value="{{ wert }}" {% if wert == gesang_vorgabe %}checked{% endif %}
+                           aria-describedby="gesang-hilfe">
+                    <label for="gesang-{{ wert }}">{{ beschriftung }}</label>
+                  </div>
+                {% endfor %}
+              </fieldset>
+            {% endif %}
+
+            {% comment %}Der Textvorschlag vom Spark (19.10.2026). Vorgabe an;
+            ein Kind, das nicht schreiben mag, soll trotzdem ein Lied
+            bekommen. Aus heisst: kein Knopf, und der Endpunkt lehnt ab.{% endcomment %}
+            {% if braucht.texthilfe %}
+              <fieldset class="feld">
+                <legend>Textvorschlag vom Spark</legend>
+                <p class="feld-hilfe" id="texthilfe-hilfe">
+                  Die Kinder schreiben den Liedtext selbst oder lassen sich zu
+                  einem Thema einen Vorschlag vom Sprachmodell am Spark
+                  schreiben und ändern ihn dann. Höchstens
+                  {{ texthilfe_hoechstens }} Vorschläge je Kind; vertont wird
+                  erst, was das Kind abschickt.
+                </p>
+                <div class="wahl">
+                  <input type="checkbox" id="song_text_help" name="song_text_help"
+                         value="ja" checked aria-describedby="texthilfe-hilfe">
+                  <label for="song_text_help">Die Kinder dürfen sich einen Text vom Spark schreiben lassen</label>
+                </div>
+              </fieldset>
+            {% endif %}
+
+            {% if braucht.niveau %}
+              <div class="feld">
+                <label for="language_level">Wie weit sind die Lernenden?</label>
+                <p class="feld-hilfe" id="niveau-hilfe">
+                  Nach dem Gemeinsamen Europäischen Referenzrahmen. Das Niveau
+                  begrenzt den Wortschatz und die Satzlänge: Auf A1 spricht der
+                  Coach in höchstens acht Wörtern je Satz, und die Anwendung
+                  setzt das durch, nicht nur der Systemprompt.
+                </p>
+                <select id="language_level" name="language_level"
+                        aria-describedby="niveau-hilfe">
+                  {% for wert, beschriftung in niveaus %}
+                    <option value="{{ wert }}">{{ beschriftung }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            {% endif %}
+
+            {% if braucht.aufgabe %}
+              {% comment %}Die Gespraechsaufgabe (Regel 11 des Berichts). Alle
+              Aufgaben stehen im Dokument, jede mit ihren Niveaus: Ohne
+              JavaScript ist das die ganze Liste, und die Ansicht weist eine
+              unpassende Wahl mit einem Satz zurueck. Mit JavaScript blendet
+              aufgabenwahl.js aus, was nicht zum gewaehlten Niveau passt.
+
+              Die erste Aufgabe ist vorgewaehlt und nicht das freie Gespraech:
+              Die Literatur spricht fuer die Aufgabe, also ist sie die
+              Vorgabe.{% endcomment %}
+              <fieldset class="feld aufgabenwahl" id="aufgabenwahl">
+                <legend>Welche Gesprächsaufgabe?</legend>
+                <p class="feld-hilfe" id="aufgabe-hilfe">
+                  Warum eine Aufgabe und kein Plaudern: Gespräche mit einem
+                  Ziel, bei denen das Kind etwas herausfinden muss, das nur der
+                  Coach weiß, wirken deutlich stärker als freies Plaudern – in
+                  der größten Übersicht (Bibauw et al. 2022) mit d = 0,97
+                  gegenüber keinem nachweisbaren Effekt. Und die Kinder müssen
+                  dabei selbst fragen, was viele noch nicht können. Jede
+                  Aufgabe läuft gleich ab: eine Minute planen, das Gespräch,
+                  dieselbe Aufgabe noch einmal, ein kurzer Rückblick.
+                  <a href="{% url 'sprechcoach_erklaerung' %}#aufgaben">Mehr dazu</a>
+                </p>
+                {% for a in sprechaufgaben %}
+                  <div class="wahl wahl-erklaert" data-niveaus="{{ a.niveaus|join:' ' }}">
+                    <input type="radio" id="aufgabe-{{ a.schluessel }}" name="speaking_task"
+                           value="{{ a.schluessel }}" {% if forloop.first %}checked{% endif %}
+                           aria-describedby="aufgabe-{{ a.schluessel }}-text">
+                    <div>
+                      <label for="aufgabe-{{ a.schluessel }}">{{ a.titel }}</label>
+                      <p class="wahl-text" id="aufgabe-{{ a.schluessel }}-text">
+                        <span class="aufgabe-marke">{{ a.niveaus|join:", " }}</span>
+                        <span class="aufgabe-marke">{% if a.typ == "lang" %}Meinungsgespräch{% else %}Alltagsgespräch{% endif %}</span>
+                        <span class="aufgabe-fuer">{{ a.fuer }}</span><br>
+                        {{ a.ziel_deutsch }}
+                      </p>
+                    </div>
+                  </div>
+                {% endfor %}
+                <div class="wahl wahl-erklaert" data-niveaus="{{ freies_gespraech.niveaus|join:' ' }}">
+                  <input type="radio" id="aufgabe-frei" name="speaking_task"
+                         value="{{ freies_gespraech.schluessel }}"
+                         aria-describedby="aufgabe-frei-text">
+                  <div>
+                    <label for="aufgabe-frei">{{ freies_gespraech.titel }}</label>
+                    <p class="wahl-text" id="aufgabe-frei-text">
+                      Wie bisher: ein Gespräch über das Thema oben, ohne Ziel,
+                      ohne Planen und ohne Wiederholung. Am Ende gibt es
+                      trotzdem einen kurzen Rückblick.
+                    </p>
+                  </div>
+                </div>
+              </fieldset>
+            {% endif %}
+          </div>
+
+          {% comment %}Die Altersklasse, in den Faechern, die sie noch haben.
+          In Mathematik hat die Schulstufe (Frage 1) sie ersetzt.{% endcomment %}
+          {% if braucht.alter %}
+            <div class="formspalte">
+              <fieldset class="feld">
+                <legend>Wie alt sind die Lernenden?</legend>
+                <p class="feld-hilfe" id="alter-hilfe">
+                  Das ändert die Anrede und die Sprachebene der Antworten,
+                  sonst nichts. Für einen Vortrag vor Erwachsenen die letzte
+                  Wahl nehmen, sonst wird das Publikum wie eine vierte Klasse
+                  angesprochen.
+                </p>
+                {% for wert, beschriftung in altersklassen %}
+                  <div class="wahl">
+                    <input type="radio" id="alter-{{ forloop.counter }}" name="age_group"
+                           value="{{ wert }}" {% if forloop.first %}checked{% endif %}
+                           aria-describedby="alter-hilfe">
+                    <label for="alter-{{ forloop.counter }}">{{ beschriftung }}</label>
+                  </div>
+                {% endfor %}
+              </fieldset>
+            </div>
+          {% endif %}
+        </div>
+
+        {% comment %}WEITERE EINSTELLUNGEN, in jedem Fach eingeklappt. Keine
+        davon hat didaktische Evidenz je Stunde (Bericht 5.3), also steht
+        keine davon zwischen Fachwahl und Start. Sie bleiben aber in der
+        Anwendung: der Titel, weil er vorbelegt wird und aenderbar bleibt;
+        Aufzeichnung und Gueltigkeit, weil das Lab sie braucht; die
+        Qualitaetssicherung als bewusster Haken, weil nur so je Stunde etwas
+        das Haus verlaesst, dem die Lehrperson zugestimmt hat. Das weicht vom
+        Bericht ab ("fest ein, sobald ein Zugang hinterlegt ist"), und zwar
+        absichtlich: Datenschutz ist keine Vorgabe des Lab, sondern eine
+        Zustimmung der Lehrperson.{% endcomment %}
+        {% if braucht.protokoll or braucht.qualitaet or braucht.ruhezeit %}
+          <details class="weitere-einstellungen" id="weitere-einstellungen">
+            <summary>
+              <span class="weitere-titel">Weitere Einstellungen</span>
+              <span class="weitere-leise">Titel{% if braucht.qualitaet and fach.schluessel != "safechat" %}, Qualitätssicherung{% endif %}{% if braucht.protokoll and protokoll_waehlbar %}, Aufzeichnung{% endif %}{% if braucht.ruhezeit %}, Gültigkeit des Codes{% endif %} – die Vorgaben passen fast immer</span>
+            </summary>
+            <div class="weitere-innen">
+
+              <div class="feld">
+                <label for="title">Titel der Sitzung</label>
+                <input type="text" id="title" name="title" maxlength="120"
+                       value="{{ titel|default:'' }}"
+                       placeholder="{{ titel_vorschlag }}"
+                       aria-describedby="title-hilfe">
+                <p class="feld-hilfe feld-hilfe-unten" id="title-hilfe">
+                  Leer heißt „{{ titel_vorschlag }}“. Nur für dich, die Kinder
+                  sehen ihn oben klein; auf der Sitzungsseite ist er mit dem
+                  Stift änderbar.
+                </p>
+              </div>
+
+              {% comment %}Im Safe Chat steht derselbe Haken als Frage 1
+              weiter oben; ein zweites Feld mit demselben Namen gibt es
+              nicht.{% endcomment %}
+              {% if braucht.qualitaet and fach.schluessel != "safechat" %}
+                <fieldset class="feld">
+                  <legend>Qualitätssicherung</legend>
+                  <p class="feld-hilfe" id="qs-hilfe">
+                    Bei schwierigen Aufgaben kannst du eine zweite, stärkere
+                    Einschätzung dazuholen. Der Spark anonymisiert die Aufgabe
+                    dafür zuerst: Namen, Adressen und Ähnliches werden durch
+                    Platzhalter ersetzt, bevor etwas das Haus verlässt, und
+                    danach lokal wieder eingesetzt. Eine
+                    Sozialversicherungsnummer im Text sperrt den Weg ganz.
+                    {% comment %}Die Stufen kommen nur zur Sprache, wo es
+                    Stufen gibt. Im Trainer und im Sprechcoach wuerde der Satz
+                    von einer Mechanik erzaehlen, die dort nicht
+                    laeuft.{% endcomment %}
+                    {% if braucht.stufen %}
+                      Die geprüfte Lösung bekommen die Kinder nie zu sehen.
+                      Sie hilft der Anwendung nur dabei, einen falschen Ansatz
+                      früher zu erkennen – etwa wenn jemand addiert, wo
+                      multipliziert gehört. Die Stufen bleiben unverändert.
+                    {% else %}
+                      Die Lernenden sehen die zweite Einschätzung nicht. Sie
+                      hilft der Anwendung, einen Irrweg früher zu erkennen.
+                    {% endif %}
+                  </p>
+                  {% if qualitaet_moeglich %}
+                    <div class="wahl">
+                      <input type="checkbox" id="qualitaetssicherung" name="qualitaetssicherung"
+                             value="ja" aria-describedby="qs-hilfe">
+                      <label for="qualitaetssicherung">
+                        Qualitätssicherung einschalten{% if qualitaet_modell %}
+                          <span class="feld-zusatz">({{ qualitaet_modell }})</span>{% endif %}
+                      </label>
+                    </div>
+                    {% if braucht.stufen %}
+                      {% comment %}Der zweite Schalter (Thomas, 31.10.2026).
+                      Er haengt am ersten (static/js/qsschalter.js und noch
+                      einmal am Server) und gibt nicht das Foto frei,
+                      sondern die Bildkette: Nur was sie durchlaesst, geht
+                      hinaus. Wortwahl: zugeschnitten und bereinigt, nicht
+                      anonymisiert.{% endcomment %}
+                      <p class="feld-hilfe" id="bilder-hilfe">
+                        Fotos von Heften zeigen oft Handschrift, Namen, Gesichter
+                        oder das Schullogo. Mit dieser Option schneidet die
+                        Anwendung das Foto vorher auf die gedruckte Aufgabe zu,
+                        entfernt Handschrift und Bilddaten und prüft das Ergebnis
+                        noch einmal. Nur wenn diese Prüfung eindeutig ausfällt,
+                        geht der Ausschnitt an die externe KI; sonst bekommt sie
+                        wie bisher nur den abgeschriebenen Text. Was hinausging,
+                        siehst du im Verlauf neben dem Foto. Ohne diese Option
+                        verlässt kein Bild die PH.
+                        <a href="{% url 'bildpruefung' %}">Mehr erfahren</a>
+                      </p>
+                      <div class="wahl wahl-unter">
+                        <input type="checkbox" id="bilder_pruefen" name="bilder_pruefen"
+                               value="ja" aria-describedby="bilder-hilfe">
+                        <label for="bilder_pruefen">
+                          Auch Fotos der Aufgabe prüfen lassen (zugeschnitten und bereinigt)
+                        </label>
+                      </div>
+                    {% endif %}
+                  {% else %}
+                    <p class="leerhinweis">
+                      Zurzeit nicht eingerichtet. Ohne hinterlegten Zugang bleibt
+                      alles auf dem Rechner der Hochschule.
+                    </p>
+                  {% endif %}
+                </fieldset>
+              {% endif %}
+
+              {% comment %}Die Protokollstufe ist seit 1.11.2026 fest am
+              Server eingestellt (Thomas: die Wahl verkomplizierte den
+              Ablauf); das Formular zeigt sie nur noch als Satz. Mit
+              PROTOKOLLSTUFE_WAEHLBAR kommt die Auswahl zurueck.{% endcomment %}
+              {% if braucht.protokoll and not protokoll_waehlbar %}
+                <p class="feld-hilfe" id="protokoll-fest">
+                  Aufzeichnung: {{ protokollstufe_fest }} – für diesen Server
+                  fest eingestellt. Für die Forschung werden die Texte vor der
+                  Auswertung anonymisiert; welches Kind einen Beitrag geschrieben
+                  hat, wird mit der Sitzung gelöscht.
+                </p>
+              {% elif braucht.protokoll %}
+                <fieldset class="feld">
+                  <legend>Was wird für die Forschung aufgezeichnet?</legend>
+                  <p class="feld-hilfe" id="protokoll-hilfe">
+                    Das Lab ist ein Forschungsvorhaben, deshalb ist die
+                    vollständige Aufzeichnung voreingestellt. Bei Erwachsenen
+                    fragt Stufe 3 vor dem Beitritt um Zustimmung; wer ablehnt,
+                    macht trotzdem mit und wird nur nach Stufe 1 aufgezeichnet.
+                    Kinder werden nicht gefragt: Für sie entscheiden Schule und
+                    Erziehungsberechtigte, nicht die Anwendung.
+                  </p>
+                  {% for wert, beschriftung in protokollstufen %}
+                    <div class="wahl">
+                      <input type="radio" id="protokoll-{{ wert }}" name="research_level" value="{{ wert }}"
+                             {% if forloop.last %}checked{% endif %} aria-describedby="protokoll-hilfe">
+                      <label for="protokoll-{{ wert }}">{{ beschriftung }}</label>
+                    </div>
+                  {% endfor %}
+                </fieldset>
+              {% endif %}
+
+              {% if braucht.ruhezeit %}
+                <div class="feld">
+                  {% comment %}Ein Auswahlfeld und keine Knopfreihe: Die
+                  Voreinstellung stimmt fast immer, und vier Knoepfe fuer
+                  diesen Fall machen die Seite nur laenger.{% endcomment %}
+                  <label for="idle_timeout">Wie lange gilt der Code?</label>
+                  <p class="feld-hilfe" id="ruhe-hilfe">
+                    Wird in der Sitzung nichts mehr getan, verfällt sie von
+                    selbst.
+                  </p>
+                  <select id="idle_timeout" name="idle_timeout"
+                          aria-describedby="ruhe-hilfe">
+                    {% for wert, beschriftung in ruhezeiten %}
+                      <option value="{{ wert }}">{{ beschriftung }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              {% endif %}
+            </div>
+          </details>
+        {% endif %}
+
+        <div class="anlegen-abschluss">
+          <button type="submit" class="knopf knopf-gross">Stunde starten</button>
+          <p class="knopf-hilfe">
+            Danach erscheinen der sechsstellige Code und der QR-Code für die
+            Leinwand.
+          </p>
+        </div>
+      </form>
+
+    {% else %}
+      <p class="schrittmarke">Schritt 1 von 2</p>
+      <h2 id="anlegen-titel">Neue Stunde: Welches Fach?</h2>
+      <p class="feld-hilfe anlegen-vorspann">
+        Das Fach entscheidet, wie die Stunde arbeitet und was danach noch
+        einzustellen ist. Mehr ist hier nicht zu wählen.
+      </p>
+      {% comment %}Gewoehnliche Links, kein Skript und keine Knoepfe in einem
+      Formular: Die Wahl steht danach in der Adresse, ist also teilbar, kommt
+      mit dem Zurueck-Knopf des Browsers wieder und funktioniert auch, wenn
+      das Laden eines Skripts scheitert.{% endcomment %}
+      <ul class="fachliste">
+        {% for f in faecher %}
+          <li>
+            <a class="fachknopf" href="?fach={{ f.schluessel }}#anlegen">
+              <span class="fach-symbol" aria-hidden="true">{% include "tutoring/_fachsymbol.html" with symbol=f.symbol %}</span>
+              <span class="fach-name">{{ f.name }}</span>
+              <span class="fach-satz">{{ f.satz }}</span>
+            </a>
+          </li>
+        {% empty %}
+          <li class="leerhinweis">
+            Zurzeit ist kein Fach eingerichtet. Melde das bitte dem Lab.
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </section>
+
+</div>
+{% endblock %}
+
+{% block skripte %}
+  <script src="{% static 'js/nachfrage.js' %}" defer></script>
+  {% if braucht.aufgabe %}<script src="{% static 'js/aufgabenwahl.js' %}" defer></script>{% endif %}
+  {% if braucht.stufen and qualitaet_moeglich %}<script src="{% static 'js/qsschalter.js' %}" defer></script>{% endif %}
+{% endblock %}

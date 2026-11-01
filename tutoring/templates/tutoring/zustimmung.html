@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block titel %}Darf mitgeschrieben werden?{% endblock %}
+
+{% block inhalt %}
+<h1>Darf für die Forschung mitgeschrieben werden?</h1>
+
+<p class="lead">
+  Diese Sitzung gehört zu einem Forschungsvorhaben des ModLearn Technology Lab
+  der Pädagogischen Hochschule Vorarlberg. Untersucht wird, wie gestufte Hilfen
+  beim Rechnen wirken.
+</p>
+
+<div class="karte">
+  <h2>Wenn du zustimmst</h2>
+  <p>
+    Werden deine Eingaben und die Antworten im Wortlaut gespeichert und später
+    wissenschaftlich ausgewertet. Gespeichert wird dazu <strong>kein Name</strong>,
+    sondern eine zufällige Kennung. Welches Tier zu welcher Kennung gehört, wird
+    mit dem Ende der Sitzung gelöscht und lässt sich danach nicht mehr herstellen.
+  </p>
+
+  <h2>Wenn du ablehnst</h2>
+  <p>
+    Machst du bei der Stunde <strong>ganz normal mit</strong>. Es ändert sich für
+    dich nichts: dieselbe Aufgabenhilfe, dieselben Stufen. Gespeichert werden dann
+    nur Zahlen ohne Inhalt, also wann eine Hilfe angefordert wurde und welche Stufe
+    es war. Kein Aufgabentext, keine Antwort.
+  </p>
+  <p class="hervorgehoben">
+    Ablehnen hat keinen Nachteil. Du wirst dadurch nicht ausgeschlossen, und
+    niemand erfährt, wer abgelehnt hat.
+  </p>
+</div>
+
+<form method="post" class="zustimmungsknoepfe">
+  {% csrf_token %}
+  <button type="submit" name="zustimmung" value="ja" class="knopf knopf-gross">
+    Ja, ich stimme zu
+  </button>
+  <button type="submit" name="zustimmung" value="nein" class="knopf knopf-still">
+    Nein, danke
+  </button>
+</form>
+{% endblock %}

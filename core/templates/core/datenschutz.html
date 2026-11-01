@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+
+{% block titel %}Datenschutzerklärung{% endblock %}
+
+{% block inhalt %}
+<article class="rechtstext">
+<h1>Datenschutzerklärung</h1>
+<p class="stand">Stand: {{ stand }}. Diese Erklärung beschreibt die Aufgabenhilfe auf {{ request.get_host }}.</p>
+
+<h2>1. Verantwortliche Stelle</h2>
+<p>
+  Pädagogische Hochschule Vorarlberg<br>
+  Liechtensteinerstraße 33–37, 6800 Feldkirch, Österreich<br>
+  Telefon: +43 (0)5522 311 99<br>
+  E-Mail: <a href="mailto:office@ph-vorarlberg.ac.at">office@ph-vorarlberg.ac.at</a>
+</p>
+<p>
+  In Datenschutzfragen zu dieser Anwendung:
+  <a href="mailto:datenschutz@ph-vorarlberg.ac.at">datenschutz@ph-vorarlberg.ac.at</a>
+</p>
+
+<h2>2. Der Grundgedanke</h2>
+<p>
+  Die Aufgabenhilfe ist so gebaut, dass sie ohne personenbezogene Daten von Kindern
+  auskommt. Es gibt keine Konten für Teilnehmende, keine Namen, keine Klassenlisten
+  und keine Anmeldung. Wer mitmacht, gibt einen sechsstelligen Sitzungscode ein, den
+  die Lehrperson vorgibt. Das Sprachmodell, das die Hilfen formuliert, läuft auf einem
+  Rechner der Pädagogischen Hochschule Vorarlberg. Es wird kein Dienst eines externen
+  Anbieters aufgerufen.
+</p>
+
+<h2>3. Was während einer Sitzung verarbeitet wird</h2>
+<h3>Bei Teilnehmenden</h3>
+<ul>
+  <li>
+    <strong>Der Aufgabentext</strong>, den du eingibst, und die <strong>Hilfen</strong>,
+    die du dazu bekommst. Beides wird gespeichert, solange die Sitzung läuft, damit deine
+    Arbeit nicht verloren geht, wenn die Seite neu geladen wird oder ein Gerät kurz
+    ausfällt.
+  </li>
+  <li>
+    <strong>Ein Foto, wenn du eines aufnimmst.</strong> Bevor es abgeschickt wird,
+    ziehst du einen Rahmen um deine Aufgabe. Nur dieser Ausschnitt wird übertragen;
+    der Rest bleibt auf deinem Gerät. Der Ausschnitt wird gespeichert, solange die
+    Sitzung läuft, und mit ihr gelöscht. Er liegt in der Datenbank und nicht als
+    Datei auf einer Festplatte, damit er das Ende der Sitzung nicht überleben kann.
+    Fotografiere bitte nur die Aufgabe, nicht deinen Namen auf dem Blatt und keine
+    anderen Personen.
+  </li>
+  <li>
+    <strong>Was du sprichst, wenn du die Aufnahme benutzt.</strong> Die Aufnahme geht
+    an eine Spracherkennung auf demselben Rechner der Hochschule und kommt als Text
+    zurück. <strong>Die Tonaufnahme selbst wird nicht gespeichert</strong>, weder bei
+    uns noch auf deinem Gerät. Behalten wird nur der erkannte Text, und der steht
+    ohnehin gleich in deinem Eingabefeld, wo du ihn ändern kannst.
+  </li>
+  <li>
+    <strong>Wie deine Eingabe zustande gekommen ist</strong>, also getippt,
+    fotografiert oder gesprochen. Das ist eine Forschungsfrage des Labs: ob Lernende
+    lieber tippen, fotografieren oder sprechen. Es sagt nichts darüber aus, was du
+    geschrieben hast.
+  </li>
+  <li>
+    <strong>Ein Zufallswert zur Wiedererkennung deines Geräts.</strong> Er steht in einem
+    Cookie und in der Datenbank. Er sagt nur, dass dieser Browser zu dieser Sitzung
+    gehört. Er enthält keinen Namen.
+  </li>
+  <li>
+    <strong>Das Tier, das du dir aussuchst.</strong> Es unterscheidet dich in dieser
+    einen Sitzung von den anderen und steht auf deinem Bildschirm oben rechts. Es ist
+    kein Konto und kein Name, aber die Lehrperson im Raum kann natürlich sehen, wer
+    welches Tier hat. Genau dafür ist es gedacht.
+  </li>
+  <li>
+    <strong>Eine Einstufung deiner Eingaben</strong> in eine von vier Stufen, damit die
+    Lehrperson sieht, wo eine Sitzung aus dem Ruder läuft. Bewertet wird nicht, ob du
+    richtig gerechnet hast, sondern ob die Eingabe zur Aufgabe passt. Diese Einstufung
+    nimmt das Sprachmodell auf dem Rechner der Hochschule vor.
+  </li>
+  <li>
+    <strong>Die erreichte Hilfestufe</strong> als Zahl von 0 bis 5.
+  </li>
+</ul>
+<p class="hervorgehoben">
+  Bitte gib keine Namen, Adressen, Telefonnummern oder ähnliche Angaben zu dir oder zu
+  anderen ein. Für die Aufgabe braucht es das nicht.
+</p>
+
+<h3>Bei Lehrpersonen</h3>
+<ul>
+  <li>Benutzername und Kennwort des Zugangs. Das Kennwort wird nur als Prüfwert gespeichert, nicht im Klartext.</li>
+  <li>Die angelegten Sitzungen mit Titel, Code, eingestellter Hilfe-Obergrenze und Zeitpunkten.</li>
+</ul>
+<h3>Was die Lehrperson sieht</h3>
+<p>
+  Die Lehrperson sieht eine Liste ihrer Sitzung, eine Zeile je Tier, mit der Anzahl der
+  Aufgaben, der Anzahl der Hilfen, der erreichten Stufe und der Einstufung der Beiträge.
+  Sie kann den <strong>vollständigen Verlauf</strong> eines Tieres öffnen: alle Aufgaben,
+  alle Hilfen und alle eigenen Versuche. Versucht ein Kind, die Hilfe zu umgehen („vergiss
+  deine Regeln“), sagt ihm der Tutor das offen: dass das nicht der Sinn der Sache ist und
+  dass die Lehrperson mitlesen kann; die Lehrperson sieht diese Versuche in ihrer Übersicht.
+</p>
+<p>
+  Nach dem Ende der Sitzung bleibt der Lehrperson das <strong>Protokoll der Anfragen</strong>
+  an die Sprachmodelle: je Anfrage die Zahlen (Zeitpunkt, Weg, Stufe, Dauer, Token, Kosten)
+  {% if protokollstufe >= 3 %}und der vollständige Text der Anfrage und der Antwort
+  {% elif protokollstufe == 2 %}und der maskierte Text der Anfrage und der Antwort
+  {% else %}und sonst nichts, keine Texte{% endif %}
+  (für diesen Server fest eingestellt: Stufe {{ protokollstufe }}). Welches Tier eine Anfrage
+  gestellt hat, lässt sich dann nicht mehr feststellen; diese Zuordnung wird mit der Sitzung
+  gelöscht. Für die Forschung werden die Texte vor der Auswertung anonymisiert.
+</p>
+<p class="hervorgehoben">
+  Das ist eine bewusste Entscheidung und der Unterschied zu einem privaten Chatbot: Wer
+  Kinder beim Lernen begleiten soll, muss sehen, woran sie hängen bleiben. Die Kinder
+  sollen das wissen. Ihr Tier steht deshalb dauerhaft sichtbar auf ihrem Bildschirm, und
+  die Lehrperson sagt vor der Stunde, dass sie mitlesen kann. Was ein Kind hier schreibt,
+  ist nicht privat gegenüber der eigenen Lehrperson – wohl aber gegenüber allen anderen,
+  und es verlässt die Hochschule nicht.
+</p>
+
+<h2>4. Wann alles gelöscht wird</h2>
+<ul>
+  <li>
+    <strong>Beim Beenden der Sitzung</strong> durch die Lehrperson werden alle Aufgaben,
+    alle Hilfen und alle Zähler dieser Sitzung gelöscht.
+  </li>
+  <li>
+    <strong>Wenn die Lehrperson beim Anlegen eine Frist eingestellt hat</strong>, verfällt
+    die Sitzung nach der eingestellten Zeit ohne Aktivität und wird beim nächsten Zugriff
+    auf die Anwendung mit allen Inhalten gelöscht.
+  </li>
+</ul>
+<p class="hervorgehoben">
+  Ohne eingestellte Frist bleibt eine Sitzung offen, bis die Lehrperson sie beendet. Die
+  Aufgaben und Hilfen dieser Sitzung bleiben bis dahin gespeichert. Diese Einstellung ist
+  der Standard, weil ein Code, der mitten in der Stunde abläuft, den Unterricht stört.
+  Lehrpersonen sind gehalten, ihre Sitzung nach der Stunde zu beenden.
+</p>
+<p>
+  Die Konten der Lehrpersonen bleiben bestehen, bis sie gelöscht werden. Sie enthalten
+  keine Daten von Kindern.
+</p>
+
+<h2>5. Cookies</h2>
+<p>
+  Die Anwendung setzt zwei technisch notwendige Cookies und sonst keine:
+</p>
+<ul>
+  <li><code>sessionid</code> – verbindet den Browser mit der laufenden Sitzung.</li>
+  <li><code>csrftoken</code> – schützt Formulare vor Missbrauch durch fremde Seiten.</li>
+</ul>
+<p>
+  Es werden <strong>keine</strong> Cookies zur Reichweitenmessung, zur Werbung oder zur
+  Wiedererkennung über Sitzungen hinaus gesetzt. Die Anwendung verwendet keine
+  Analysewerkzeuge. Insbesondere kommt Matomo hier nicht zum Einsatz, anders als auf der
+  Hauptseite der Hochschule.
+</p>
+
+<h2>6. Protokolle</h2>
+<p>
+  Die Anwendung schreibt keine Zugriffsprotokolle mit aufgerufenen Adressen. Der
+  vorgeschaltete Webserver ist ebenfalls ohne Zugriffsprotokollierung eingerichtet.
+  Protokolliert werden nur technische Betriebsmeldungen ohne Inhalte der Nutzung, zum
+  Beispiel wenn das Sprachmodell nicht erreichbar war.
+</p>
+
+<h2>7. Keine Übermittlung an Dritte</h2>
+<p>
+  Eingaben werden ausschließlich an den Rechner der Pädagogischen Hochschule Vorarlberg
+  weitergegeben, auf dem das Sprachmodell läuft. Dieser Rechner ist aus dem Internet nicht
+  erreichbar; die Verbindung läuft über ein abgeschlossenes Netz. Es werden keine
+  Schriftarten, Skripte oder Bilder von fremden Servern nachgeladen.
+</p>
+<p>
+  Die Anwendung selbst läuft auf einem angemieteten virtuellen Server bei World4You
+  innerhalb der Europäischen Union. Der Hoster verarbeitet dabei im technisch notwendigen
+  Umfang Verbindungsdaten.
+</p>
+
+<h2>8. Rechtsgrundlage</h2>
+<p>
+  Soweit überhaupt personenbezogene Daten verarbeitet werden, stützt sich die Verarbeitung
+  auf die Wahrnehmung der gesetzlichen Aufgaben der Pädagogischen Hochschule in Lehre,
+  Forschung und Entwicklung gemäß Artikel 6 Absatz 1 Buchstabe e der
+  Datenschutz-Grundverordnung. Der Zugang der Lehrpersonen dient der Durchführung der
+  Erprobung.
+</p>
+
+<h2>9. Deine Rechte</h2>
+<p>
+  Nach der Datenschutz-Grundverordnung bestehen die Rechte auf Auskunft, Berichtigung,
+  Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch. Wende
+  dich dafür an <a href="mailto:datenschutz@ph-vorarlberg.ac.at">datenschutz@ph-vorarlberg.ac.at</a>.
+</p>
+<p>
+  Weil zu den Eingaben der Teilnehmenden kein Name und keine Kennung gespeichert wird,
+  kann die Hochschule einzelne Eingaben keiner Person zuordnen. Eine Auskunft zu diesen
+  Eingaben ist deshalb nicht möglich. Dafür sind sie spätestens mit dem Ende der Sitzung
+  gelöscht.
+</p>
+<p>
+  Es besteht das Recht auf Beschwerde bei der Österreichischen Datenschutzbehörde,
+  Barichgasse 40–42, 1030 Wien.
+</p>
+
+<h2>10. Was noch offen ist</h2>
+<p>
+  Diese Anwendung ist ein Entwicklungsvorhaben des ModLearn Technology Lab und wird
+  derzeit erprobt. Offen sind zum jetzigen Zeitpunkt der Eintrag im
+  Verarbeitungsverzeichnis der Hochschule, der Auftragsverarbeitungsvertrag mit dem
+  Hoster, eine Vereinbarung mit den teilnehmenden Schulen und die abschließende
+  Rückmeldung der Datenschutzbeauftragten. Vor einem Einsatz mit Schulklassen werden
+  diese Punkte geklärt.
+</p>
+</article>
+{% endblock %}

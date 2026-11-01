@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titel %}Anmeldung{% endblock %}
+
+{% block inhalt %}
+<h1>Anmeldung für Lehrpersonen</h1>
+<p class="lead">Teilnehmende brauchen keine Anmeldung. Sie treten mit dem Sitzungscode bei.</p>
+
+{% if ph_anmeldung_moeglich %}
+  {% comment %}Der Knopf steht nur, wenn das Geheimnis zwischen Caddy und der
+  Anwendung vorhanden ist (core.views.Anmeldung). Das Ziel ?next= wird
+  durchgereicht; die Ansicht laesst nur Pfade auf dieser Seite zu.{% endcomment %}
+  <div class="karte">
+    <h2>Mit dem PH-Konto</h2>
+    <p>
+      Wer ein Konto der PH Vorarlberg hat, meldet sich damit an. Ein neues
+      Konto startet als Studierende; Lehrpersonen schaltet das Lab frei.
+    </p>
+    <a class="knopf knopf-gross"
+       href="{% url 'ph_anmeldung' %}{% if next %}?next={{ next|urlencode }}{% endif %}">Mit PH-Konto anmelden</a>
+  </div>
+  <p class="lead">Oder mit Benutzername und Kennwort:</p>
+{% endif %}
+
+{% if form.errors %}
+  <p class="meldung meldung-fehler" role="alert" id="anmelde-fehler">
+    Das hat nicht gepasst. Bitte prüfe Benutzername und Kennwort.
+  </p>
+{% endif %}
+
+<form method="post" class="karte">
+  {% csrf_token %}
+  <div class="feld">
+    <label for="id_username">Benutzername</label>
+    <input type="text" id="id_username" name="username" autocomplete="username" required autofocus
+           {% if form.errors %}aria-describedby="anmelde-fehler"{% endif %}>
+  </div>
+  <div class="feld">
+    <label for="id_password">Kennwort</label>
+    <div class="kennwort-zeile">
+      <input type="password" id="id_password" name="password" autocomplete="current-password" required
+             {% if form.errors %}aria-describedby="anmelde-fehler"{% endif %}>
+      <button type="button" class="augenknopf" id="augenknopf"
+              aria-controls="id_password" aria-pressed="false" hidden>
+        <svg class="auge-offen" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+          <path d="M1.8 12S5.5 5.5 12 5.5 22.2 12 22.2 12 18.5 18.5 12 18.5 1.8 12 1.8 12Z"
+                fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+          <circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+        <svg class="auge-zu" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" hidden>
+          <path d="M1.8 12S5.5 5.5 12 5.5 22.2 12 22.2 12 18.5 18.5 12 18.5 1.8 12 1.8 12Z"
+                fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+          <circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M4 20 20 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        <span class="nur-fuer-vorlesen" id="augen-text">Kennwort anzeigen</span>
+      </button>
+    </div>
+  </div>
+  <button type="submit" class="knopf knopf-gross">Anmelden</button>
+</form>
+{% endblock %}
+
+{% block skripte %}
+<script src="{% static 'js/kennwort.js' %}" defer></script>
+{% endblock %}

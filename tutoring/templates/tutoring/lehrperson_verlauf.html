@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titel %}Verlauf {{ teilnahme.tier_name }}{% endblock %}
+
+{% block inhalt %}
+{% comment %}Der Verlauf eines Kindes, in jeder Betriebsart (Thomas,
+22.10.2026). Die Seite holt sich alle fuenf Sekunden den neuesten Stand -
+ausser in der Musikstunde: Dort stehen Abspieler im Verlauf, und ein
+ersetzter Abspieler finge jedes Mal von vorn an.{% endcomment %}
+<p class="zurueck"><a href="{% url 'tutoring:lehrperson_sitzung' sitzung.code %}">Zurück zur Sitzung</a></p>
+
+<h1 class="verlauf-titel">
+{% include "tutoring/_tierabzeichen.html" with klasse="tier-bild" groesse=48 %}
+  {{ teilnahme.tier_name }}
+</h1>
+<p class="lead">
+  {{ sitzung.title }} &middot; beigetreten um {{ teilnahme.joined_at|time:"H:i" }}
+  {% if sitzung.ist_musik %}&middot; {{ lieder|length }} Lied{{ lieder|length|pluralize:"er" }}
+  {% elif sitzung.ist_sprechcoach %}&middot; {{ sprachlaeufe|length }} Gespräch{{ sprachlaeufe|length|pluralize:"e" }}
+  {% elif sitzung.ist_trainer %}&middot; {{ laeufe|length }} {{ laeufe|length|pluralize:"Thema,Themen" }}
+  {% elif sitzung.ist_safechat %}&middot; Safe Chat
+  {% elif teilnahme.max_level_reached %}&middot; höchste Stufe {{ teilnahme.max_level_reached }}
+  {% else %}&middot; noch keine Stufenhilfe{% endif %}
+  {% if anteil_zeile %}&middot; {{ anteil_zeile }}, grobe Einschätzung{% endif %}
+  {% if note_zeile %}&middot; {{ note_zeile }}{% endif %}
+</p>
+{% if sitzung.ist_musik %}
+  <p class="mitlaufhinweis" role="status">
+    Stand beim Laden der Seite.
+    <a href="{% url 'tutoring:lehrperson_verlauf' sitzung.code teilnahme.pk %}">Neu laden</a>
+  </p>
+  <div id="verlaufsinhalt">
+    {% include "tutoring/_verlauf.html" %}
+  </div>
+{% else %}
+  <p class="mitlaufhinweis" role="status">
+    Diese Seite holt sich alle fünf Sekunden den neuesten Stand.
+  </p>
+  <div id="verlaufsinhalt"
+       hx-get="{% url 'tutoring:lehrperson_verlauf' sitzung.code teilnahme.pk %}"
+       hx-trigger="every 5s" hx-swap="innerHTML">
+    {% include "tutoring/_verlauf.html" %}
+  </div>
+{% endif %}
+{% endblock %}
+
+{% block skripte %}
+{% comment %}Im Safe Chat: der Knopf "Alles aufklappen" und das Wiederoeffnen
+der Protokolle nach jedem htmx-Tausch. Das Skript liegt hier, ausserhalb
+des getauschten Bereichs, damit es nur einmal laeuft; ohne Formular auf
+der Seite macht es nur diesen Teil.{% endcomment %}
+{% if sitzung.ist_safechat %}<script src="{% static 'js/safechat.js' %}" defer></script>{% endif %}
+{% endblock %}

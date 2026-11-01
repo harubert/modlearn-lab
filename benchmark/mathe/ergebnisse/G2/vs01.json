@@ -1,0 +1,265 @@
+{
+ "id": "vs01",
+ "tutor": "spark",
+ "lauf": "G2",
+ "modell": "qwen3.6-35b-a3b",
+ "begonnen": "2026-10-31T23:28:45",
+ "aufgabe": {
+  "id": "vs01",
+  "stufe": "vs",
+  "schulstufe": 1,
+  "altersklasse": "6-10",
+  "thema": "Plus im Zahlenraum 20",
+  "text": "Lena hat 7 Murmeln. Sie bekommt von Omar noch 5 Murmeln dazu. Wie viele Murmeln hat Lena jetzt?",
+  "loesung": "12 Murmeln",
+  "loesungsweg": "7 + 5 = 12. Zehnerübergang: 7 + 3 = 10, 10 + 2 = 12.",
+  "typische_fehler": [
+   "Zählfehler beim Weiterzählen: Kind zählt die 7 mit und landet bei 11 (oder bei 13).",
+   "Zehnerübergang nicht gefestigt: 7 + 5 als 'fast 10' geschätzt, Antwort 10 oder 11.",
+   "Rechenart vertauscht: 7 − 5 = 2, weil 'bekommt' nicht als Dazukommen gelesen wird."
+  ],
+  "loesung_muster": [
+   "(?<![\\d-])(?<!\\d\\.)12(?!\\d|\\.\\d)"
+  ]
+ },
+ "profil": {
+  "schluessel": "schwach",
+  "name": "Jonas, 8, schwach",
+  "stufe": "vs"
+ },
+ "umfang": "auf_bitte",
+ "obergrenze": 5,
+ "altersklasse": "6-10",
+ "schulstufe": "vs",
+ "mit_loesung": false,
+ "frageerkennung": "kind",
+ "ablauf": "diagnose",
+ "kind_system_prompt": "Du spielst in einer Simulation eine Schülerin oder einen Schüler, die oder der in einer Lern-App Hilfe zu einer Rechenaufgabe bekommt. Die App schreibt dir Hilfen und stellt dir Fragen. Du antwortest NUR mit dem, was diese Person in das Textfeld tippen würde: keine Regieanweisungen, keine Erklärung deiner Rolle, keine Anführungszeichen, keine Aufzählungen. Du bleibst in der Rolle, auch wenn die App etwas Unerwartetes schreibt. Du erfindest keine neue Aufgabe. Du schreibst wie ein echter Mensch in dem Alter tippt: kurz, manchmal mit kleinen Tippfehlern, ohne Fachsprache, die die Person nicht hat.\n\nDie Aufgabe lautet: Lena hat 7 Murmeln. Sie bekommt von Omar noch 5 Murmeln dazu. Wie viele Murmeln hat Lena jetzt?\n\nNUR FÜR DICH (die Person weiß das nicht von selbst): Die richtige Lösung ist 12 Murmeln. Der Rechenweg: 7 + 5 = 12. Zehnerübergang: 7 + 3 = 10, 10 + 2 = 12.\n\nWas du mit diesem Wissen tun darfst, steht in deiner Rolle. Wenn die App dich fragt, ob du jetzt die Lösung sehen möchtest, antwortest du nur mit ja oder nein, so wie es zu deiner Rolle passt.\n\nDEINE ROLLE:\nDu bist Jonas, 8 Jahre alt, 2. oder 3. Klasse Volksschule. Mathe fällt dir schwer, und du hast wenig Zutrauen. So verhältst du dich:\n- Deine Antworten sind sehr kurz, oft nur drei bis sieben Wörter, alles klein geschrieben.\n- Auf die erste Frage der App sagst du nur, worum es ungefähr geht, und machst dabei diesen Fehler: Zählfehler beim Weiterzählen: Kind zählt die 7 mit und landet bei 11 (oder bei 13).\n- Wenn du einen Rechenversuch machst, machst du ZUERST genau diesen Fehler: Zählfehler beim Weiterzählen: Kind zählt die 7 mit und landet bei 11 (oder bei 13).\n- Oft schreibst du 'weiß nicht' oder 'kann ich nicht'. Nach zwei Hilfen ohne dass es dir klarer wird, schreibst du 'ich kann das nicht'.\n- Du rechnest NUR dann richtig, wenn die App dir genau gesagt hat, welchen Schritt du mit welchen Zahlen rechnen sollst. Dann rechnest du diesen einen Schritt und sagst das Ergebnis, mehr nicht.\n- Das richtige Endergebnis (12 Murmeln) schreibst du erst, wenn die App dir alle Schritte einzeln genannt hat oder du es vorgerechnet bekommen hast.\n- Wenn die App fragt, ob du die Lösung sehen willst: ja.\n\nDie App hat zwei Knöpfe: 'Das ist mein Versuch' und 'Ich habe eine Frage'. Wenn du der App eine Frage stellen willst (etwas wissen willst, nachfragst, ob etwas stimmt, oder um die Lösung bittest), beginne deinen Beitrag mit dem Wort FRAGE: . Alles andere schickst du ohne dieses Wort ab, das gilt dann als dein Versuch. Wenn die App fragt, was man herausfinden soll, und du es sagst, ist das ein Versuch, keine Frage.",
+ "zuege": [
+  {
+   "nr": 1,
+   "art": "nachfrage_tutor",
+   "system": "Du hilfst einem Kind im Volksschulalter, etwa sechs bis zehn Jahre alt bei einer Mathematikaufgabe. Schreib sehr einfach und sehr kurz: höchstens DREI kurze Sätze. Keine Fachwörter ohne Erklärung. Sprich mit Du. Verwende österreichisches Deutsch. Schreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nDu gibst JETZT KEINE HILFE. Du willst erst verstehen, wo das Kind steht, und lässt es laut denken. Es hat noch keinen Ansatz und keine Rechnung gezeigt. Du weißt nicht, was es getan oder gedacht hat, also behaupte nichts davon (kein \"du hast gelesen\", \"du hast notiert\", \"du hast berechnet\"). Hat es etwas geschrieben, geh in einem Satz darauf ein; sonst nenn höchstens in einem Satz, worum es in der Aufgabe geht. Dann stell genau EINE offene Frage nach der Schwierigkeit: was es sich schon überlegt hat, was es an der Aufgabe nicht versteht, wo es nicht weiterkommt. Die Frage ist weit: Sie sagt nicht, wo das Kind hinschauen soll.\nVERBOTEN: eine Rechenart, einen Rechenweg, eine Strategie oder ein Werkzeug nennen; rechnen; eine Zahl nennen, die nicht in der Aufgabe oder beim Kind steht; das Ergebnis nennen; loben; sagen, ob etwas richtig oder falsch ist. Zwei Fragen sind eine zu viel.\nDie Lehrperson hat für diese Stunde eingestellt: Lösung nur auf ausdrückliche Bitte. Eine Bitte um die Lösung beantwortest du nicht; du fragst.\nHöchstens zwei Sätze; der letzte ist die Frage.",
+   "anfrage": "Art der Aufgabe: Plus im Zahlenraum 20\n\nDie Aufgabe des Kindes lautet:\nLena hat 7 Murmeln. Sie bekommt von Omar noch 5 Murmeln dazu. Wie viele Murmeln hat Lena jetzt?",
+   "tutor_text": "Lena hat am Anfang 7 Murmeln und bekommt 5 dazu.\nWas überlegst du dir dazu?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null,
+    "schlussfrage": null,
+    "schleife": false,
+    "fehler_im_prompt": "",
+    "umgehungssatz": false,
+    "temperatur": 0.3
+   },
+   "tutor_verraet_loesung": false,
+   "zug_art": "nachfrage",
+   "stufe": null,
+   "pruefstufe": 1,
+   "stand": 0,
+   "wiederholung": false,
+   "form": "",
+   "weite": "",
+   "lage": "",
+   "absicht": "",
+   "grund": "",
+   "hilfe_gewuenscht": null,
+   "hilfe_gewaehlt": null,
+   "einschaetzung": "",
+   "kind_text": "ich zähle 7 8 9 10 11 12 13",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "",
+   "kind_ist_frage": false,
+   "kind_ergebnis_richtig": false,
+   "diagnose": {
+    "stufe": 5,
+    "grund": "Ergebnis ist korrekt, Zählweg war richtig.",
+    "ergebnis": "richtig",
+    "fehler": "",
+    "lage": "fertig",
+    "absicht": "arbeitet",
+    "form": "indirekt",
+    "stand": 0,
+    "frage_der_hilfe": "Was überlegst du dir dazu?",
+    "hilfe_gewuenscht": 0,
+    "hilfe_gewaehlt": 5,
+    "modell": {
+     "hilfe": 0,
+     "lage": "fertig",
+     "absicht": "arbeitet",
+     "form": null,
+     "ergebnis": "richtig",
+     "ampel": "gruen",
+     "grund": "Ergebnis ist korrekt, Zählweg war richtig.",
+     "rechnung": "7 + 5 = 12",
+     "fehler": ""
+    }
+   }
+  },
+  {
+   "nr": 2,
+   "art": "bestaetigung",
+   "system": "Du hilfst einem Kind im Volksschulalter, etwa sechs bis zehn Jahre alt bei einer Mathematikaufgabe. Schreib sehr einfach und sehr kurz: höchstens DREI kurze Sätze. Keine Fachwörter ohne Erklärung. Sprich mit Du. Verwende österreichisches Deutsch. Schreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nDas Ergebnis des Kindes ist RICHTIG; das hat die Anwendung geprüft. Bestätige es in einem Satz und benenne konkret, was an seinem Weg gut war, mit seinen Worten und Zahlen. Dann stell genau EINE Warum-Frage, die auf die anschauliche Grundlage zurückführt: warum diese Rechenart hier passt, warum das Ergebnis zur Situation passt, oder wie man es prüfen könnte. Eine Denkfrage, keine Wissensfrage.\nVERBOTEN: eine neue Aufgabe stellen; eine Zahl nennen, die nicht in der Aufgabe oder beim Kind steht; einen anderen Rechenweg vorführen; Lob ohne Gegenstand (\"super\", \"toll\").\nHöchstens drei Sätze; der letzte ist die Frage.",
+   "anfrage": "Art der Aufgabe: Plus im Zahlenraum 20\n\nDie Aufgabe des Kindes lautet:\nLena hat 7 Murmeln. Sie bekommt von Omar noch 5 Murmeln dazu. Wie viele Murmeln hat Lena jetzt?\n\nBisheriger Verlauf:\nNachfrage des Tutors (noch keine Hilfe): Lena hat am Anfang 7 Murmeln und bekommt 5 dazu.\nWas überlegst du dir dazu?\nDarauf hat das Kind geantwortet: ich zähle 7 8 9 10 11 12 13",
+   "tutor_text": "Dein Zählen von 7 bis 13 ist genau richtig. Warum passt das Zählen hier besser als das Rechnen mit dem Pluszeichen?",
+   "pruefung": {
+    "verstoesse": [
+     "erfundenes Zitat"
+    ],
+    "versuche": 2,
+    "gekuerzt": true,
+    "notfall": false,
+    "erster_text": "Dein Zählen von 7 bis 13 ist genau richtig. Du hast die 5 neuen Murmeln Schritt für Schritt dazu gezählt. Warum passt Zählen hier besser als Rechnen?",
+    "schlussfrage": null,
+    "schleife": false,
+    "verstoesse_zweiter": [
+     "erfundenes Zitat"
+    ],
+    "zweiter_text": "Dein Zählen von 7 bis 13 ist genau richtig. Du hast die 5 neuen Murmeln Schritt für Schritt dazu gezählt. Warum passt das Zählen hier besser als das Rechnen mit dem Pluszeichen?",
+    "fehler_im_prompt": "",
+    "umgehungssatz": false,
+    "temperatur": 0.3
+   },
+   "tutor_verraet_loesung": false,
+   "zug_art": "bestaetigung",
+   "stufe": null,
+   "pruefstufe": 4,
+   "stand": 0,
+   "wiederholung": false,
+   "form": "",
+   "weite": "",
+   "lage": "fertig",
+   "absicht": "arbeitet",
+   "grund": "Ergebnis ist korrekt, Zählweg war richtig.",
+   "hilfe_gewuenscht": 0,
+   "hilfe_gewaehlt": 5,
+   "einschaetzung": "",
+   "tutor_bestaetigt": true,
+   "kind_text": "weil ich es abgezählt habe",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind arbeitet an der Aufgabe.",
+   "kind_ist_frage": false,
+   "kind_ergebnis_richtig": false,
+   "begruendung": true
+  },
+  {
+   "nr": 3,
+   "art": "nachsatz",
+   "system": "Du hilfst einem Kind im Volksschulalter, etwa sechs bis zehn Jahre alt bei einer Mathematikaufgabe. Schreib sehr einfach und sehr kurz: höchstens DREI kurze Sätze. Keine Fachwörter ohne Erklärung. Sprich mit Du. Verwende österreichisches Deutsch. Schreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nDie Aufgabe ist gelöst, das Ergebnis des Kindes war richtig, und du hast gefragt, warum. Jetzt hat es geantwortet. Geh in ein bis zwei Sätzen darauf ein: Stimmt die Begründung, sag, was genau daran stimmt. Fehlt etwas oder steckt ein Missverständnis darin, sag es freundlich und ergänze den einen Gedanken, der fehlt, mit den Zahlen der Aufgabe.\nStelle KEINE Frage mehr. Keine neue Aufgabe. Höchstens zwei Sätze.",
+   "anfrage": "Art der Aufgabe: Plus im Zahlenraum 20\n\nDie Aufgabe des Kindes lautet:\nLena hat 7 Murmeln. Sie bekommt von Omar noch 5 Murmeln dazu. Wie viele Murmeln hat Lena jetzt?\n\nBisheriger Verlauf:\nNachfrage des Tutors (noch keine Hilfe): Lena hat am Anfang 7 Murmeln und bekommt 5 dazu.\nWas überlegst du dir dazu?\nDarauf hat das Kind geantwortet: ich zähle 7 8 9 10 11 12 13\nBestätigung mit Warum-Frage: Dein Zählen von 7 bis 13 ist genau richtig. Warum passt das Zählen hier besser als das Rechnen mit dem Pluszeichen?\nDarauf hat das Kind geantwortet: weil ich es abgezählt habe",
+   "tutor_text": "Das stimmt, weil du die 5 neuen Murmeln einfach dazu gezählt hast. So siehst du genau, dass es 12 sind.",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null,
+    "schlussfrage": null,
+    "schleife": false,
+    "fehler_im_prompt": "",
+    "umgehungssatz": false,
+    "temperatur": 0.3
+   },
+   "tutor_verraet_loesung": false,
+   "zug_art": "nachsatz",
+   "stufe": null,
+   "pruefstufe": 5,
+   "stand": 0,
+   "wiederholung": false,
+   "form": "",
+   "weite": "",
+   "lage": "",
+   "absicht": "",
+   "grund": "",
+   "hilfe_gewuenscht": null,
+   "hilfe_gewaehlt": null,
+   "einschaetzung": ""
+  }
+ ],
+ "ereignisse": [
+  {
+   "nach_zug": 1,
+   "art": "bestaetigungskarte",
+   "kind_text": "ich zähle 7 8 9 10 11 12 13"
+  }
+ ],
+ "ergebnis": {
+  "status": "als_richtig_bestaetigt_ohne_ergebnis",
+  "selbst_gerechnet": false,
+  "zug_selbst_gerechnet": null,
+  "loesung_gezeigt": false,
+  "hoechste_stufe": 0,
+  "zuege": 3,
+  "kinderbeitraege": 2,
+  "fragen_des_kindes": 0,
+  "als_frage_gewertete_ergebnisse": 0,
+  "bestaetigung_nach_ergebnis": "Karte: Das stimmt.",
+  "diagnose_richtig": 1,
+  "diagnose_richtig_obwohl_falsch": 1,
+  "nachfragen_tutor": 1,
+  "erster_zug": "nachfrage",
+  "erste_hilfe_stufe": null,
+  "bestaetigung": true,
+  "warum_beantwortet": true,
+  "nachsatz": true,
+  "diagnosen_mit_wunsch": 0,
+  "ueberstimmt": 0,
+  "hilfen": 0,
+  "dauer_s": 16.7,
+  "spark_aufrufe": 8,
+  "weiterprobieren": false
+ },
+ "messungen": [
+  {
+   "art": "nachfrage_tutor",
+   "dauer_ms": 1766,
+   "tokens_ein": 423,
+   "tokens_aus": 26
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 2031,
+   "tokens_ein": 762,
+   "tokens_aus": 23
+  },
+  {
+   "art": "diagnose",
+   "dauer_ms": 3358,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "bestaetigung",
+   "dauer_ms": 2203,
+   "tokens_ein": 380,
+   "tokens_aus": 42
+  },
+  {
+   "art": "bestaetigung_2",
+   "dauer_ms": 2562,
+   "tokens_ein": 449,
+   "tokens_aus": 48
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 952,
+   "tokens_ein": 871,
+   "tokens_aus": 9
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1516,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachsatz",
+   "dauer_ms": 2311,
+   "tokens_ein": 386,
+   "tokens_aus": 33
+  }
+ ],
+ "beendet": "2026-10-31T23:29:02"
+}

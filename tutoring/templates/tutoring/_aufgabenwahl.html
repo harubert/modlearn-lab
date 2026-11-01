@@ -1,0 +1,22 @@
+{% comment %}Die Aufgaben der Lehrperson zur Wahl (1.11.2026). Steht ueber dem
+Verfasser, sobald keine Aufgabe laeuft; erledigte sind markiert und lassen
+sich noch einmal ueben. Erwartet: pool, pool_offen.{% endcomment %}
+{% if pool and pool_offen %}
+<section class="aufgabenwahl" id="aufgabenwahl" aria-labelledby="wahl-titel">
+  <h2 id="wahl-titel" class="wahl-titel">Aufgaben von deiner Lehrperson</h2>
+  <ol class="wahlliste">
+    {% for e in pool %}
+      <li class="wahlaufgabe{% if e.erledigt %} ist-erledigt{% endif %}">
+        <p class="wahl-text">{{ e.vorlage.text|truncatechars:180 }}</p>
+        <form method="post" action="{% url 'tutoring:aufgabe_waehlen' %}" class="wahlform">
+          {% csrf_token %}
+          <input type="hidden" name="vorlage" value="{{ e.vorlage.pk }}">
+          <button type="submit" class="knopf">{% if e.erledigt %}Noch einmal üben{% else %}Diese Aufgabe üben{% endif %}</button>
+          {% if e.erledigt %}<span class="erledigtmarke">erledigt</span>{% endif %}
+        </form>
+      </li>
+    {% endfor %}
+  </ol>
+  <p class="feld-hilfe">Du kannst auch unten eine eigene Aufgabe eintippen oder fotografieren.</p>
+</section>
+{% endif %}

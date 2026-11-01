@@ -1,0 +1,55 @@
+{% comment %}Der Zuschnitt, den das Kind vor dem Abschicken waehlt.
+
+Auf einem Heftfoto steht fast immer mehr als die eine Aufgabe: die
+Nachbaraufgabe, der Name auf dem Blatt, der halbe Tisch. Was hier
+weggeschnitten wird, verlaesst das Handy nicht, und das Modell liest nicht
+die falsche Zeile ab.
+
+Die Schicht steht ausserhalb von _verfasser.html und damit ausserhalb des
+Formulars: Ein Knopf im Formular koennte das Abschicken ausloesen, und der
+Zuschnitt soll genau das erst vorbereiten.{% endcomment %}
+<div class="zuschnitt" id="zuschnitt" role="dialog" aria-modal="true"
+     aria-labelledby="zuschnitt-titel" hidden>
+  <div class="zuschnitt-karte">
+    <h2 class="zuschnitt-titel" id="zuschnitt-titel">Zeig mir deine Aufgabe</h2>
+    <p class="zuschnitt-hilfe" id="zuschnitt-hilfe">
+      Zieh den Rahmen auf deine Aufgabe. An den Ecken wird er größer und kleiner.
+    </p>
+
+    <div class="zuschnitt-buehne" id="zuschnitt-buehne">
+      {% comment %}Die Flaeche ist genau so gross, wie das Foto zu sehen ist.
+      Beides bekommt seine Groesse von foto.js, weil erst dort bekannt ist,
+      wie hoch und breit das Foto ist.{% endcomment %}
+      <div class="zuschnitt-flaeche" id="zuschnitt-flaeche">
+        <canvas class="zuschnitt-bild" id="zuschnitt-bild" role="img"
+                aria-label="Dein Foto"></canvas>
+        <div class="zuschnitt-rahmen" id="zuschnitt-rahmen" tabindex="0"
+             aria-label="Rahmen um deine Aufgabe"
+             aria-describedby="zuschnitt-hilfe zuschnitt-tasten">
+          <span class="zuschnitt-griff griff-lo" data-ecke="lo" aria-hidden="true"></span>
+          <span class="zuschnitt-griff griff-ro" data-ecke="ro" aria-hidden="true"></span>
+          <span class="zuschnitt-griff griff-lu" data-ecke="lu" aria-hidden="true"></span>
+          <span class="zuschnitt-griff griff-ru" data-ecke="ru" aria-hidden="true"></span>
+        </div>
+      </div>
+    </div>
+
+    <p class="nur-fuer-vorlesen" id="zuschnitt-tasten">
+      Mit den Pfeiltasten verschiebst du den Rahmen. Hältst du dabei die
+      Umschalttaste, wird er größer und kleiner. Mit Plus und Minus auch.
+    </p>
+    <p class="nur-fuer-vorlesen" id="zuschnitt-ansage" role="status"></p>
+
+    <div class="zuschnitt-knoepfe">
+      <button type="button" class="knopf zuschnitt-los" id="zuschnitt-fertig">
+        Zuschneiden
+      </button>
+      <button type="button" class="knopf knopf-still" id="zuschnitt-ganz">
+        Ganzes Bild nehmen
+      </button>
+      <button type="button" class="knopf knopf-still" id="zuschnitt-abbrechen">
+        Abbrechen
+      </button>
+    </div>
+  </div>
+</div>

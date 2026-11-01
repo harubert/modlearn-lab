@@ -1,0 +1,79 @@
+{% comment %}Ein Eingabebereich fuer alles: tippen, fotografieren, sprechen.
+Genau ein Feld und zwei Knoepfe: "Das ist mein Versuch" und "Ich habe eine
+Frage". Das Kind sagt selbst, was sein Beitrag ist; die Anwendung raet nicht
+mehr (Benchmark 19.10.2026, Befund 1). Was sich mit dem Zustand aendert, ist
+nur die Beschriftung und wohin abgeschickt wird.
+
+Die Knoepfe tragen name="absicht" fuer den Weg ohne Skript; mit Skript setzt
+chat.js das versteckte Feld. Beides zusammen ist kein Widerspruch: Django
+nimmt den letzten Wert, und der kommt vom Knopf.
+
+Die Kennungen (fotoknopf, fotoeingabe, text, bildfeld, fotostand,
+fotovorschau, sprachknopf, sprachstand, herkunftfeld) erwarten foto.js und
+sprache.js; sie bleiben, wie sie sind.{% endcomment %}
+<form class="verfasser-form" id="verfasser-form" method="post"
+      action="{{ verfasser.adresse }}" data-modus="{{ verfasser.modus }}"
+      data-url-aufgabe="{% url 'tutoring:aufgabe_stellen' %}"
+      data-url-ergaenzen="{% url 'tutoring:aufgabe_ergaenzen' %}"
+      data-url-antwort="{% url 'tutoring:antwort_geben' %}"
+      data-url-nachfrage="{% url 'tutoring:nachfrage_stellen' %}"
+      data-knopf-versuch="{{ knopf_versuch }}" data-knopf-frage="{{ knopf_frage }}">
+  {% csrf_token %}
+  <input type="hidden" name="bild" id="bildfeld">
+  <input type="hidden" name="herkunft" id="herkunftfeld" value="tippen">
+  <input type="hidden" name="absicht" id="absichtfeld" value="versuch">
+
+  <label for="text" id="verfasser-label">{{ verfasser.beschriftung }}</label>
+  {% if verfasser.hilfe %}
+    <p class="feld-hilfe" id="verfasser-hilfe">{{ verfasser.hilfe }}</p>
+  {% else %}
+    <p class="feld-hilfe" id="verfasser-hilfe" hidden></p>
+  {% endif %}
+
+  <div class="werkzeuge">
+    <button type="button" class="werkzeug" id="fotoknopf"
+            data-url="{% url 'tutoring:bild_erkennen' %}"
+            data-ziel="text" data-feld="bildfeld">
+      <svg class="werkzeug-zeichen" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"
+              fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+        <circle cx="12" cy="13" r="3.4" fill="none" stroke="currentColor" stroke-width="1.7"/>
+      </svg>
+      <span class="werkzeug-wort">Foto</span>
+    </button>
+    <input type="file" id="fotoeingabe" accept="image/*" capture="environment"
+           class="nur-fuer-vorlesen" tabindex="-1" aria-hidden="true">
+
+    {% if sprache_moeglich %}
+      <button type="button" class="werkzeug sprachknopf" id="sprachknopf"
+              data-url="{% url 'tutoring:sprache_erkennen' %}"
+              data-ziel="text" aria-pressed="false">
+        <svg class="werkzeug-zeichen" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <rect x="9" y="3" width="6" height="11" rx="3" fill="none"
+                stroke="currentColor" stroke-width="1.7"/>
+          <path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3" fill="none"
+                stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+        </svg>
+        <span class="werkzeug-wort">Sprechen</span>
+      </button>
+    {% endif %}
+  </div>
+
+  {% include "tutoring/_aufnahme.html" %}
+  <p class="fotostand" id="fotostand" role="status" hidden></p>
+  <p class="fotostand" id="sprachstand" role="status" hidden></p>
+  <img class="fotovorschau" id="fotovorschau" alt="Dein Foto" hidden>
+
+  <textarea id="text" name="text" rows="2" maxlength="2000"
+            aria-describedby="verfasser-hilfe"
+            placeholder="{{ verfasser.platzhalter }}"></textarea>
+
+  <div class="verfasser-knoepfe">
+    <button type="submit" class="knopf knopf-hauptsache" id="senden"
+            name="absicht" value="versuch">{{ verfasser.knopf }}</button>
+    <button type="submit" class="knopf knopf-still" id="fragen"
+            name="absicht" value="frage"
+            {% if not verfasser.zweiter %}hidden{% endif %}>{{ verfasser.zweiter|default:knopf_frage }}</button>
+  </div>
+</form>
+{% include "tutoring/_zuschnitt.html" %}

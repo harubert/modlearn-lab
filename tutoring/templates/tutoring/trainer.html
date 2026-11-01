@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titel %}Ein Trainer für alles{% endblock %}
+
+{% block kopf_extra %}
+  {% comment %}Ein eigener Stilbogen statt Zeilen in app.css: Der Trainer ist eine
+     zweite, in sich geschlossene Oberflaeche und wird nur hier gebraucht.
+     Farben, Knoepfe und Felder kommen aus app.css, deshalb stimmt auch der
+     dunkle Modus von selbst.{% endcomment %}
+  <link rel="stylesheet" href="{% static 'css/trainer.css' %}">
+{% endblock %}
+
+{% block kopf_aktion %}
+<p class="tierabzeichen" aria-label="Du bist {{ teilnahme.tier_name }}">
+  {% include "tutoring/_tierabzeichen.html" %}
+  <span class="tier-name">{{ teilnahme.tier_name }}</span>
+</p>
+{% endblock %}
+
+{% block inhalt %}
+<div class="sitzungsleiste">
+  <p class="sitzungstitel">{{ sitzung.title }}</p>
+</div>
+
+{% comment %}Wo stehe ich gerade? Der Satz kommt vom Server, die Zahlen
+kommen vom Server. Das Skript schreibt beides nach jedem Zug neu, und zwar
+mit demselben Satzbau wie hier: Die Seite darf nach dem ersten Zug nicht
+anders klingen als beim Laden.{% endcomment %}
+<section class="trainer-leiste" aria-label="Wo du gerade stehst">
+  <div class="trainer-lage">
+    <p class="trainer-stand" id="trainer-stand">{{ zustand_text }}</p>
+    <p class="trainer-fortschritt" id="trainer-fortschritt">Schritt {{ lauf.schritt_nr }} · {% if lauf.aufgaben_gestellt %}{{ lauf.aufgaben_richtig }} von {{ lauf.aufgaben_gestellt }} Aufgaben richtig{% else %}noch keine Aufgabe zum Prüfen{% endif %}</p>
+    <p class="trainer-thema" id="trainer-thema" {% if not lauf.thema %}hidden{% endif %}>Dein Thema: {{ lauf.thema }}</p>
+  </div>
+
+  {% comment %}Der Umschalter startet verborgen. Erst das Skript zeigt ihn,
+  und nur dann, wenn der Browser wirklich eine deutsche Stimme hat. Ein Knopf,
+  der bloss schweigt, waere schlimmer als kein Knopf.{% endcomment %}
+  <button type="button" class="werkzeug trainer-vorlesen" id="vorlesen"
+          aria-pressed="false" hidden>
+    <svg class="werkzeug-zeichen" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M4 9.5h3L11 6v12l-4-3.5H4a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1Z"
+            fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+      <path d="M15 9a4 4 0 0 1 0 6M17.8 6.2a8 8 0 0 1 0 11.6" fill="none"
+            stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+    </svg>
+    <span class="werkzeug-wort">Vorlesen</span>
+  </button>
+</section>
+
+{% if not zuege %}
+  <div class="trainer-willkommen">
+    <p>Hallo! Ich bin dein Trainer. Sag mir, was du lernen möchtest. Ich erkläre
+      es dir Schritt für Schritt und frage dich zwischendurch etwas.</p>
+  </div>
+{% endif %}
+
+<ol class="trainer-verlauf" id="trainer-verlauf"
+    aria-label="Was der Trainer und du gesagt habt" aria-busy="false">
+  {% for zug in zuege %}
+    <li class="zug zug-{{ zug.rolle }}">
+      <p class="zug-kopf">
+        <span class="zug-wer">{% if zug.rolle == "trainer" %}Trainer{% else %}Du{% endif %}</span>
+        {% if zug.urteil %}
+          <span class="urteil urteil-{{ zug.urteil }}">{% if zug.urteil == "verstanden" %}richtig{% elif zug.urteil == "teilweise" %}fast{% elif zug.urteil == "nicht" %}noch nicht{% else %}{{ zug.urteil }}{% endif %}</span>
+        {% endif %}
+      </p>
+      {% comment %}Kein linebreaksbr: .zug-text bricht mit white-space: pre-wrap um. So
+         steht im Dokument derselbe Text, den das Skript spaeter setzt und die
+         Sprachausgabe vorliest.{% endcomment %}
+      <div class="zug-text">{{ zug.text }}</div>
+      {% if zug.frage %}
+        <p class="zug-frage">
+          <span class="zug-frage-marke">Antworte darauf</span>
+          <span class="zug-frage-text">{{ zug.frage }}</span>
+        </p>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ol>
+
+<div class="trainer-eingabe">
+  {% comment %}Der ruhige Wartezustand. Er steht im Dokument und wird nur
+  ein- und ausgeblendet: Ein Kasten, der erst gebaut wird, springt beim
+  Erscheinen und verschiebt den Verlauf.{% endcomment %}
+  <p class="trainer-denkt" id="trainer-denkt" hidden>
+    <span class="trainer-punkte" aria-hidden="true">
+      <span class="trainer-punkt"></span>
+      <span class="trainer-punkt"></span>
+      <span class="trainer-punkt"></span>
+    </span>
+    <span>Der Trainer denkt nach …</span>
+  </p>
+
+  <p class="meldung meldung-fehler" id="trainer-fehler" role="alert" hidden></p>
+
+  {% comment %}Eine einzige Ansage fuer Vorlesewerkzeuge. Zwei Bereiche, die
+  gleichzeitig sprechen, reden einander tot; darum tragen die sichtbaren
+  Kaesten keine eigene Meldungsrolle.{% endcomment %}
+  <p class="nur-fuer-vorlesen" role="status" id="trainer-ansage"></p>
+
+  <div class="fertighinweis" id="trainer-fertig" {% if not lauf.ist_fertig %}hidden{% endif %}>
+    <p>Du hast es geschafft. Gut gemacht!</p>
+    {% comment %}Ohne diesen Weg endet der Trainer in einer Sackgasse: Das
+    Thema ist durch, und es gibt keine Tuer zum naechsten.{% endcomment %}
+    <form method="post" action="{% url 'tutoring:trainer_neu' %}">
+      {% csrf_token %}
+      <button type="submit" class="knopf">Noch etwas lernen</button>
+    </form>
+  </div>
+
+  {% comment %}Ohne JavaScript ist das ein gewoehnliches Formular: Es schickt
+  ab, die Ansicht liefert die Seite neu. Mit JavaScript fragt trainer.js an
+  derselben Adresse nach und haengt nur den neuen Zug an.
+
+  Ist der Lauf zu Ende, geht das Feld weg. Ein Feld, das noch dasteht und auf
+  jede Eingabe mit einer Fehlermeldung antwortet, ist eine Sackgasse mit
+  Klingel.{% endcomment %}
+  <form class="trainer-form" id="trainer-form" method="post"
+        action="{% url 'tutoring:trainer_zug' %}"
+        data-zustand="{{ lauf.zustand }}"
+        {% if lauf.ist_fertig %}hidden{% endif %}>
+    {% csrf_token %}
+    <input type="hidden" name="bild" id="trainer-bild" value="">
+    <input type="hidden" name="herkunft" id="herkunftfeld" value="tippen">
+
+    <label for="text" id="trainer-label">{% if lauf.zustand == "thema" %}Was möchtest du lernen?{% elif lauf.zustand == "bestaetigen" %}Passt das so?{% elif lauf.zustand == "pruefung" %}Deine Lösung{% elif lauf.zustand == "abschluss" %}Möchtest du noch etwas fragen?{% else %}Deine Antwort{% endif %}</label>
+    <p class="feld-hilfe" id="trainer-hilfe"{% if lauf.zustand != "thema" %} hidden{% endif %}>{% if lauf.zustand == "thema" %}Zum Beispiel: „Ich möchte etwas zur Maßumwandlung und zu Längenmaßen lernen.“{% endif %}</p>
+
+    {% if sprache_moeglich %}
+      {% comment %}Ein eigener, einfacher Sprechen-Knopf. Er benutzt
+      sprache.js unveraendert: Das Skript braucht nur diesen Knopf, die
+      Aufnahmetafel darf fehlen, dann beendet derselbe Knopf die Aufnahme.
+      Verborgen startet er, weil trainer.js erst prueft, ob dieses Geraet
+      ueberhaupt ein Mikrofon anbietet.{% endcomment %}
+      <div class="werkzeuge" id="trainer-werkzeuge" hidden>
+        <button type="button" class="werkzeug sprachknopf" id="sprachknopf"
+                data-url="{% url 'tutoring:sprache_erkennen' %}"
+                data-ziel="text" aria-pressed="false">
+          <svg class="werkzeug-zeichen" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <rect x="9" y="3" width="6" height="11" rx="3" fill="none"
+                  stroke="currentColor" stroke-width="1.7"/>
+            <path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3" fill="none"
+                  stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+          <span class="werkzeug-wort">Sprechen</span>
+        </button>
+      </div>
+      <p class="fotostand" id="sprachstand" role="status" hidden></p>
+    {% endif %}
+
+    <div class="trainer-zeile">
+      {% comment %}required, damit der Browser selbst abfaengt, wenn ohne JavaScript ein
+         leeres Feld abgeschickt wird. Mit JavaScript kommt es nicht so weit,
+         ohne waere die Antwort der Ansicht nackter JSON-Text.{% endcomment %}
+      <textarea id="text" name="text" rows="2" maxlength="2000" required
+                aria-describedby="trainer-hilfe"
+                placeholder="{% if lauf.zustand == 'thema' %}Ich möchte etwas über … lernen{% elif lauf.zustand == 'bestaetigen' %}Ja, das passt …{% elif lauf.zustand == 'pruefung' %}Schreib, wie du gerechnet hast …{% elif lauf.zustand == 'abschluss' %}Deine Frage …{% else %}Schreib deine Antwort …{% endif %}"></textarea>
+      <button type="submit" class="knopf" id="senden">{% if lauf.zustand == "thema" %}Los geht's{% elif lauf.zustand == "abschluss" %}Fragen{% else %}Antworten{% endif %}</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block skripte %}
+{% comment %}sprache.js zuerst: Es sucht seinen Knopf beim Laden. trainer.js stellt
+   danach window.zumChatende bereit, das sprache.js nach dem Abschreiben
+   ruft -- beide mit defer, also in dieser Reihenfolge.{% endcomment %}
+{% if sprache_moeglich %}<script src="{% static 'js/sprache.js' %}" defer></script>{% endif %}
+<script src="{% static 'js/trainer.js' %}" defer></script>
+{% endblock %}

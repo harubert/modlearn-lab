@@ -1,0 +1,414 @@
+{
+ "id": "ma12",
+ "tutor": "spark",
+ "lauf": "spark_ist",
+ "modell": "qwen3-vl-30b",
+ "begonnen": "2026-10-19T09:39:30",
+ "aufgabe": {
+  "id": "ma12",
+  "stufe": "matura",
+  "schulstufe": 11,
+  "altersklasse": "14-19",
+  "grundkompetenz": "AN 1.3",
+  "thema": "Mittlere und momentane Änderungsrate",
+  "text": "Die Höhe eines Balls (in Metern) nach t Sekunden ist h(t) = −5t² + 20t. Berechne die mittlere Geschwindigkeit im Zeitintervall [1; 2] und die momentane Geschwindigkeit zum Zeitpunkt t = 1.",
+  "loesung": "mittlere Geschwindigkeit 5 m/s, momentane Geschwindigkeit 10 m/s",
+  "loesungsweg": "h(1) = 15, h(2) = 20. Mittlere: (20 − 15)/(2 − 1) = 5 m/s. Ableitung h'(t) = −10t + 20, h'(1) = 10 m/s.",
+  "typische_fehler": [
+   "Mittlere Änderungsrate als h(2)/2 oder als h(2) − h(1) ohne Division (zufällig gleich, aber falsch begründet).",
+   "Ableitung ohne den linearen Term: h'(t) = −10t, h'(1) = −10.",
+   "Momentane Geschwindigkeit als h(1)/1 = 15 m/s."
+  ],
+  "loesung_muster": [
+   "(?<![\\d.-])5(?![\\d.])",
+   "(?<![\\d.-])10(?![\\d.])"
+  ]
+ },
+ "profil": {
+  "schluessel": "stark",
+  "name": "Sophie, 18, stark",
+  "stufe": "matura"
+ },
+ "umfang": "auf_bitte",
+ "obergrenze": 5,
+ "altersklasse": "14-19",
+ "mit_loesung": false,
+ "frageerkennung": "app",
+ "kind_system_prompt": "Du spielst in einer Simulation eine Schülerin oder einen Schüler, die oder der in einer Lern-App Hilfe zu einer Rechenaufgabe bekommt. Die App schreibt dir Hilfen und stellt dir Fragen. Du antwortest NUR mit dem, was diese Person in das Textfeld tippen würde: keine Regieanweisungen, keine Erklärung deiner Rolle, keine Anführungszeichen, keine Aufzählungen. Du bleibst in der Rolle, auch wenn die App etwas Unerwartetes schreibt. Du erfindest keine neue Aufgabe. Du schreibst wie ein echter Mensch in dem Alter tippt: kurz, manchmal mit kleinen Tippfehlern, ohne Fachsprache, die die Person nicht hat.\n\nDie Aufgabe lautet: Die Höhe eines Balls (in Metern) nach t Sekunden ist h(t) = −5t² + 20t. Berechne die mittlere Geschwindigkeit im Zeitintervall [1; 2] und die momentane Geschwindigkeit zum Zeitpunkt t = 1.\n\nNUR FÜR DICH (die Person weiß das nicht von selbst): Die richtige Lösung ist mittlere Geschwindigkeit 5 m/s, momentane Geschwindigkeit 10 m/s. Der Rechenweg: h(1) = 15, h(2) = 20. Mittlere: (20 − 15)/(2 − 1) = 5 m/s. Ableitung h'(t) = −10t + 20, h'(1) = 10 m/s.\n\nWas du mit diesem Wissen tun darfst, steht in deiner Rolle. Wenn die App dich fragt, ob du jetzt die Lösung sehen möchtest, antwortest du nur mit ja oder nein, so wie es zu deiner Rolle passt.\n\nDEINE ROLLE:\nDu bist Sophie, 18 Jahre alt, 8. Klasse AHS, du strebst ein Sehr gut an. So verhältst du dich:\n- Auf die erste Frage der App sagst du präzise, was gegeben und was gesucht ist, und welche Grundkompetenz oder Methode passt.\n- Beim ersten Rechenversuch rechnest du den ersten Schritt richtig vor und stellst dann einmal eine echte Rückfrage zum Verständnis (warum eine Regel gilt, oder ob ein alternativer Weg zulässig ist). Diese Frage endet mit einem Fragezeichen.\n- Danach rechnest du die Aufgabe richtig zu Ende und nennst das Ergebnis mittlere Geschwindigkeit 5 m/s, momentane Geschwindigkeit 10 m/s mit Einheit beziehungsweise in korrekter Schreibweise.\n- Du schreibst ein bis drei Sätze, mathematisch sauber.\n- Wenn die App fragt, ob du die Lösung sehen willst: nein, du probierst weiter.",
+ "zuege": [
+  {
+   "nr": 1,
+   "art": "hilfe",
+   "stufe": 1,
+   "wiederholung": false,
+   "system": "Du hilfst einer jugendlichen Person zwischen vierzehn und neunzehn Jahren bei einer Rechenaufgabe. Schreib sachlich und knapp: höchstens VIER Sätze. Fachsprache ist erlaubt. Sprich mit Du, aber nicht kindlich. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was die lernende Person zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Motivationshilfe) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die die lernende Person nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt die lernende Person nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\nGib eine Motivationshilfe. Deine Aufgabe ist es, der lernenden Person die SITUATION der Aufgabe nahezubringen, nicht die Rechnung. Wähle aus, was hier wirklich passt, und mach nicht alles auf einmal:\n- Erkläre Wörter aus der Aufgabe, die ein Kind nicht kennen muss, zum Beispiel was eine Schulbibliothek ist oder was ausleihen heißt.\n- Sag in ein, zwei Sätzen, worum es in der Situation geht und warum das jemanden angehen könnte: Wer wüsste das gern, und wozu?\n- Enthält die Aufgabe gar keine Frage, dann SAGE DAS in jedem Fall. Das ist keine Schwäche der lernenden Person, sondern eine Lücke in der Angabe, und ein Kind, das sie bemerkt, denkt richtig.\n- Mach der lernenden Person Mut, es zu probieren.\nVERBOTEN: rechnen, einen Rechenweg nennen, eine Strategie vorschlagen, nach gegeben und gesucht fragen, das Ergebnis nennen. Auch verboten: sagen, was berechnet oder herausgefunden werden soll, auch nicht in einem Nebensatz.\nDie Wörter zählen, rechnen, malnehmen, plus, minus, geteilt und alles Verwandte kommen in dieser Antwort NICHT vor. Auch nicht als Vorschlag, auch nicht als Beispiel, auch nicht verneint.",
+   "anfrage": "Art der Aufgabe: Mittlere und momentane Änderungsrate\n\nDie Aufgabe des Kindes lautet:\nDie Höhe eines Balls (in Metern) nach t Sekunden ist h(t) = −5t² + 20t. Berechne die mittlere Geschwindigkeit im Zeitintervall [1; 2] und die momentane Geschwindigkeit zum Zeitpunkt t = 1.",
+   "tutor_text": "Die Aufgabe beschreibt, wie sich die Höhe eines Balls über die Zeit ändert. Du sollst herausfinden, wie schnell der Ball im Zeitintervall von 1 bis 2 Sekunden durchschnittlich fällt oder steigt, und wie schnell er genau zur ersten Sekunde fällt oder steigt. Das ist eine Situation, die man in der Physik oder beim Werfen eines Balls beobachten kann. Probier es einfach mal mit den gegebenen Werten.",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "rueckfrage": "Was soll man hier herausfinden? Sag es mit deinen Worten.",
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 2,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Man soll die mittlere Geschwindigkeit im Intervall  berechnen, also wie schnell der Ball durchschnittlich zwischen der 1. und 2. Sekunde steigt, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also wie schnell er genau nach einer Sekunde steigt. Dafür braucht man die Höhe bei t=1 und t=2 und die Ableitung von h(t).",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind beschreibt Aufgabenstellung",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einer jugendlichen Person zwischen vierzehn und neunzehn Jahren bei einer Rechenaufgabe. Schreib sachlich und knapp: höchstens VIER Sätze. Fachsprache ist erlaubt. Sprich mit Du, aber nicht kindlich. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was die lernende Person zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die die lernende Person nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt die lernende Person nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndie lernende Person arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nDie Höhe eines Balls (in Metern) nach t Sekunden ist h(t) = −5t² + 20t. Berechne die mittlere Geschwindigkeit im Zeitintervall [1; 2] und die momentane Geschwindigkeit zum Zeitpunkt t = 1.\nHilfe der Stufe 1: Die Aufgabe beschreibt, wie sich die Höhe eines Balls über die Zeit ändert. Du sollst herausfinden, wie schnell der Ball im Zeitintervall von 1 bis 2 Sekunden durchschnittlich fällt oder steigt, und wie schnell er genau zur ersten Sekunde fällt oder steigt. Das ist eine Situation, die man in der Physik oder beim Werfen eines Balls beobachten kann. Probier es einfach mal mit den gegebenen Werten.\n\nDie Rückfrage lautet:\nMan soll die mittlere Geschwindigkeit im Intervall  berechnen, also wie schnell der Ball durchschnittlich zwischen der 1. und 2. Sekunde steigt, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also wie schnell er genau nach einer Sekunde steigt. Dafür braucht man die Höhe bei t=1 und t=2 und die Ableitung von h(t).",
+   "tutor_text": "Was bedeutet in diesem Zusammenhang die Ableitung von h(t)?",
+   "pruefung": {
+    "verstoesse": [
+     "Gleichung mit Ergebnis",
+     "ausgeschriebene Rechnung",
+     "genannter Rechenweg"
+    ],
+    "versuche": 2,
+    "gekuerzt": true,
+    "notfall": false,
+    "erster_text": "Die mittlere Geschwindigkeit im Intervall [1; 2] berechnest du mit der Differenz der Höhen geteilt durch die Zeitdifferenz, also (h(2) − h(1)) : (2 − 1). Die momentane Geschwindigkeit zum Zeitpunkt t = 1 erhältst du durch die Ableitung h′(t) an der Stelle t = 1. Was sollst du hier zuerst berechnen?",
+    "verstoesse_zweiter": [
+     "Gleichung mit Ergebnis",
+     "genannter Rechenweg"
+    ],
+    "zweiter_text": "Die mittlere Geschwindigkeit im Intervall [1; 2] berechnet man aus der Differenz der Höhen bei t=2 und t=1, geteilt durch die Zeitdifferenz. Die momentane Geschwindigkeit zum Zeitpunkt t=1 ergibt sich aus der Ableitung der Höhenfunktion h(t) an der Stelle t=1. Was bedeutet in diesem Zusammenhang die Ableitung von h(t)?"
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 3,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Die Ableitung von h(t) gibt die momentane Geschwindigkeit an, also wie schnell sich die Höhe im jeweiligen Moment ändert. Das ist wichtig, um die Geschwindigkeit genau zur Zeit t=1 zu berechnen.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Erklärt Zusammenhang Ableitung und Geschwindigkeit",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einer jugendlichen Person zwischen vierzehn und neunzehn Jahren bei einer Rechenaufgabe. Schreib sachlich und knapp: höchstens VIER Sätze. Fachsprache ist erlaubt. Sprich mit Du, aber nicht kindlich. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was die lernende Person zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die die lernende Person nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt die lernende Person nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndie lernende Person arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nDie Höhe eines Balls (in Metern) nach t Sekunden ist h(t) = −5t² + 20t. Berechne die mittlere Geschwindigkeit im Zeitintervall [1; 2] und die momentane Geschwindigkeit zum Zeitpunkt t = 1.\nHilfe der Stufe 1: Die Aufgabe beschreibt, wie sich die Höhe eines Balls über die Zeit ändert. Du sollst herausfinden, wie schnell der Ball im Zeitintervall von 1 bis 2 Sekunden durchschnittlich fällt oder steigt, und wie schnell er genau zur ersten Sekunde fällt oder steigt. Das ist eine Situation, die man in der Physik oder beim Werfen eines Balls beobachten kann. Probier es einfach mal mit den gegebenen Werten.\nFrühere Rückfrage: Man soll die mittlere Geschwindigkeit im Intervall  berechnen, also wie schnell der Ball durchschnittlich zwischen der 1. und 2. Sekunde steigt, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also wie schnell er genau nach einer Sekunde steigt. Dafür braucht man die Höhe bei t=1 und t=2 und die Ableitung von h(t).\nAntwort darauf: Was bedeutet in diesem Zusammenhang die Ableitung von h(t)?\n\nDie Rückfrage lautet:\nDie Ableitung von h(t) gibt die momentane Geschwindigkeit an, also wie schnell sich die Höhe im jeweiligen Moment ändert. Das ist wichtig, um die Geschwindigkeit genau zur Zeit t=1 zu berechnen.",
+   "tutor_text": "Die Ableitung von h(t) beschreibt die momentane Änderungsrate der Höhe, also genau die momentane Geschwindigkeit des Balls zum Zeitpunkt t. Was sollst du hier herausfinden?",
+   "pruefung": {
+    "verstoesse": [
+     "Gleichung mit Ergebnis"
+    ],
+    "versuche": 2,
+    "gekuerzt": true,
+    "notfall": false,
+    "erster_text": "Die Ableitung von h(t) beschreibt die momentane Änderungsrate der Höhe, also genau die momentane Geschwindigkeit des Balls zum Zeitpunkt t. Das ist die Steigung der Funktion h(t) an der Stelle t. Was soll man hier herausfinden? Die mittlere Geschwindigkeit im Intervall [1; 2] und die momentane Geschwindigkeit bei t = 1.",
+    "verstoesse_zweiter": [
+     "Gleichung mit Ergebnis"
+    ],
+    "zweiter_text": "Die Ableitung von h(t) beschreibt die momentane Änderungsrate der Höhe, also genau die momentane Geschwindigkeit des Balls zum Zeitpunkt t. Das ist der Wert, den du für t = 1 benötigst. Was sollst du hier herausfinden?"
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 4,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich soll die mittlere Geschwindigkeit im Intervall  berechnen, also den Durchschnitt der Geschwindigkeit zwischen der 1. und 2. Sekunde, und die momentane Geschwindigkeit genau zur Zeit t=1, also wie schnell der Ball genau nach einer Sekunde steigt. Dafür brauche ich die Werte von h(1) und h(2) und die Ableitung von h(t).",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind versteht Aufgabe und benennt notwendige Schritte",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einer jugendlichen Person zwischen vierzehn und neunzehn Jahren bei einer Rechenaufgabe. Schreib sachlich und knapp: höchstens VIER Sätze. Fachsprache ist erlaubt. Sprich mit Du, aber nicht kindlich. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was die lernende Person zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die die lernende Person nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt die lernende Person nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndie lernende Person arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nDie Höhe eines Balls (in Metern) nach t Sekunden ist h(t) = −5t² + 20t. Berechne die mittlere Geschwindigkeit im Zeitintervall [1; 2] und die momentane Geschwindigkeit zum Zeitpunkt t = 1.\nHilfe der Stufe 1: Die Aufgabe beschreibt, wie sich die Höhe eines Balls über die Zeit ändert. Du sollst herausfinden, wie schnell der Ball im Zeitintervall von 1 bis 2 Sekunden durchschnittlich fällt oder steigt, und wie schnell er genau zur ersten Sekunde fällt oder steigt. Das ist eine Situation, die man in der Physik oder beim Werfen eines Balls beobachten kann. Probier es einfach mal mit den gegebenen Werten.\nFrühere Rückfrage: Man soll die mittlere Geschwindigkeit im Intervall  berechnen, also wie schnell der Ball durchschnittlich zwischen der 1. und 2. Sekunde steigt, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also wie schnell er genau nach einer Sekunde steigt. Dafür braucht man die Höhe bei t=1 und t=2 und die Ableitung von h(t).\nAntwort darauf: Was bedeutet in diesem Zusammenhang die Ableitung von h(t)?\nFrühere Rückfrage: Die Ableitung von h(t) gibt die momentane Geschwindigkeit an, also wie schnell sich die Höhe im jeweiligen Moment ändert. Das ist wichtig, um die Geschwindigkeit genau zur Zeit t=1 zu berechnen.\nAntwort darauf: Die Ableitung von h(t) beschreibt die momentane Änderungsrate der Höhe, also genau die momentane Geschwindigkeit des Balls zum Zeitpunkt t. Was sollst du hier herausfinden?\n\nDie Rückfrage lautet:\nIch soll die mittlere Geschwindigkeit im Intervall  berechnen, also den Durchschnitt der Geschwindigkeit zwischen der 1. und 2. Sekunde, und die momentane Geschwindigkeit genau zur Zeit t=1, also wie schnell der Ball genau nach einer Sekunde steigt. Dafür brauche ich die Werte von h(1) und h(2) und die Ableitung von h(t).",
+   "tutor_text": "Was ist der nächste Schritt, um h(1) und h(2) zu berechnen?",
+   "pruefung": {
+    "verstoesse": [
+     "Gleichung mit Ergebnis"
+    ],
+    "versuche": 2,
+    "gekuerzt": true,
+    "notfall": false,
+    "erster_text": "Du sollst die mittlere Geschwindigkeit im Intervall [1; 2] berechnen, also den durchschnittlichen Höhenunterschied pro Sekunde zwischen t=1 und t=2, und die momentane Geschwindigkeit zum Zeitpunkt t=1, die durch die Ableitung h′(t) gegeben ist. Was ist der Unterschied zwischen mittlerer und momentaner Geschwindigkeit?",
+    "verstoesse_zweiter": [
+     "Gleichung mit Ergebnis"
+    ],
+    "zweiter_text": "Du sollst die mittlere Geschwindigkeit im Intervall [1; 2] berechnen, also den durchschnittlichen Höhenunterschied pro Sekunde zwischen t=1 und t=2, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also die Geschwindigkeit genau zu diesem Moment. Dafür brauchst du die Höhe bei t=1 und t=2 sowie die Ableitung von h(t), um die momentane Geschwindigkeit zu bestimmen. Was ist der nächste Schritt, um h(1) und h(2) zu berechnen?"
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 5,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich soll die mittlere Geschwindigkeit im Intervall  berechnen, also den Durchschnitt der Höheänderung zwischen der 1. und 2. Sekunde, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also wie schnell der Ball genau nach einer Sekunde steigt. Dafür brauche ich h(1) und h(2) sowie die Ableitung von h(t).",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind versteht Aufgabe und benennt notwendige Schritte",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einer jugendlichen Person zwischen vierzehn und neunzehn Jahren bei einer Rechenaufgabe. Schreib sachlich und knapp: höchstens VIER Sätze. Fachsprache ist erlaubt. Sprich mit Du, aber nicht kindlich. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was die lernende Person zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die die lernende Person nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt die lernende Person nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndie lernende Person arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nDie Höhe eines Balls (in Metern) nach t Sekunden ist h(t) = −5t² + 20t. Berechne die mittlere Geschwindigkeit im Zeitintervall [1; 2] und die momentane Geschwindigkeit zum Zeitpunkt t = 1.\nHilfe der Stufe 1: Die Aufgabe beschreibt, wie sich die Höhe eines Balls über die Zeit ändert. Du sollst herausfinden, wie schnell der Ball im Zeitintervall von 1 bis 2 Sekunden durchschnittlich fällt oder steigt, und wie schnell er genau zur ersten Sekunde fällt oder steigt. Das ist eine Situation, die man in der Physik oder beim Werfen eines Balls beobachten kann. Probier es einfach mal mit den gegebenen Werten.\nFrühere Rückfrage: Man soll die mittlere Geschwindigkeit im Intervall  berechnen, also wie schnell der Ball durchschnittlich zwischen der 1. und 2. Sekunde steigt, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also wie schnell er genau nach einer Sekunde steigt. Dafür braucht man die Höhe bei t=1 und t=2 und die Ableitung von h(t).\nAntwort darauf: Was bedeutet in diesem Zusammenhang die Ableitung von h(t)?\nFrühere Rückfrage: Die Ableitung von h(t) gibt die momentane Geschwindigkeit an, also wie schnell sich die Höhe im jeweiligen Moment ändert. Das ist wichtig, um die Geschwindigkeit genau zur Zeit t=1 zu berechnen.\nAntwort darauf: Die Ableitung von h(t) beschreibt die momentane Änderungsrate der Höhe, also genau die momentane Geschwindigkeit des Balls zum Zeitpunkt t. Was sollst du hier herausfinden?\nFrühere Rückfrage: Ich soll die mittlere Geschwindigkeit im Intervall  berechnen, also den Durchschnitt der Geschwindigkeit zwischen der 1. und 2. Sekunde, und die momentane Geschwindigkeit genau zur Zeit t=1, also wie schnell der Ball genau nach einer Sekunde steigt. Dafür brauche ich die Werte von h(1) und h(2) und die Ableitung von h(t).\nAntwort darauf: Was ist der nächste Schritt, um h(1) und h(2) zu berechnen?\n\nDie Rückfrage lautet:\nIch soll die mittlere Geschwindigkeit im Intervall  berechnen, also den Durchschnitt der Höheänderung zwischen der 1. und 2. Sekunde, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also wie schnell der Ball genau nach einer Sekunde steigt. Dafür brauche ich h(1) und h(2) sowie die Ableitung von h(t).",
+   "tutor_text": "Du sollst h(1) und h(2) berechnen, indem du die Werte 1 und 2 in die Funktion h(t) = −5t² + 20t einsetzt. Was ist h(1)?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 6,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich soll die mittlere Geschwindigkeit im Intervall  berechnen, also den Durchschnitt der Höheänderung zwischen der 1. und 2. Sekunde, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also wie schnell der Ball genau nach einer Sekunde steigt. Dafür brauche ich h(1) und h(2) sowie die Ableitung von h(t).",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind versteht Aufgabe und benennt notwendige Schritte",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einer jugendlichen Person zwischen vierzehn und neunzehn Jahren bei einer Rechenaufgabe. Schreib sachlich und knapp: höchstens VIER Sätze. Fachsprache ist erlaubt. Sprich mit Du, aber nicht kindlich. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was die lernende Person zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die die lernende Person nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt die lernende Person nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndie lernende Person arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nDie Höhe eines Balls (in Metern) nach t Sekunden ist h(t) = −5t² + 20t. Berechne die mittlere Geschwindigkeit im Zeitintervall [1; 2] und die momentane Geschwindigkeit zum Zeitpunkt t = 1.\nHilfe der Stufe 1: Die Aufgabe beschreibt, wie sich die Höhe eines Balls über die Zeit ändert. Du sollst herausfinden, wie schnell der Ball im Zeitintervall von 1 bis 2 Sekunden durchschnittlich fällt oder steigt, und wie schnell er genau zur ersten Sekunde fällt oder steigt. Das ist eine Situation, die man in der Physik oder beim Werfen eines Balls beobachten kann. Probier es einfach mal mit den gegebenen Werten.\nFrühere Rückfrage: Man soll die mittlere Geschwindigkeit im Intervall  berechnen, also wie schnell der Ball durchschnittlich zwischen der 1. und 2. Sekunde steigt, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also wie schnell er genau nach einer Sekunde steigt. Dafür braucht man die Höhe bei t=1 und t=2 und die Ableitung von h(t).\nAntwort darauf: Was bedeutet in diesem Zusammenhang die Ableitung von h(t)?\nFrühere Rückfrage: Die Ableitung von h(t) gibt die momentane Geschwindigkeit an, also wie schnell sich die Höhe im jeweiligen Moment ändert. Das ist wichtig, um die Geschwindigkeit genau zur Zeit t=1 zu berechnen.\nAntwort darauf: Die Ableitung von h(t) beschreibt die momentane Änderungsrate der Höhe, also genau die momentane Geschwindigkeit des Balls zum Zeitpunkt t. Was sollst du hier herausfinden?\nFrühere Rückfrage: Ich soll die mittlere Geschwindigkeit im Intervall  berechnen, also den Durchschnitt der Geschwindigkeit zwischen der 1. und 2. Sekunde, und die momentane Geschwindigkeit genau zur Zeit t=1, also wie schnell der Ball genau nach einer Sekunde steigt. Dafür brauche ich die Werte von h(1) und h(2) und die Ableitung von h(t).\nAntwort darauf: Was ist der nächste Schritt, um h(1) und h(2) zu berechnen?\nFrühere Rückfrage: Ich soll die mittlere Geschwindigkeit im Intervall  berechnen, also den Durchschnitt der Höheänderung zwischen der 1. und 2. Sekunde, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also wie schnell der Ball genau nach einer Sekunde steigt. Dafür brauche ich h(1) und h(2) sowie die Ableitung von h(t).\nAntwort darauf: Du sollst h(1) und h(2) berechnen, indem du die Werte 1 und 2 in die Funktion h(t) = −5t² + 20t einsetzt. Was ist h(1)?\n\nDie Rückfrage lautet:\nIch soll die mittlere Geschwindigkeit im Intervall  berechnen, also den Durchschnitt der Höheänderung zwischen der 1. und 2. Sekunde, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also wie schnell der Ball genau nach einer Sekunde steigt. Dafür brauche ich h(1) und h(2) sowie die Ableitung von h(t).",
+   "tutor_text": "Was ergibt das?",
+   "pruefung": {
+    "verstoesse": [
+     "Gleichung mit Ergebnis",
+     "genannter Rechenweg"
+    ],
+    "versuche": 2,
+    "gekuerzt": true,
+    "notfall": false,
+    "erster_text": "h(1) berechnest du, indem du t = 1 in die Funktion h(t) = −5t² + 20t einsetzt. Was ist der Wert von h(1)?",
+    "verstoesse_zweiter": [
+     "Gleichung mit Ergebnis"
+    ],
+    "zweiter_text": "Du sollst h(1) berechnen, indem du t = 1 in die Funktion h(t) = −5t² + 20t einsetzt. Was ergibt das?"
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 7,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich soll die mittlere Geschwindigkeit im Intervall  berechnen, also den Durchschnitt der Höheänderung zwischen der 1. und 2. Sekunde, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also wie schnell der Ball genau nach einer Sekunde steigt. Dafür brauche ich h(1) und h(2) sowie die Ableitung von h(t).",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind versteht Aufgabe und fragt nach notwendigen Schritten",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einer jugendlichen Person zwischen vierzehn und neunzehn Jahren bei einer Rechenaufgabe. Schreib sachlich und knapp: höchstens VIER Sätze. Fachsprache ist erlaubt. Sprich mit Du, aber nicht kindlich. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was die lernende Person zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die die lernende Person nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt die lernende Person nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndie lernende Person arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nDie Höhe eines Balls (in Metern) nach t Sekunden ist h(t) = −5t² + 20t. Berechne die mittlere Geschwindigkeit im Zeitintervall [1; 2] und die momentane Geschwindigkeit zum Zeitpunkt t = 1.\nHilfe der Stufe 1: Die Aufgabe beschreibt, wie sich die Höhe eines Balls über die Zeit ändert. Du sollst herausfinden, wie schnell der Ball im Zeitintervall von 1 bis 2 Sekunden durchschnittlich fällt oder steigt, und wie schnell er genau zur ersten Sekunde fällt oder steigt. Das ist eine Situation, die man in der Physik oder beim Werfen eines Balls beobachten kann. Probier es einfach mal mit den gegebenen Werten.\nFrühere Rückfrage: Man soll die mittlere Geschwindigkeit im Intervall  berechnen, also wie schnell der Ball durchschnittlich zwischen der 1. und 2. Sekunde steigt, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also wie schnell er genau nach einer Sekunde steigt. Dafür braucht man die Höhe bei t=1 und t=2 und die Ableitung von h(t).\nAntwort darauf: Was bedeutet in diesem Zusammenhang die Ableitung von h(t)?\nFrühere Rückfrage: Die Ableitung von h(t) gibt die momentane Geschwindigkeit an, also wie schnell sich die Höhe im jeweiligen Moment ändert. Das ist wichtig, um die Geschwindigkeit genau zur Zeit t=1 zu berechnen.\nAntwort darauf: Die Ableitung von h(t) beschreibt die momentane Änderungsrate der Höhe, also genau die momentane Geschwindigkeit des Balls zum Zeitpunkt t. Was sollst du hier herausfinden?\nFrühere Rückfrage: Ich soll die mittlere Geschwindigkeit im Intervall  berechnen, also den Durchschnitt der Geschwindigkeit zwischen der 1. und 2. Sekunde, und die momentane Geschwindigkeit genau zur Zeit t=1, also wie schnell der Ball genau nach einer Sekunde steigt. Dafür brauche ich die Werte von h(1) und h(2) und die Ableitung von h(t).\nAntwort darauf: Was ist der nächste Schritt, um h(1) und h(2) zu berechnen?\nFrühere Rückfrage: Ich soll die mittlere Geschwindigkeit im Intervall  berechnen, also den Durchschnitt der Höheänderung zwischen der 1. und 2. Sekunde, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also wie schnell der Ball genau nach einer Sekunde steigt. Dafür brauche ich h(1) und h(2) sowie die Ableitung von h(t).\nAntwort darauf: Du sollst h(1) und h(2) berechnen, indem du die Werte 1 und 2 in die Funktion h(t) = −5t² + 20t einsetzt. Was ist h(1)?\nFrühere Rückfrage: Ich soll die mittlere Geschwindigkeit im Intervall  berechnen, also den Durchschnitt der Höheänderung zwischen der 1. und 2. Sekunde, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also wie schnell der Ball genau nach einer Sekunde steigt. Dafür brauche ich h(1) und h(2) sowie die Ableitung von h(t).\nAntwort darauf: Was ergibt das?\n\nDie Rückfrage lautet:\nIch soll die mittlere Geschwindigkeit im Intervall  berechnen, also den Durchschnitt der Höheänderung zwischen der 1. und 2. Sekunde, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also wie schnell der Ball genau nach einer Sekunde steigt. Dafür brauche ich h(1) und h(2) sowie die Ableitung von h(t).",
+   "tutor_text": "Du sollst h(1) und h(2) berechnen, indem du 1 und 2 in die Funktion h(t) = −5t² + 20t einsetzt. Was ist h(1)?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 8,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "Ich soll die mittlere Geschwindigkeit im Intervall  berechnen, also den Durchschnitt der Höheänderung zwischen der 1. und 2. Sekunde, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also wie schnell der Ball genau nach einer Sekunde steigt. Dafür brauche ich h(1) und h(2) sowie die Ableitung von h(t).",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind versteht Aufgabe und benennt notwendige Schritte",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einer jugendlichen Person zwischen vierzehn und neunzehn Jahren bei einer Rechenaufgabe. Schreib sachlich und knapp: höchstens VIER Sätze. Fachsprache ist erlaubt. Sprich mit Du, aber nicht kindlich. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was die lernende Person zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die die lernende Person nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt die lernende Person nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndie lernende Person arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nDie Höhe eines Balls (in Metern) nach t Sekunden ist h(t) = −5t² + 20t. Berechne die mittlere Geschwindigkeit im Zeitintervall [1; 2] und die momentane Geschwindigkeit zum Zeitpunkt t = 1.\nHilfe der Stufe 1: Die Aufgabe beschreibt, wie sich die Höhe eines Balls über die Zeit ändert. Du sollst herausfinden, wie schnell der Ball im Zeitintervall von 1 bis 2 Sekunden durchschnittlich fällt oder steigt, und wie schnell er genau zur ersten Sekunde fällt oder steigt. Das ist eine Situation, die man in der Physik oder beim Werfen eines Balls beobachten kann. Probier es einfach mal mit den gegebenen Werten.\nFrühere Rückfrage: Man soll die mittlere Geschwindigkeit im Intervall  berechnen, also wie schnell der Ball durchschnittlich zwischen der 1. und 2. Sekunde steigt, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also wie schnell er genau nach einer Sekunde steigt. Dafür braucht man die Höhe bei t=1 und t=2 und die Ableitung von h(t).\nAntwort darauf: Was bedeutet in diesem Zusammenhang die Ableitung von h(t)?\nFrühere Rückfrage: Die Ableitung von h(t) gibt die momentane Geschwindigkeit an, also wie schnell sich die Höhe im jeweiligen Moment ändert. Das ist wichtig, um die Geschwindigkeit genau zur Zeit t=1 zu berechnen.\nAntwort darauf: Die Ableitung von h(t) beschreibt die momentane Änderungsrate der Höhe, also genau die momentane Geschwindigkeit des Balls zum Zeitpunkt t. Was sollst du hier herausfinden?\nFrühere Rückfrage: Ich soll die mittlere Geschwindigkeit im Intervall  berechnen, also den Durchschnitt der Geschwindigkeit zwischen der 1. und 2. Sekunde, und die momentane Geschwindigkeit genau zur Zeit t=1, also wie schnell der Ball genau nach einer Sekunde steigt. Dafür brauche ich die Werte von h(1) und h(2) und die Ableitung von h(t).\nAntwort darauf: Was ist der nächste Schritt, um h(1) und h(2) zu berechnen?\nFrühere Rückfrage: Ich soll die mittlere Geschwindigkeit im Intervall  berechnen, also den Durchschnitt der Höheänderung zwischen der 1. und 2. Sekunde, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also wie schnell der Ball genau nach einer Sekunde steigt. Dafür brauche ich h(1) und h(2) sowie die Ableitung von h(t).\nAntwort darauf: Du sollst h(1) und h(2) berechnen, indem du die Werte 1 und 2 in die Funktion h(t) = −5t² + 20t einsetzt. Was ist h(1)?\nFrühere Rückfrage: Ich soll die mittlere Geschwindigkeit im Intervall  berechnen, also den Durchschnitt der Höheänderung zwischen der 1. und 2. Sekunde, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also wie schnell der Ball genau nach einer Sekunde steigt. Dafür brauche ich h(1) und h(2) sowie die Ableitung von h(t).\nAntwort darauf: Was ergibt das?\nFrühere Rückfrage: Ich soll die mittlere Geschwindigkeit im Intervall  berechnen, also den Durchschnitt der Höheänderung zwischen der 1. und 2. Sekunde, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also wie schnell der Ball genau nach einer Sekunde steigt. Dafür brauche ich h(1) und h(2) sowie die Ableitung von h(t).\nAntwort darauf: Du sollst h(1) und h(2) berechnen, indem du 1 und 2 in die Funktion h(t) = −5t² + 20t einsetzt. Was ist h(1)?\n\nDie Rückfrage lautet:\nIch soll die mittlere Geschwindigkeit im Intervall  berechnen, also den Durchschnitt der Höheänderung zwischen der 1. und 2. Sekunde, und die momentane Geschwindigkeit zum Zeitpunkt t=1, also wie schnell der Ball genau nach einer Sekunde steigt. Dafür brauche ich h(1) und h(2) sowie die Ableitung von h(t).",
+   "tutor_text": "Du sollst h(1) und h(2) berechnen, indem du die Werte 1 und 2 in die Funktion h(t) = −5t² + 20t einsetzt. Was ist h(1)?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_verraet_loesung": false
+  }
+ ],
+ "ereignisse": [],
+ "ergebnis": {
+  "status": "abgebrochen_zuege",
+  "selbst_gerechnet": false,
+  "zug_selbst_gerechnet": null,
+  "loesung_gezeigt": false,
+  "hoechste_stufe": 1,
+  "zuege": 8,
+  "kinderbeitraege": 7,
+  "fragen_des_kindes": 7,
+  "als_frage_gewertete_ergebnisse": 0,
+  "bestaetigung_nach_ergebnis": null,
+  "dauer_s": 77.3,
+  "spark_aufrufe": 26
+ },
+ "messungen": [
+  {
+   "art": "hilfe",
+   "dauer_ms": 4218,
+   "tokens_ein": 970,
+   "tokens_aus": 105
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 3890,
+   "tokens_ein": 801,
+   "tokens_aus": 95
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1109,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 4420,
+   "tokens_ein": 1095,
+   "tokens_aus": 105
+  },
+  {
+   "art": "nachfrage_2",
+   "dauer_ms": 4407,
+   "tokens_ein": 1188,
+   "tokens_aus": 99
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 2562,
+   "tokens_ein": 944,
+   "tokens_aus": 52
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1484,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 3795,
+   "tokens_ein": 1170,
+   "tokens_aus": 90
+  },
+  {
+   "art": "nachfrage_2",
+   "dauer_ms": 2719,
+   "tokens_ein": 1261,
+   "tokens_aus": 61
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 4077,
+   "tokens_ein": 1078,
+   "tokens_aus": 98
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1641,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 4186,
+   "tokens_ein": 1316,
+   "tokens_aus": 93
+  },
+  {
+   "art": "nachfrage_2",
+   "dauer_ms": 5532,
+   "tokens_ein": 1407,
+   "tokens_aus": 130
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 3890,
+   "tokens_ein": 1231,
+   "tokens_aus": 93
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1593,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2594,
+   "tokens_ein": 1436,
+   "tokens_aus": 53
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 3436,
+   "tokens_ein": 1410,
+   "tokens_aus": 89
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1468,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2188,
+   "tokens_ein": 1586,
+   "tokens_aus": 45
+  },
+  {
+   "art": "nachfrage_2",
+   "dauer_ms": 2281,
+   "tokens_ein": 1679,
+   "tokens_aus": 43
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 3733,
+   "tokens_ein": 1542,
+   "tokens_aus": 89
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1641,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2405,
+   "tokens_ein": 1689,
+   "tokens_aus": 50
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 3922,
+   "tokens_ein": 1718,
+   "tokens_aus": 89
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1531,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2593,
+   "tokens_ein": 1836,
+   "tokens_aus": 53
+  }
+ ],
+ "beendet": "2026-10-19T09:40:47"
+}

@@ -1,0 +1,518 @@
+{% extends "base.html" %}
+
+{% block titel %}Ein Trainer für alles{% endblock %}
+
+{% block inhalt %}
+<article class="rechtstext">
+<h1>Ein Trainer für alles</h1>
+<p class="lead">
+  Für Lehrpersonen: Was der Trainer tut, warum er das Gegenteil der
+  Aufgabenhilfe ist und sie gerade deshalb ergänzt, wann Sie welche der beiden
+  Funktionen nehmen, und warum er bei einem Fehler die
+  <strong>Darstellung wechselt</strong> statt dieselbe Erklärung zu wiederholen.
+</p>
+
+<h2>1. Die zweite Funktion, und warum sie umgekehrt gebaut ist</h2>
+<p>
+  Die Aufgabenhilfe setzt voraus, dass eine Aufgabe schon da ist und dass das Kind
+  den Rechenschritt behalten soll. Deshalb hält sie zurück: Sie gibt gestufte
+  Hilfen nach Zech (2002), immer nur die nächste Stufe, und die Lehrperson setzt
+  eine Obergrenze. Das Zurückhalten ist dort der Kern der Sache.
+</p>
+<p>
+  Der Trainer setzt das Gegenteil voraus: Das Thema fehlt. Zurückhalten wäre hier
+  nicht streng, sondern sinnlos – man kann niemandem etwas vorenthalten, das er
+  noch nicht hat. Der Trainer ist ein Nachhilfelehrer für ein Thema, das die
+  lernende Person selbst nennt, und er hält <strong>nichts</strong> zurück. Er
+  erklärt, er zeigt, und er rechnet vor, wenn es dem Aufbau dient.
+</p>
+<p>
+  Das Thema wird frei formuliert, in eigenen Worten und ohne Auswahlliste. Ein
+  typischer Einstieg lautet: „Ich möchte etwas zur Maßumwandlung und zu
+  Längenmaßen lernen.“
+</p>
+<p class="hervorgehoben">
+  Die Aufgabenhilfe begrenzt, <strong>wie viel verraten wird</strong>. Der Trainer
+  begrenzt, <strong>wie viel auf einmal kommt</strong>. Beide haben eine Grenze,
+  aber sie liegt an einer anderen Stelle. Ein Trainer ohne diese zweite Grenze ist
+  keine Nachhilfe, sondern ein Vortrag mit Eingabefeld.
+</p>
+
+<h2>2. Wann Sie welche Funktion nehmen</h2>
+<h3>Aufgabenhilfe – wenn eine konkrete Aufgabe vorliegt</h3>
+<p>
+  Das Kind hat eine Aufgabe vor sich, im Heft, im Schulbuch oder als Foto, und es
+  geht darum, dass es den Denk- und Rechenschritt selbst tut und behält. Hier ist
+  jede vorweggenommene Erklärung ein Verlust. Die Aufgabenhilfe ist die Funktion
+  für Übungsphasen, für Hausaufgaben und für die Stunde, in der ein bestimmtes
+  Verfahren sitzen soll.
+</p>
+<h3>Trainer – wenn ein Thema fehlt und aufgebaut werden muss</h3>
+<p>
+  Das Kind kommt nicht mit einer Aufgabe, sondern mit einer Lücke: Es weiß nicht,
+  wie Längenmaße zusammenhängen, es war krank, es hat den Einstieg verpasst, oder
+  es möchte etwas vorziehen. Hier gibt es keinen Rechenschritt, den man schützen
+  könnte. Es gibt etwas aufzubauen, und das braucht Erklärung, Beispiele und
+  Nachfragen.
+</p>
+<p>
+  Die Unterscheidung in vier Punkten:
+</p>
+<ul>
+  <li><strong>Ausgangspunkt.</strong> Aufgabenhilfe: eine Aufgabe. Trainer: ein Thema.</li>
+  <li><strong>Haltung zur Lösung.</strong> Aufgabenhilfe: hält sie zurück, bis zur eingestellten Obergrenze. Trainer: hält nichts zurück.</li>
+  <li><strong>Was die Anwendung steuert.</strong> Aufgabenhilfe: die Hilfestufe. Trainer: den Lernabschnitt und die Portionsgröße.</li>
+  <li><strong>Ende.</strong> Aufgabenhilfe: die Aufgabe ist gelöst, oder die Stufen sind aus. Trainer: eine Prüfung ist bestanden, oder es ist benannt, was noch nicht sitzt.</li>
+</ul>
+<p>
+  Ein Grenzfall, der in der Erprobung vorkommen wird: Ein Kind nennt seine
+  Hausaufgabe als „Thema“. Dann ist der Trainer die falsche Funktion, denn er
+  würde die Aufgabe erklären, die das Kind selbst lösen soll. Dafür ist die
+  Aufgabenhilfe da.
+</p>
+
+<h2>3. Der Ablauf, den die Anwendung führt</h2>
+<p>
+  Der Trainer arbeitet in sechs Abschnitten. Die Reihenfolge liegt in der
+  Anwendung, nicht im Auftrag an das Sprachmodell. Das ist derselbe Grundsatz wie
+  bei den Hilfestufen: Ein Systemprompt ist eine Bitte, keine Grenze. Zu jedem
+  Abschnitt steht deshalb nicht nur, was er tut, sondern auch, was die Anwendung
+  erzwingt.
+</p>
+<p>
+  Die Sprachebene richtet sich nach der Altersklasse der Sitzung, und zwar nach
+  derselben Festlegung, die auch die Aufgabenhilfe verwendet. Beide Funktionen
+  sprechen ein Kind im Volksschulalter also gleich an.
+</p>
+<ol class="stufenliste stufenliste-erklaert">
+  <li>
+    <span class="stufe-nr" aria-hidden="true">1</span>
+    <span class="stufe-text">
+      <strong>Thema.</strong> Die lernende Person schreibt in eigenen Worten, was
+      sie lernen möchte. Der Trainer fasst in einem Satz zusammen, was er
+      verstanden hat, und fragt zurück, ob das so passt. Das kostet einen Zug und
+      verhindert den häufigsten Leerlauf: einen vollständigen Lernweg zum falschen
+      Thema.
+      <span class="stufe-beispiel">„Du möchtest Längenmaße kennenlernen und üben, wie man Meter in Zentimeter umrechnet und zurück. Passt das so, oder meinst du etwas anderes?“</span>
+      <span class="stufe-verbot"><strong>Was die Anwendung erzwingt:</strong> Die Zusammenfassung ist ein eigener Zug. Erklärt wird erst, nachdem darauf geantwortet wurde; ist das Thema unklar, fragt der Trainer genauer nach.</span>
+    </span>
+  </li>
+  <li>
+    <span class="stufe-nr" aria-hidden="true">2</span>
+    <span class="stufe-text">
+      <strong>Einführung.</strong> Zwei bis vier Sätze dazu, worum es geht und
+      wofür man das braucht. Kein Vortrag, keine Übersicht über das ganze Gebiet.
+      Die Einführung endet mit einer Frage, die das Kind beantworten kann, ohne das
+      Thema schon zu kennen.
+      <span class="stufe-beispiel">„Längenmaße sind Maße für ‚wie lang‘ und ‚wie weit‘: Millimeter, Zentimeter, Meter, Kilometer. Man braucht sie, sobald etwas gemessen wird. Welches Maß würdest du nehmen, um dein Federpennal zu messen?“</span>
+      <span class="stufe-verbot"><strong>Was die Anwendung erzwingt:</strong> begrenzte Länge, und der letzte Satz ist eine Frage.</span>
+    </span>
+  </li>
+  <li>
+    <span class="stufe-nr" aria-hidden="true">3</span>
+    <span class="stufe-text">
+      <strong>Lernschritte.</strong> Das Thema wird in kleine Schritte zerlegt.
+      Jeder Schritt bringt <em>eine</em> neue Sache und endet mit
+      <em>genau einer</em> Frage, die beantwortet werden muss. Ohne Antwort gibt
+      es den nächsten Schritt nicht. Nach einer festgelegten Zahl gelungener
+      Schritte – derzeit vier – geht es in die Prüfung.
+      <span class="stufe-beispiel">„In einem Meter sind 100 Zentimeter. Wie viele Zentimeter sind dann 2 Meter?“</span>
+      <span class="stufe-verbot"><strong>Was die Anwendung erzwingt:</strong> eine Frage pro Zug, nicht drei; höchstens vier Sätze vor der Frage; und kein Weitergehen ohne eigenen Beitrag.</span>
+    </span>
+  </li>
+  <li>
+    <span class="stufe-nr" aria-hidden="true">4</span>
+    <span class="stufe-text">
+      <strong>Prüfung.</strong> Mehrere Aufgaben mit steigender Schwierigkeit –
+      wie viele, legt die Anwendung fest, derzeit vier. Sie kommen einzeln und
+      nicht als Liste, damit jede Aufgabe eine eigene Antwort bekommt und ein
+      Fehler nicht erst am Ende auffällt. Vor der Aufgabe steht keine Erklärung:
+      Hier wartet der Trainer.
+      <span class="stufe-beispiel">Erst „Wie viele Zentimeter sind 3 Meter?“, nach der Antwort „Wie viele Meter sind 450 Zentimeter?“, danach „Was ist länger: 1200 Millimeter oder 1 Meter?“</span>
+      <span class="stufe-verbot"><strong>Was die Anwendung erzwingt:</strong> Anzahl und Reihenfolge der Aufgaben, eine Antwort je Aufgabe, und keine vorweggenommene Lösung. Das ist die einzige Stelle, an der der Trainer etwas zurückhält.</span>
+    </span>
+  </li>
+  <li>
+    <span class="stufe-nr" aria-hidden="true">5</span>
+    <span class="stufe-text">
+      <strong>Schleife.</strong> Geht eine Aufgabe nicht auf, führt der Weg zurück
+      in die Erklärung – und zwar auf eine <em>andere Darstellungsebene</em>, nicht
+      in dieselben Worte. Der Schritt wird kleiner als vorher, danach wird erneut
+      geprüft. Ein Fehler ist in diesem Ablauf der Normalfall und nicht das
+      Scheitern.
+      <span class="stufe-beispiel">„Nimm einmal ein Meterband. Wie groß bist du? Und wie viele Zentimeter sind das?“</span>
+      <span class="stufe-verbot"><strong>Was die Anwendung erzwingt:</strong> Über den Rücksprung entscheidet die Anwendung, nicht das Modell; die Wiederholung bekommt eine andere Ebene als der gescheiterte Versuch, und die schon versuchten Zugänge werden mitgeführt. Die Schleife ist begrenzt – derzeit auf drei Versuche bei derselben Sache. Wer viermal an derselben Hürde steht, hört auf.</span>
+    </span>
+  </li>
+  <li>
+    <span class="stufe-nr" aria-hidden="true">6</span>
+    <span class="stufe-text">
+      <strong>Abschluss.</strong> Eine kurze Rückmeldung: was sitzt und was noch
+      nicht. Das Offene wird benannt und nicht weggelobt – sonst ist der Abschluss
+      für die nächste Stunde wertlos.
+      <span class="stufe-beispiel">„Meter in Zentimeter kannst du sicher. Von Zentimeter zurück auf Meter warst du zweimal unsicher – üb das nächste Mal zuerst 450 cm in Meter.“</span>
+      <span class="stufe-verbot"><strong>Was die Anwendung erzwingt:</strong> Die Rückmeldung nennt beides, das Sichere und das Offene, und dazu eine konkrete Sache zum Weiterüben. Am Schluss steht keine Frage mehr – es ist vorbei.</span>
+    </span>
+  </li>
+</ol>
+
+<h2>4. Bei einem Fehler wechselt die Darstellung, nicht die Lautstärke</h2>
+<p>
+  Ein Sprachmodell, das nicht verstanden wird, reagiert verlässlich gleich: Es
+  wiederholt, mit mehr Worten und freundlicher. Das hilft nicht, denn die Worte
+  waren das Problem. Der Trainer wiederholt deshalb nicht dieselbe Erklärung,
+  sondern wechselt die Ebene, auf der das Thema dargestellt ist. Für die
+  Maßumwandlung sind das drei Ebenen:
+</p>
+<ol class="stufenliste stufenliste-erklaert">
+  <li>
+    <span class="stufe-nr" aria-hidden="true">1</span>
+    <span class="stufe-text">
+      <strong>Gegenständlich (enaktiv).</strong> Etwas, das man anfassen und tun
+      kann: ein Meterband in die Hand nehmen, die eigene Körpergröße messen, einen
+      Meter im Zimmer abschreiten.
+      <span class="stufe-beispiel">„Wie groß bist du? Und steht diese Zahl in Zentimetern oder in Metern?“</span>
+    </span>
+  </li>
+  <li>
+    <span class="stufe-nr" aria-hidden="true">2</span>
+    <span class="stufe-text">
+      <strong>Bildlich (ikonisch).</strong> Ein Bild, das die Struktur zeigt: die
+      Stellenwerttafel mit den Spalten m, dm, cm, mm, in der die Ziffer wandert,
+      oder ein gezeichneter Meterstab mit seinen Markierungen.
+      <span class="stufe-beispiel">„Schreib die 2 in die Spalte m. Wie viele Spalten weiter rechts steht cm – und was steht dann dort?“</span>
+    </span>
+  </li>
+  <li>
+    <span class="stufe-nr" aria-hidden="true">3</span>
+    <span class="stufe-text">
+      <strong>Symbolisch.</strong> Die Umrechnungszahl und die Regel: 1 m = 100 cm,
+      von Meter zu Zentimeter mal 100, zurück geteilt durch 100.
+      <span class="stufe-beispiel">„3 m sind 3 · 100 = 300 cm.“</span>
+    </span>
+  </li>
+</ol>
+<p>
+  Diese drei Ebenen sind Bruners Repräsentationsmodell. Bruner (1966; deutsch
+  1974) beschreibt <em>enactive</em>, <em>iconic</em> und <em>symbolic
+  representation</em> als Formen, in denen Wissen dargestellt sein kann, und als
+  Grundlage dafür, wie Unterricht einen Gegenstand aufbaut. In der
+  deutschsprachigen Didaktik ist daraus die Kurzform „E-I-S-Prinzip“ geworden; die
+  drei englischen Begriffe sind Bruners eigene, die Abkürzung ist es nicht.
+</p>
+<p>
+  Dass ein Wechsel zwischen Darstellungen keine Verpackungsfrage ist, sondern
+  selbst etwas, das gelernt werden muss, hat Duval (2006) für die Mathematik
+  ausgearbeitet: Der Übergang von einer Darstellung in eine andere ist eine eigene
+  Leistung. Das hat eine praktische Folge für die Rückmeldung an Sie. Ein Kind, das
+  mit der Stellenwerttafel richtig arbeitet und mit der Umrechnungszahl nicht, hat
+  nicht „das Thema nicht verstanden“ – ihm fehlt der Übergang zwischen zwei
+  Darstellungen. Das ist ein anderer Befund, und er führt zu einer anderen Übung.
+</p>
+<p>
+  Der Weg geht in beide Richtungen, und das ist der eigentliche Punkt. Ein Lauf
+  beginnt gegenständlich. Sitzt ein Schritt, rückt die Erklärung eine Ebene weiter
+  nach oben, bis die Regel selbst dasteht – das ist der Aufbau. Geht ein Schritt
+  nicht auf, rückt sie eine Ebene zurück – das ist die Schleife. War die Antwort
+  nur halb richtig, bleibt die Ebene und der Schritt wird kleiner; erst ein klares
+  „nicht verstanden“ führt eine Ebene hinunter.
+</p>
+<p class="hervorgehoben">
+  Die Anwendung führt mit, welche Ebenen bereits versucht wurden, und verlangt für
+  die Wiederholung eine andere. Ohne diese Buchführung kommt dieselbe Erklärung
+  zurück, nur länger.
+</p>
+<p>
+  Eine Einschränkung, die dazugehört: Bruner beschreibt die drei Formen als
+  Entwicklungsfolge und als Aufbauprinzip für Unterricht, nicht als Regel für den
+  Umgang mit Fehlern. Die Regel „bei einem Fehler eine Ebene tiefer“ ist daraus
+  abgeleitet. Sie ist eine Entscheidung dieser Anwendung und steht so nicht bei
+  Bruner.
+</p>
+
+<h2>5. Eine Frage pro Zug</h2>
+<p>
+  Der häufigste Fehler eines Sprachmodells in der Rolle des Nachhilfelehrers ist
+  nicht fachlich. Er ist eine Frage der Menge: Das Modell erklärt gründlich und
+  stellt zum Schluss drei Fragen auf einmal. Das wirkt sorgfältig und ist für ein
+  Kind eine Wand. Wer drei Fragen bekommt, muss drei offene Fäden im Kopf halten,
+  während er an einem arbeitet.
+</p>
+<p>
+  Sweller (1988) hat für das Problemlösen gezeigt, dass Belastung, die dem
+  Lernziel nicht dient, genau jene Kapazität wegnimmt, die für das Lernen selbst
+  gebraucht wird. Drei gleichzeitige Fragen sind eine solche Belastung: Sie
+  gehören nicht zur Sache, sondern zur Verwaltung des Gesprächs.
+</p>
+<p>
+  Aus der Unterrichtsforschung kommt der zweite Teil des Arguments. Rowe (1974)
+  hat ausgezählt, wie lange Lehrpersonen nach einer Frage warten – im Schnitt etwa
+  eine Sekunde – und was sich ändert, wenn diese Wartezeit auf drei bis fünf
+  Sekunden verlängert wird: Die Antworten werden länger, es antworten mehr Kinder
+  überhaupt, und es antworten auch die langsameren. Sie hat das später als
+  Empfehlung für die Unterrichtspraxis zusammengefasst (Rowe 1986).
+</p>
+<p>
+  Hier ist Redlichkeit angebracht: Ein geschriebenes Gespräch hat keine Wartezeit
+  in Rowes Sinn. Niemand drängt, das Kind kann sich beliebig viel Zeit nehmen, und
+  damit ist der gemessene Effekt nicht einfach übertragen. Übertragbar ist der
+  Gedanke dahinter: Eine Frage, die allein stehen bleibt, bekommt eine
+  eigenständige Antwort; eine Frage, die von der nächsten überholt wird, bekommt
+  keine. In einem Chat überholt nicht die Uhr, sondern die zweite Frage.
+</p>
+<p>
+  Dass Zurückhaltung beim Erklären dem Lernen nützt, ist für menschliche Nachhilfe
+  untersucht: Chi u. a. (2001) fanden, dass Lernende mehr mitnehmen, wenn die
+  Tutorin ihre Erklärungen zurückhält und die Lernenden ihre Antwort selbst
+  formulieren. Das ist zugleich der Grund, warum die Einführung in Abschnitt 3 auf
+  zwei bis vier Sätze begrenzt ist.
+</p>
+<p class="hervorgehoben">
+  Die Regel lautet deshalb nicht „stelle wenige Fragen“, sondern: genau eine, und
+  dann ist das Kind dran.
+</p>
+<p>
+  Im Auftrag an das Modell steht diese Regel an erster Stelle, und weil ein
+  Auftrag eine Bitte ist, steht sie zusätzlich in der Anwendung. Das Modell muss
+  Text und Frage getrennt zurückgeben; die Frage ist ein eigenes Feld. Die
+  Anwendung schneidet dieses Feld hinter dem ersten Fragezeichen ab. Wer zwei
+  Fragen stellt, stellt damit eine.
+</p>
+
+<h2>6. Das Modell urteilt, die Anwendung entscheidet</h2>
+<p>
+  Ein Zug des Trainers besteht aus <strong>zwei Aufrufen</strong> des Modells, und
+  dazwischen entscheidet die Anwendung. Das Urteil über eine Antwort kommt also vom
+  Modell – was daraus folgt, nicht.
+</p>
+<ol class="stufenliste stufenliste-erklaert">
+  <li>
+    <span class="stufe-nr" aria-hidden="true">1</span>
+    <span class="stufe-text">
+      <strong>Das Urteil.</strong> Das Modell bekommt nur die gestellte Frage und
+      die Antwort darauf und gibt ein <strong>strukturiertes Urteil</strong>
+      zurück: verstanden, teilweise verstanden oder nicht verstanden, dazu in zwei
+      bis vier Worten, woran es gehapert hat. Dieser Aufruf unterrichtet nicht, er
+      erklärt nichts und er beantwortet die Frage nicht. Er ist kurz und kostet
+      entsprechend wenig.
+    </span>
+  </li>
+  <li>
+    <span class="stufe-nr" aria-hidden="true">2</span>
+    <span class="stufe-text">
+      <strong>Die Entscheidung.</strong> Sie fällt in der Anwendung, nicht im
+      Modell: weitergehen, auf einer anderen Ebene wiederholen, prüfen oder
+      abschließen. Erst damit steht fest, welchen Auftrag der zweite Aufruf
+      bekommt.
+    </span>
+  </li>
+  <li>
+    <span class="stufe-nr" aria-hidden="true">3</span>
+    <span class="stufe-text">
+      <strong>Der Text.</strong> Jetzt formuliert das Modell – mit dem Zustand,
+      der Darstellungsebene und dem Hinweis, woran es gehapert hat, als Auftrag.
+    </span>
+  </li>
+</ol>
+<p>
+  In einem einzigen Aufruf ist das nicht zu haben. Das Urteil über die Antwort, die
+  gerade gekommen ist, käme dann gemeinsam mit dem nächsten Erklärtext zurück – die
+  Entscheidung müsste also vorher fallen. Der Trainer würde eine Runde zu spät
+  merken, dass jemand nicht mitkommt. Der zweite Aufruf ist der Preis dafür, dass
+  er es rechtzeitig merkt.
+</p>
+<p>
+  Drei Gründe, warum die Entscheidung nicht beim Modell liegt.
+</p>
+<ul>
+  <li>
+    <strong>Ein Modell, das sich selbst beurteilt, urteilt freundlich.</strong>
+    Dass Sprachmodelle dazu neigen, zuzustimmen und zu loben, weil solche Antworten
+    im Training bevorzugt wurden, ist untersucht (Sharma u. a. 2023). Für einen
+    Trainer ist das nicht bloß ein Schönheitsfehler: Wer bei „teilweise verstanden“
+    „Super, weiter so!“ schreibt, hat die Schleife aus Abschnitt 3 aufgehoben.
+    Dass der erste Aufruf ausdrücklich <em>nicht</em> unterrichtet, gehört zu
+    diesem Punkt: Er beurteilt nicht seine eigene Erklärung, sondern eine Antwort.
+  </li>
+  <li>
+    <strong>Ein Urteil in Prosa ist kein Zustand.</strong> Was nur im Text steht,
+    müsste die Anwendung erraten. Ein erratener Zustand ist keiner. Deshalb steht
+    das Urteil in einem eigenen Feld mit drei möglichen Werten. Kommt etwas
+    anderes zurück oder nichts Lesbares, gilt „teilweise“ – die Annahme, die am
+    wenigsten Schaden anrichtet: Sie schiebt niemanden weiter, der nicht mitkommt,
+    und hält niemanden auf, der es verstanden hat, denn im nächsten Zug wird
+    ohnehin neu geurteilt.
+  </li>
+  <li>
+    <strong>Dasselbe Prinzip trägt bereits die Aufgabenhilfe.</strong> Dort prüft
+    die Anwendung die Antwort des Modells, bevor das Kind sie sieht. Der Anlass war
+    konkret: Auf eine Aufgabe zu Packungen mit je acht Stiften lieferte die erste
+    Hilfestufe die Lösung als Zählreihe, obwohl der Auftrag genau das verbot. Ein
+    Systemprompt ist eine Bitte. Die Grenze gehört in den Server.
+  </li>
+</ul>
+<p>
+  Der zweite Teil des Urteils – woran es gehapert hat – macht die Schleife
+  brauchbar. Erst er macht aus „falsch“ eine Auskunft darüber, <em>welche</em>
+  Erklärung als nächste sinnvoll ist, und er geht als Auftrag in den zweiten
+  Aufruf: Geh genau darauf ein. Dass Fehler im Mathematikunterricht weitgehend
+  nicht zufällig sind, sondern Mustern folgen, die sich ordnen lassen, hat Radatz
+  (1980) für den deutschsprachigen Raum ausgearbeitet; das ist der Grund, warum
+  diese Angabe überhaupt etwas wert ist.
+</p>
+<p>
+  Hier ist eine Einschränkung nötig, damit Sie den Wert dieser Angabe richtig
+  einschätzen. Der Trainer arbeitet <strong>nicht</strong> mit einer festen
+  Fehlerklassifikation. Das Urteil selbst hat drei feste Werte, die Angabe zum
+  Fehler ist ein kurzer, frei formulierter Vermerk von wenigen Worten. Sie steuert
+  die nächste Erklärung und ist keine Einordnung des Kindes in eine Kategorie. Wer
+  aus solchen Vermerken eine Fehlerstatistik bauen möchte, braucht zuerst eine
+  vorgegebene Liste; die gibt es noch nicht.
+</p>
+
+<h2>7. Warum am Ende geprüft wird</h2>
+<p>
+  Die Prüfung aus Abschnitt 3 ist keine Leistungsbeurteilung, sondern Teil des
+  Lernens. Roediger und Karpicke (2006) haben gezeigt, dass das Abrufen von
+  Gelerntem die Behaltensleistung stärker stützt als erneutes Durchlesen, und dass
+  sich der Unterschied erst nach einiger Zeit zeigt – unmittelbar danach schneidet
+  das Wiederholen sogar besser ab. Eine Prüfung gehört also nicht als Bericht an
+  das Ende, sondern als Arbeitsschritt in den Lernweg.
+</p>
+<p>
+  Ihre Untersuchungen betrafen Prosatexte mit Erwachsenen, nicht die Maßumwandlung
+  mit Zehnjährigen. Der Befund gilt als gut abgesichert; die Übertragung auf
+  diesen Fall bleibt eine Übertragung.
+</p>
+<p>
+  Die steigende Schwierigkeit hat einen zweiten Zweck: Sie macht sichtbar, wo die
+  Grenze liegt. Jede Aufgabe soll etwas schwerer sein als die vorige. Wer alle ohne
+  Zögern löst, war bei diesem Thema unterfordert – auch das ist eine Auskunft, und
+  sie steht in der Rückmeldung am Schluss.
+</p>
+<p>
+  Geht eine Prüfaufgabe nicht auf, endet die Prüfung nicht. Der Weg führt zurück in
+  einen Lernschritt auf einer anderen Darstellungsebene, und danach wird weiter
+  geprüft. Auch das ist begrenzt: Nach einer festgelegten Zahl von Anläufen geht es
+  weiter, auch wenn die Sache nicht sitzt. Dann steht sie am Schluss unter dem, was
+  noch offen ist – das ist ehrlicher, als jemanden in derselben Hürde zu lassen.
+</p>
+
+<h2>8. Sprachausgabe</h2>
+<p>
+  Der Text des Trainers kann vorgelesen werden. Vorgelesen wird
+  <strong>ausschließlich der Text des Trainers</strong> samt seiner einen Frage –
+  die Frage gehört dazu, denn wer sich vorlesen lässt, braucht genau sie, um
+  antworten zu können. Die eigene Antwort wird nicht vorgelesen: Die kennt man
+  schon, und sie noch einmal zu hören hält nur auf.
+</p>
+<p>
+  Gelesen wird über die <strong>Sprachausgabe des Geräts</strong> – mit einer
+  Stimme, die im Handy oder im Rechner ohnehin eingerichtet ist. Gesucht wird eine
+  deutsche Stimme, eine österreichische zuerst, und danach mit Vorrang eine, die im
+  Gerät selbst rechnet: Die schickt die Sätze nirgendwohin, und das ist der Punkt.
+  Es wird also keine Stimme erzeugt und nichts an einen Dienst geschickt.
+</p>
+<p>
+  Die andere Richtung bleibt, wie sie in der Aufgabenhilfe ist: Wenn die lernende
+  Person spricht, geht die Aufnahme an die Spracherkennung auf demselben Rechner
+  der Hochschule und kommt als Text zurück. <strong>Die Stimme geht an keinen
+  Anbieter</strong>, und die Tonaufnahme selbst wird nicht gespeichert; behalten
+  wird nur der erkannte Text, der im Eingabefeld steht und dort geändert werden
+  kann.
+</p>
+<p>
+  Was dabei ehrlich dazugehört:
+</p>
+<ul>
+  <li>
+    Wie gut vorgelesen wird, hängt am Gerät und nicht an der Anwendung. Die
+    Stimmen unterscheiden sich zwischen Geräten deutlich. Ist auf einem Gerät
+    überhaupt keine deutsche Stimme eingerichtet, erscheint der Knopf nicht – das
+    ist ehrlicher als ein Knopf, der nichts tut oder englisch liest.
+  </li>
+  <li>
+    Der Trainer gibt Fließtext aus. Zahlen, Rechenzeichen und Einheiten liest eine
+    Gerätestimme nicht immer so, wie sie gemeint sind. Eine mathematische
+    Auszeichnung, die eine Vorlesestimme gezielt auswerten könnte, ist nicht
+    umgesetzt.
+  </li>
+  <li>
+    Ein Zug des Trainers erscheint als Ganzes und nicht Wort für Wort. Er wird
+    deshalb vorgelesen, sobald er da ist. Lange Züge werden dafür in Stücke
+    zerlegt und der Reihe nach gesprochen: Manche Browser brechen eine einzelne
+    lange Äußerung nach wenigen Sekunden ab. Geschnitten wird an einem Satzende.
+  </li>
+  <li>
+    Ob vorgelesen wird, bleibt auf dem Gerät gemerkt, damit die Einstellung nicht
+    bei jedem Zug neu getroffen werden muss. Gelesen wird etwas langsamer als
+    normal, damit man mitdenken kann.
+  </li>
+</ul>
+
+<h2>9. Was der Trainer nicht ist</h2>
+<ul>
+  <li>
+    <strong>Kein Lehrplan.</strong> Er folgt dem genannten Thema, nicht einer
+    Stoffreihenfolge. Ob das Thema zum Stand der Klasse passt, beurteilen Sie.
+  </li>
+  <li>
+    <strong>Keine Leistungsbeurteilung.</strong> Die Prüfung dient dem Lernen. Sie
+    ergibt keine Note und ersetzt keine Rückmeldung von Ihnen.
+  </li>
+  <li>
+    <strong>Keine Diagnose.</strong> „Teilweise verstanden“ ist ein Urteil über
+    eine Antwort in einem Gespräch, nicht über ein Kind. Wer daraus einen
+    Förderbedarf ableitet, überdehnt die Auskunft.
+  </li>
+  <li>
+    <strong>Kein fachlicher Garant.</strong> Ein Sprachmodell kann sachlich irren,
+    und es irrt zuversichtlich. Bei einem Thema, das Sie nicht selbst überblicken,
+    ist der Trainer keine Prüfinstanz.
+  </li>
+  <li>
+    <strong>Keine Aufgabenhilfe.</strong> Er hält nichts zurück. Für eine Aufgabe,
+    die das Kind selbst lösen soll, ist er das falsche Werkzeug.
+  </li>
+</ul>
+
+<h2>10. Offene Fragen für die Erprobung</h2>
+<p>
+  Das ModLearn Technology Lab erprobt diese Funktion, es liegen dazu noch keine
+  eigenen Ergebnisse vor. Untersucht werden sollen unter anderem:
+</p>
+<ul>
+  <li>Nennen Kinder ein Thema so, dass der Trainer damit arbeiten kann – oder ist der erste Abschnitt die eigentliche Hürde?</li>
+  <li>Wie oft greift die Schleife, und hilft der Wechsel der Darstellungsebene tatsächlich, oder brechen Kinder vorher ab?</li>
+  <li>Stimmt das Urteil des Modells mit dem überein, was eine Lehrperson in derselben Antwort sieht?</li>
+  <li>Nehmen Lehrpersonen die beiden Funktionen so, wie hier unterschieden, oder setzen sie den Trainer für Aufgaben ein?</li>
+  <li>Wird die Sprachausgabe benutzt, von wem, und ändert sie etwas an der Länge der Antworten?</li>
+</ul>
+
+<h2>Literatur</h2>
+<ul class="literatur">
+  <li>Bruner, J. S. (1966). <em>Toward a Theory of Instruction.</em> Cambridge, MA: Belknap Press of Harvard University Press.</li>
+  <li>Bruner, J. S. (1974). <em>Entwurf einer Unterrichtstheorie</em> (übersetzt von A. Harttung). Berlin: Berlin-Verlag; Düsseldorf: Pädagogischer Verlag Schwann. [Deutsche Ausgabe von Bruner 1966.]</li>
+  <li>Duval, R. (2006). A cognitive analysis of problems of comprehension in a learning of mathematics. <em>Educational Studies in Mathematics</em>, 61(1–2), 103–131.</li>
+  <li>Sweller, J. (1988). Cognitive load during problem solving: Effects on learning. <em>Cognitive Science</em>, 12(2), 257–285.</li>
+  <li>Rowe, M. B. (1974). Wait-time and rewards as instructional variables, their influence on language, logic, and fate control: Part one – wait-time. <em>Journal of Research in Science Teaching</em>, 11(2), 81–94.</li>
+  <li>Rowe, M. B. (1986). Wait time: Slowing down may be a way of speeding up! <em>Journal of Teacher Education</em>, 37(1), 43–50.</li>
+  <li>Chi, M. T. H., Siler, S. A., Jeong, H., Yamauchi, T. &amp; Hausmann, R. G. (2001). Learning from human tutoring. <em>Cognitive Science</em>, 25(4), 471–533.</li>
+  <li>Radatz, H. (1980). <em>Fehleranalysen im Mathematikunterricht.</em> Braunschweig: Vieweg.</li>
+  <li>Roediger, H. L. &amp; Karpicke, J. D. (2006). Test-enhanced learning: Taking memory tests improves long-term retention. <em>Psychological Science</em>, 17(3), 249–255.</li>
+  <li>Sharma, M., Tong, M., Korbak, T., Duvenaud, D. u. a. (2023). <em>Towards Understanding Sycophancy in Language Models.</em> arXiv:2310.13548 [Preprint].</li>
+  <li>Zech, F. (2002). <em>Grundkurs Mathematikdidaktik. Theoretische und praktische Anleitungen für das Lehren und Lernen von Mathematik</em> (10. Aufl.). Weinheim: Beltz.</li>
+  <li>Krauthausen, G. (2018). <em>Einführung in die Mathematikdidaktik – Grundschule</em> (4. Aufl.). Berlin: Springer Spektrum. [Deutschsprachige Einführung, zur Einordnung der didaktischen Grundbegriffe.]</li>
+</ul>
+<p class="quelle">
+  Die Angaben wurden für diese Seite einzeln in Bibliothekskatalogen und bei den
+  Verlagen geprüft, mit zwei Ausnahmen: Bei Zech ist die Auflage aus den
+  Projektunterlagen übernommen, wo sie mit dem Vermerk steht, sie vor der
+  Verwendung zu prüfen; Sharma u. a. (2023) ist ein Preprint und keine begutachtete
+  Veröffentlichung. Zwei Schlüsse dieser Seite gehen über die genannten Quellen
+  hinaus und sind als Entscheidungen dieser Anwendung zu lesen: die Regel, bei
+  einem Fehler die Darstellungsebene zu wechseln, und die Übertragung der
+  Wartezeit nach einer Frage auf ein geschriebenes Gespräch.
+</p>
+</article>
+{% endblock %}

@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% load static %}
+{% block titel %}Musik-KI testen{% endblock %}
+
+{% block inhalt %}
+<div class="seitenkopf">
+  <h1>Musik-KI testen</h1>
+  <p class="seitenkopf-zusatz">Testecke des Lab. Gerechnet wird mit ACE-Step 1.5 am Spark.</p>
+</div>
+
+<p class="musik-gesund">
+  Erreichbarkeit des Musikdienstes:
+  {% if gesund.ok %}
+    <strong class="musik-gesund-ja">antwortet</strong>
+  {% else %}
+    <strong class="musik-gesund-nein">antwortet nicht</strong>
+  {% endif %}
+</p>
+
+{% if hinderung %}
+  <div class="meldung meldung-fehler" role="status">
+    <p>{{ hinderung }}</p>
+    {% if not gesund.ok %}
+      <p>Auch die Gesundheitsabfrage, die ohne Geheimnis geht, kommt nicht durch. Der Server erreicht den Spark also gerade nicht über das Tailnet.</p>
+    {% endif %}
+  </div>
+{% else %}
+
+{% comment %}
+Das Formular wird vom Skript abgeschickt (fetch), weil die Seite danach die
+Warteschlange abfragt. Ohne Skript geht hier nichts; das ist für eine Testecke
+so vereinbart. Die Werte des gewählten Stils landen in gewöhnlichen Feldern,
+damit man sie vor dem Absenden ändern kann: Das Ausprobieren ist der Zweck.
+{% endcomment %}
+<form id="musik-form" class="karte musik-form" method="post" action="{% url 'musik_absenden' %}">
+  {% csrf_token %}
+
+  <fieldset class="musik-stile">
+    <legend>Stil</legend>
+    {% if stile %}
+      <div class="musik-stilraster">
+        {% for stil in stile %}
+          <label class="musik-stil">
+            <input type="radio" name="stil" value="{{ stil.name }}"
+                   data-tags="{{ stil.tags }}" data-bpm="{{ stil.bpm|default_if_none:'' }}"
+                   data-tonart="{{ stil.tonart|default_if_none:'' }}"
+                   data-takt="{{ stil.takt|default_if_none:'' }}"
+                   {% if forloop.first %}checked{% endif %}>
+            <span class="musik-stil-name">{{ stil.titel|default:stil.name }}</span>
+            {% if stil.beschreibung %}<span class="musik-stil-text">{{ stil.beschreibung }}</span>{% endif %}
+            <span class="musik-stil-werte">
+              {% if stil.bpm %}{{ stil.bpm }} BPM{% endif %}{% if stil.tonart %} · {{ stil.tonart }}{% endif %}
+            </span>
+            <span class="musik-stil-tags">{{ stil.tags }}</span>
+          </label>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="leerhinweis">Der Dienst nennt keine Stilvorlagen. Die Felder darunter gehen trotzdem.</p>
+    {% endif %}
+  </fieldset>
+
+  <div class="musik-zeile">
+    <label class="musik-feld musik-feld-breit">Beschreibung (Tags)
+      <input type="text" name="tags" id="musik-tags" maxlength="{{ grenzen.tags_max }}">
+    </label>
+  </div>
+  <div class="musik-zeile">
+    <label class="musik-feld">BPM <input type="number" name="bpm" id="musik-bpm" min="30" max="300"></label>
+    <label class="musik-feld">Tonart <input type="text" name="tonart" id="musik-tonart" maxlength="20"></label>
+    <label class="musik-feld">Schläge je Takt
+      <select name="takt" id="musik-takt">
+        {% for t in grenzen.takte %}<option value="{{ t }}"{% if t == "4" %} selected{% endif %}>{{ t }}</option>{% endfor %}
+      </select>
+    </label>
+    <label class="musik-feld">Sprache
+      <select name="sprache">
+        {% for s in grenzen.sprachen %}<option value="{{ s }}"{% if s == "de" %} selected{% endif %}>{{ s }}</option>{% endfor %}
+      </select>
+    </label>
+  </div>
+
+  <div class="musik-feld musik-feld-breit">
+    <label for="musik-text">Liedtext</label>
+    <div class="musik-marken" role="group" aria-label="Marken einfügen">
+      {% for marke in grenzen.marken %}
+        <button type="button" class="knopf-still" data-marke="{{ marke }}">{{ marke }}</button>
+      {% endfor %}
+    </div>
+    <textarea name="lyrics" id="musik-text" rows="10" maxlength="{{ grenzen.text_max }}"></textarea>
+    <p class="knopf-hilfe"><span id="musik-zeichen">0</span> von {{ grenzen.text_max }} Zeichen. Leer lassen oder nur [inst] ergibt ein Instrumentalstück. Marken klein und englisch schreiben, sonst werden sie mitgesungen.{% if grenzen.marken_hinweis %} {{ grenzen.marken_hinweis }}{% endif %}</p>
+  </div>
+
+  <div class="musik-feld musik-feld-breit">
+    <label for="musik-sekunden">Dauer: <output id="musik-sekunden-anzeige">{{ grenzen.sekunden_vorgabe }}</output> Sekunden</label>
+    <input type="range" name="sekunden" id="musik-sekunden" min="10" max="{{ grenzen.sekunden_max }}"
+           step="5" value="{{ grenzen.sekunden_vorgabe }}">
+  </div>
+
+  <fieldset class="musik-fassungen">
+    <legend>Fassung</legend>
+    {% for f in grenzen.fassungen %}
+      <label class="musik-fassung">
+        <input type="radio" name="fassung" value="{{ f.name }}" data-sekunden-je-minute="{{ f.sekunden_je_minute|default_if_none:'' }}"
+               {% if forloop.first %}checked{% endif %}>
+        {{ f.name }}{% if f.sekunden_je_minute %} (etwa {{ f.sekunden_je_minute }} s Rechenzeit je Musikminute){% endif %}
+      </label>
+    {% endfor %}
+  </fieldset>
+
+  <p class="musik-schaetzung" id="musik-schaetzung" aria-live="polite"></p>
+
+  <button type="submit" class="knopf" id="musik-senden">Lied rechnen lassen</button>
+  <p class="musik-meldung" id="musik-meldung" role="status" aria-live="polite"></p>
+</form>
+{% endif %}
+
+<section class="karte">
+  <h2>Deine Lieder in dieser Sitzung</h2>
+  {% csrf_token %}
+  <p class="knopf-hilfe">
+    Der Spark rechnet ein Lied nach dem anderen. Wer nach anderen abschickt, wartet.
+    {% if grenzen.verfall_stunden %}Nach {{ grenzen.verfall_stunden }} Stunden löscht der Dienst Aufträge und Dateien selbst.{% endif %}
+  </p>
+  <ul class="musik-lieder" id="musik-lieder">
+    {% for lied in lieder %}
+      <li class="musik-lied" data-auftrag="{{ lied.auftrag }}" data-zustand="{{ lied.zustand }}"
+          data-abfrage="{% url 'musik_auftrag' lied.auftrag %}" data-loeschen="{% url 'musik_loeschen' lied.auftrag %}">
+        <p class="musik-lied-kopf">
+          <strong>{{ lied.stil|default:"ohne Stil" }}</strong>,
+          {{ lied.sekunden }} s, {{ lied.fassung }}, abgeschickt {{ lied.zeit }}
+        </p>
+        <p class="musik-lied-stand" aria-live="polite">{{ lied.zustand }}</p>
+        <div class="musik-lied-spieler"></div>
+        <button type="button" class="knopf-leise musik-lied-loeschen">Löschen</button>
+        <p class="musik-lied-meldung" role="status"></p>
+      </li>
+    {% endfor %}
+  </ul>
+  <p class="leerhinweis" id="musik-leer" {% if lieder %}hidden{% endif %}>Noch keine Lieder.</p>
+</section>
+{% endblock %}
+
+{% block skripte %}
+<script src="{% static 'js/musik.js' %}" defer></script>
+{% endblock %}

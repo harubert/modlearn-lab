@@ -1,0 +1,52 @@
+{% comment %}Die Planungsminute, "think first" (Regel 12 des Berichts).
+Planung hebt Fluessigkeit und Komplexitaet (Foster & Skehan 1996; Johnson &
+Abdi Tabari 2022); die zehn Minuten der Studien sind fuer Kinder
+unrealistisch, also eine Minute mit Stichwortstuetze.
+
+Deutsch erklaert, englisch gezeigt: Das Ziel steht in beiden Sprachen, die
+Redemittel nur englisch, weil das Kind sie gleich sagen soll.
+
+Der Balken laeuft eine Minute, ohne Skript (reine CSS-Animation, bei
+prefers-reduced-motion still). Der Knopf ist sofort da; zu frueh gedrueckt
+antwortet der Server mit einem freundlichen Satz statt mit dem Gespraech.
+Die Grenze steht im Server, nicht in der Seite.
+
+In der Volksschule alles groesser (Cameron 2001: konkret, sichtbar).{% endcomment %}
+<section class="coach-planen{% if volksschule %} ist-gross{% endif %}" aria-labelledby="planen-titel">
+  <h2 class="coach-planen-titel" id="planen-titel"><span lang="en">Think first</span></h2>
+  <p class="coach-planen-deutsch">
+    Zuerst eine Minute nachdenken, dann geht das Gespräch los.
+    {{ aufgabe.ziel_deutsch }}
+  </p>
+
+  <div class="coach-ziel">
+    <p class="coach-ziel-marke">Your goal</p>
+    <p class="coach-ziel-text" lang="en">{{ aufgabe.ziel }}</p>
+  </div>
+
+  <h3 class="coach-planen-zwischen">Wendungen, die dir helfen</h3>
+  <ul class="coach-redemittel-liste" lang="en">
+    {% for r in aufgabe.redemittel %}<li>{{ r }}</li>{% endfor %}
+  </ul>
+
+  <p class="coach-planen-tipp">
+    Überleg dir, was du zuerst fragst. Du darfst dir Stichwörter
+    aufschreiben. Der Coach weiß die Antworten – du musst sie herausfinden.
+  </p>
+
+  <div class="coach-planuhr" aria-hidden="true">
+    <span class="coach-planuhr-fuellung"></span>
+  </div>
+  <p class="nur-fuer-vorlesen">Du hast etwa eine Minute Zeit.</p>
+
+  {% if planen_noch %}
+    <p class="coach-planen-noch" role="status">
+      Noch ein paar Sekunden – denk dir deine erste Frage aus.
+    </p>
+  {% endif %}
+
+  <form method="post" action="{{ weiter_url }}" class="coach-planen-form">
+    {% csrf_token %}
+    <button type="submit" class="knopf knopf-gross">Ich bin bereit</button>
+  </form>
+</section>

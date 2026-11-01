@@ -1,0 +1,961 @@
+/* Die Projektseite als Bauplan.
+
+   Ein Labor zeigt, wie es gebaut ist: Linien statt Flaechen, Detailblaetter
+   statt Karten, Masslinien statt Kacheln, der Weg einer Anfrage als
+   Schaltplan. Alle Farben kommen aus app.css (--akzent, --schrift, --rand,
+   --fokus, --grund); app.css schaltet sie unter prefers-color-scheme um, und
+   so wird der Bauplan im dunklen Modus von selbst zur Blaupause. Keine
+   eigene Farbe, keine Schrift aus dem Netz, keine Verlaeufe; ein Skript
+   nur fuer die Musik-KI ganz unten (musik_oeffentlich.js).
+
+   Schriften: Bahnschrift ist auf jedem Windows seit 10 vorhanden und ist
+   eine DIN; auf Apple-Geraeten greift DIN Alternate. Fehlen beide, bleibt die
+   Systemschrift. Beschriftungen in einer Monospace, wie auf einem Plan.
+
+   Zuerst fuer 360 Pixel entworfen: eine Spalte, 16 Pixel Rand (von .inhalt),
+   nichts breiter als die Seite. Ab 40rem zwei Spalten, ab 64rem drei, und
+   erst dort wird die Seite breiter als die 42rem der uebrigen Textseiten.
+
+   Alle Klassen tragen das Vorwort "projekt-": app.css kennt schon .werkzeug,
+   .hero und .marke, und die duerfen hier nichts anrichten. */
+
+/* --- Die Breite ---------------------------------------------------------
+   Verbreitert wird ueber :has(), weil base.html keine Klasse am Koerper
+   vergibt; kennt ein Browser :has() nicht, bleibt die Seite schmal und ist
+   vollstaendig lesbar. Kopf und Fuss wandern mit. */
+@media (min-width: 64rem) {
+  .inhalt:has(.projektseite) { max-width: 72rem; }
+  body:has(.projektseite) .kopf-innen,
+  body:has(.projektseite) .fuss-innen { max-width: 72rem; }
+}
+
+.projektseite {
+  /* Die Grenze (was ein Werkzeug nicht tut, der Weg nach draussen) traegt
+     die Fokusfarbe von app.css: hell ein gebranntes Orange mit 4,6:1 auf
+     Weiss, dunkel ein helles Orange. */
+  --projekt-grenze: var(--fokus);
+  --projekt-titel: Bahnschrift, "DIN Alternate", "DIN 2014", system-ui, sans-serif;
+  --projekt-mono: ui-monospace, "Cascadia Mono", Consolas, "SF Mono", Menlo, monospace;
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.projekt-mono { font-family: var(--projekt-mono); }
+
+/* Fliesstext hoechstens rund 70 Zeichen je Zeile. */
+.projekt-text,
+.projekt-lead,
+.projekt-hinweis,
+.projekt-kommt { max-width: 38rem; }
+
+/* --- Das Raster ----------------------------------------------------------
+   Ein Inline-SVG mit einem Muster in --akzent, sehr leise. Liegt hinter dem
+   Kopf und dem Schaltplan, nicht hinter dem Lesetext. */
+.projekt-raster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: .13;
+}
+
+/* --- Der Kopf: ein Blatt mit Rahmen -------------------------------------- */
+
+.projekt-kopf {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: 1.2rem;
+  padding: 1.2rem 1rem 1.4rem;
+  border: 1.5px solid var(--akzent);
+}
+
+.projekt-ueberzeile {
+  margin: 0 0 .7rem;
+  font-family: var(--projekt-mono);
+  font-size: .72rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--akzent);
+}
+
+.projekt-kopf h1 {
+  margin: 0 0 .9rem;
+  font-family: var(--projekt-titel);
+  font-size: clamp(2.3rem, 1.3rem + 4.4vw, 4.6rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -.02em;
+}
+
+.projekt-lead {
+  margin: 0;
+  font-size: 1.08rem;
+  line-height: 1.55;
+}
+
+.projekt-sprungleiste {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.3rem;
+  margin-top: .8rem;
+}
+
+.projekt-sprungleiste a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--projekt-mono);
+  font-size: .78rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--akzent);
+  text-underline-offset: 3px;
+}
+
+.projekt-kopf-bild { margin: 0; }
+
+.projekt-bild {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.projekt-kopf-bild .projekt-bild { max-width: 26rem; margin: 0 auto; }
+
+/* Die Illustrationen sind blaue Linien auf durchsichtigem Grund. Im dunklen
+   Modus werden sie umgekehrt und im Farbton zurueckgedreht: aus Dunkelblau
+   wird Hellblau, nahe an --akzent der dunklen Fassung. */
+@media (prefers-color-scheme: dark) {
+  .projekt-bild { filter: invert(1) hue-rotate(180deg) saturate(.8); }
+}
+
+@media (min-width: 48rem) {
+  .projekt-kopf {
+    grid-template-columns: 1.15fr .85fr;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem 2rem 2.2rem;
+  }
+}
+
+/* --- Abschnitte und ihre Marken ------------------------------------------ */
+
+.projekt-abschnitt {
+  margin-top: 3rem;
+  scroll-margin-top: 1rem;
+}
+
+/* Kreis mit Buchstabe, Titel, eine Linie bis zum Rand: die Bezugsmarke
+   eines Plans. Der Buchstabe ist Schmuck (aria-hidden), der Titel nicht. */
+.projekt-marke {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-bottom: 1rem;
+}
+
+.projekt-marke h2,
+.projekt-marke h3 {
+  margin: 0;
+  min-width: 0;
+  font-family: var(--projekt-titel);
+  font-size: clamp(1.45rem, 1.15rem + 1.4vw, 2.15rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -.01em;
+}
+
+.projekt-marke-klein { margin-top: 2.6rem; }
+.projekt-marke-klein h3 { font-size: clamp(1.25rem, 1.05rem + 1vw, 1.7rem); }
+
+.projekt-kreis {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.3rem;
+  height: 2.3rem;
+  border: 1.5px solid var(--akzent);
+  border-radius: 50%;
+  font-family: var(--projekt-mono);
+  font-size: .95rem;
+  color: var(--akzent);
+}
+
+.projekt-marke-linie {
+  flex: 1 1 1rem;
+  min-width: 1rem;
+  border-top: 1.5px solid var(--akzent);
+}
+
+.projekt-marke-zusatz {
+  display: none;
+  font-family: var(--projekt-mono);
+  font-size: .7rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--schrift-leise);
+  white-space: nowrap;
+}
+
+@media (min-width: 40rem) {
+  .projekt-marke-zusatz { display: inline; }
+}
+
+.projekt-abschnitt .projekt-text { margin: 0 0 1rem; }
+
+.projekt-nummer {
+  display: block;
+  font-family: var(--projekt-mono);
+  font-size: .75rem;
+  color: var(--akzent);
+}
+
+.projekt-marker {
+  display: block;
+  margin-bottom: .15rem;
+  font-family: var(--projekt-mono);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--schrift-leise);
+}
+
+/* --- So beginnt eine Stunde ---------------------------------------------- */
+
+.projekt-zwischentitel {
+  margin: 0 0 .9rem;
+  font-family: var(--projekt-titel);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.projekt-schritte {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1.1rem;
+}
+
+.projekt-schritte li {
+  padding: .15rem 0 .15rem 1rem;
+  border-left: 1.5px solid var(--akzent);
+  font-size: .95rem;
+  line-height: 1.55;
+}
+
+.projekt-schritte strong {
+  display: block;
+  margin: .15rem 0 .2rem;
+  font-family: var(--projekt-titel);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.projekt-vermerk {
+  margin: 1rem 0 0;
+  font-family: var(--projekt-mono);
+  font-size: .8rem;
+  color: var(--projekt-grenze);
+}
+
+@media (min-width: 40rem) {
+  .projekt-schritte { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+}
+
+/* --- Die Serie: sechs Detailblaetter ------------------------------------- */
+
+.projekt-werkzeuge {
+  list-style: none;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1.2rem;
+}
+
+@media (min-width: 40rem) {
+  .projekt-werkzeuge { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 64rem) {
+  .projekt-werkzeuge { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.6rem; }
+}
+
+.projekt-werkzeug {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1.5px solid var(--akzent);
+  background: var(--grund);
+}
+
+.projekt-werkzeug-kopf {
+  display: flex;
+  justify-content: space-between;
+  gap: .8rem;
+  margin: 0;
+  padding: .45rem .9rem;
+  border-bottom: 1px solid var(--akzent);
+  font-family: var(--projekt-mono);
+  font-size: .68rem;
+  letter-spacing: .06em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--akzent);
+}
+
+.projekt-werkzeug-kopf .projekt-mono { flex: none; white-space: nowrap; }
+.projekt-fach { text-align: right; }
+
+.projekt-zeichnung { padding: 1rem 1.2rem .2rem; }
+
+.projekt-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: var(--projekt-mono);
+}
+
+.projekt-werkzeug-inhalt {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+  padding: .4rem 1.2rem 1rem;
+}
+
+.projekt-werkzeug h3 {
+  margin: 0;
+  font-family: var(--projekt-titel);
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.projekt-tut,
+.projekt-nicht {
+  margin: 0;
+  font-size: .95rem;
+  line-height: 1.55;
+}
+
+.projekt-nicht {
+  padding-top: .65rem;
+  border-top: 1px dashed var(--akzent);
+}
+
+.projekt-nicht .projekt-marker { color: var(--projekt-grenze); }
+
+.projekt-werkzeug-weg {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--projekt-mono);
+  font-size: .8rem;
+  color: var(--akzent);
+  text-underline-offset: 3px;
+}
+
+/* --- Die Grundsaetze ----------------------------------------------------- */
+
+.projekt-grundsaetze { margin: 0; }
+
+.projekt-grundsatz {
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr);
+  gap: .35rem .8rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--akzent);
+}
+
+.projekt-grundsatz .projekt-nummer { grid-row: span 2; padding-top: .3rem; }
+
+.projekt-grundsatz dt {
+  font-family: var(--projekt-titel);
+  font-size: 1.22rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.projekt-grundsatz dd {
+  margin: 0;
+  font-size: .95rem;
+  line-height: 1.6;
+  color: var(--schrift-leise);
+}
+
+@media (min-width: 56rem) {
+  .projekt-grundsatz {
+    grid-template-columns: 3.5rem minmax(0, 1fr) minmax(0, 1fr);
+    gap: 2rem;
+    padding: 1.3rem 0;
+  }
+  .projekt-grundsatz .projekt-nummer { grid-row: auto; }
+  .projekt-grundsatz dt { font-size: 1.45rem; }
+}
+
+/* --- Wie es gebaut ist --------------------------------------------------- */
+
+.projekt-bau {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.projekt-bau-bild { margin: 0; }
+.projekt-bau-bild .projekt-bild { max-width: 13rem; margin: 0 auto; }
+
+@media (min-width: 48rem) {
+  .projekt-bau { grid-template-columns: minmax(0, 1fr) 15rem; gap: 2.5rem; align-items: start; }
+  .projekt-bau-bild .projekt-bild { max-width: 100%; }
+}
+
+.projekt-hinweis {
+  margin: .4rem 0 0;
+  padding: .9rem 1rem;
+  border: 1.5px dashed var(--akzent);
+  line-height: 1.55;
+}
+
+.projekt-hinweis .projekt-marker { color: var(--akzent); }
+
+/* Der Weg als Liste: am Telefon und Tablet ein senkrechter Plan mit
+   Verbindungslinien zwischen den Stationen. Die letzte Station ist die
+   Ausnahme (gpt-5) und steht gestrichelt in der Grenzfarbe, ebenso die
+   Linie dorthin. */
+.projekt-weg {
+  list-style: none;
+  margin: 1.6rem 0 0;
+  padding: 0;
+  max-width: 26rem;
+}
+
+.projekt-weg li {
+  position: relative;
+  margin-bottom: 1.6rem;
+  padding: .65rem .9rem;
+  border: 1.5px solid var(--akzent);
+  background: var(--grund);
+}
+
+.projekt-weg li:last-child { margin-bottom: 0; }
+
+.projekt-weg li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 1.6rem;
+  top: 100%;
+  height: 1.6rem;
+  border-left: 1.5px solid var(--akzent);
+}
+
+.projekt-weg li:nth-child(4)::after {
+  border-left-style: dashed;
+  border-left-color: var(--projekt-grenze);
+}
+
+.projekt-weg strong {
+  display: block;
+  font-family: var(--projekt-titel);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.projekt-weg span {
+  font-family: var(--projekt-mono);
+  font-size: .75rem;
+  color: var(--schrift-leise);
+}
+
+.projekt-weg .projekt-weg-ausnahme {
+  border-style: dashed;
+  border-color: var(--projekt-grenze);
+}
+
+.projekt-weg-ausnahme strong,
+.projekt-weg-ausnahme span { color: var(--projekt-grenze); }
+
+/* Der Schaltplan als SVG, erst wenn er lesbar gross ist. Die Liste bleibt
+   dann fuer Vorleseprogramme im Dokument, unsichtbar wie .nur-fuer-vorlesen
+   in app.css. */
+.projekt-plan {
+  display: none;
+  position: relative;
+  isolation: isolate;
+  margin-top: 1.8rem;
+  padding: 1.6rem 1.4rem;
+  border: 1.5px solid var(--akzent);
+}
+
+.projekt-plan .projekt-svg { font-family: var(--projekt-titel); }
+.projekt-plan .projekt-mono { font-family: var(--projekt-mono); }
+
+@media (min-width: 56rem) {
+  .projekt-plan { display: block; }
+  .projekt-weg {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/* --- Messwerte als Masslinien ---------------------------------------------
+   Jede Zahl steht ueber einer Strecke; die Laenge ist --anteil der Skala,
+   die unter dem Text genannt ist. Gestrichelt der Rest der Skala. */
+.projekt-messwerte { margin: 0; }
+
+.projekt-messwert {
+  display: grid;
+  gap: .3rem;
+  padding: .85rem 0 1rem;
+  border-top: 1px solid var(--akzent);
+}
+
+.projekt-messwert dt {
+  font-family: var(--projekt-titel);
+  font-size: 1.02rem;
+  line-height: 1.35;
+}
+
+.projekt-skala {
+  display: block;
+  margin-top: .15rem;
+  font-family: var(--projekt-mono);
+  font-size: .7rem;
+  color: var(--schrift-leise);
+}
+
+.projekt-messwert dd {
+  margin: 0;
+  padding-top: 1.7rem;
+}
+
+.projekt-strecke {
+  position: relative;
+  display: block;
+  height: 14px;
+}
+
+.projekt-strecke::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 6px;
+  border-top: 1px dashed var(--rand);
+}
+
+.projekt-mass {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--anteil);
+  border-left: 1.5px solid var(--akzent);
+  border-right: 1.5px solid var(--akzent);
+}
+
+.projekt-mass::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 6px;
+  border-top: 1.5px solid var(--akzent);
+}
+
+/* Der Wert steht mittig ueber der Strecke; ist die Strecke kuerzer als der
+   Text, beginnt er an ihrem Anfang. */
+.projekt-wert {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + .25rem);
+  min-width: 100%;
+  width: max-content;
+  text-align: center;
+  font-family: var(--projekt-mono);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--akzent);
+  white-space: nowrap;
+}
+
+@media (min-width: 48rem) {
+  .projekt-messwert {
+    grid-template-columns: 17rem minmax(0, 1fr);
+    gap: 2rem;
+    align-items: end;
+  }
+  .projekt-messwert dd { padding-top: 0; padding-bottom: .4rem; }
+}
+
+/* --- Mitmachen ----------------------------------------------------------- */
+
+.projekt-wege {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .8rem 1.4rem;
+  margin: 1.2rem 0 0;
+}
+
+.projekt-wege a:not(.knopf) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--akzent);
+}
+
+/* --- Was noch kommt ------------------------------------------------------ */
+
+.projekt-kommt {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: .9rem;
+}
+
+.projekt-kommt li {
+  font-size: .95rem;
+  line-height: 1.55;
+  color: var(--schrift-leise);
+}
+
+.projekt-kommt strong { color: var(--schrift); }
+
+.projekt-chip {
+  display: inline-block;
+  margin-right: .45rem;
+  padding: 0 .45rem;
+  border: 1px dashed var(--akzent);
+  font-family: var(--projekt-mono);
+  font-size: .68rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--akzent);
+  vertical-align: .1em;
+}
+
+/* --- Impressum: das Schriftfeld ------------------------------------------
+   Die Linien zwischen den Feldern entstehen aus dem 1px-Abstand des Rasters
+   auf einer Flaeche in --akzent; jedes Feld hat den Seitengrund. */
+.projekt-impressum h2 {
+  margin: 0 0 .6rem;
+  font-family: var(--projekt-mono);
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--akzent);
+}
+
+.projekt-schriftfeld {
+  display: grid;
+  gap: 1px;
+  margin: 0;
+  border: 1.5px solid var(--akzent);
+  background: var(--akzent);
+}
+
+.projekt-schriftfeld div {
+  padding: .55rem .8rem;
+  background: var(--grund);
+}
+
+.projekt-schriftfeld dt {
+  font-family: var(--projekt-mono);
+  font-size: .66rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--schrift-leise);
+}
+
+.projekt-schriftfeld dd {
+  margin: .1rem 0 0;
+  font-family: var(--projekt-mono);
+  font-size: .82rem;
+  line-height: 1.45;
+}
+
+@media (min-width: 40rem) {
+  .projekt-schriftfeld { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* --- Ausprobieren: die Musik-KI ------------------------------------------
+   Ein Detailblatt wie die der Serie, nur ueber die volle Breite. Die
+   Auswahlkarten sind Rahmen ohne Symbol, mit einer Nummer wie ein Bauteil;
+   die gewaehlte bekommt die doppelte Linie. Die Dauer steht als Masslinie,
+   30 s halb so lang wie 60 s. Ohne :has() bleibt der Radioknopf selbst
+   sichtbar und zeigt die Wahl. */
+.projekt-blatt {
+  border: 1.5px solid var(--akzent);
+  background: var(--grund);
+}
+
+.projekt-blatt-inhalt {
+  display: grid;
+  gap: 1.2rem;
+  padding: 1rem 1rem 1.2rem;
+}
+
+@media (min-width: 40rem) {
+  .projekt-blatt-inhalt { padding: 1.2rem 1.6rem 1.4rem; }
+}
+
+.projekt-musik-zeichnung { padding: 0; max-width: 26rem; }
+
+.projekt-musik-satz {
+  margin: 0;
+  padding: .9rem 1rem;
+  border: 1.5px dashed var(--akzent);
+  line-height: 1.55;
+}
+
+.projekt-musik { display: grid; gap: 1.3rem; min-width: 0; }
+
+.projekt-musik-teil { margin: 0; min-width: 0; }
+
+.projekt-musik legend,
+.projekt-musik-titel {
+  display: flex;
+  align-items: baseline;
+  gap: .6rem;
+  margin: 0 0 .6rem;
+  padding: 0;
+  font-family: var(--projekt-titel);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.projekt-musik legend .projekt-nummer,
+.projekt-musik-titel .projekt-nummer { display: inline; }
+
+.projekt-stile {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 12rem), 1fr));
+  gap: .7rem;
+}
+
+.projekt-stil {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  gap: .2rem .6rem;
+  min-height: 44px;
+  padding: .7rem .8rem;
+  border: 1.5px solid var(--akzent);
+  cursor: pointer;
+}
+
+.projekt-stil input {
+  grid-row: span 3;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin: 0;
+  accent-color: var(--akzent);
+}
+
+.projekt-stil-nummer {
+  font-family: var(--projekt-mono);
+  font-size: .68rem;
+  letter-spacing: .06em;
+  color: var(--akzent);
+}
+
+.projekt-stil-name {
+  font-family: var(--projekt-titel);
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.projekt-stil-text {
+  font-size: .86rem;
+  line-height: 1.45;
+  color: var(--schrift-leise);
+}
+
+.projekt-stil:has(input:checked) {
+  outline: 1.5px solid var(--akzent);
+  outline-offset: 3px;
+}
+
+.projekt-stil:has(input:focus-visible) {
+  outline: 3px solid var(--fokus);
+  outline-offset: 3px;
+}
+
+.projekt-marken-knoepfe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  margin-bottom: .6rem;
+}
+
+.projekt-marken-knopf {
+  min-height: 44px;
+  padding: 0 .7rem;
+  border: 1px dashed var(--akzent);
+  border-radius: 0;
+  background: var(--grund);
+  color: var(--akzent);
+  font-family: var(--projekt-mono);
+  font-size: .82rem;
+  cursor: pointer;
+}
+
+.projekt-marken-knopf:hover { border-style: solid; }
+
+.projekt-musik textarea {
+  border: 1.5px solid var(--akzent);
+  border-radius: 0;
+  font-family: var(--projekt-mono);
+  font-size: .92rem;
+  line-height: 1.5;
+}
+
+.projekt-musik-hilfe {
+  margin: .45rem 0 0;
+  font-family: var(--projekt-mono);
+  font-size: .74rem;
+  line-height: 1.5;
+  color: var(--schrift-leise);
+}
+
+.projekt-musik-zeile {
+  display: grid;
+  gap: 1.3rem;
+}
+
+@media (min-width: 40rem) {
+  .projekt-musik-zeile { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 2rem; }
+}
+
+.projekt-dauer {
+  display: grid;
+  grid-template-columns: auto 3.2rem minmax(0, 1fr);
+  align-items: center;
+  gap: .6rem;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.projekt-dauer input,
+.projekt-sprache input {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin: 0;
+  accent-color: var(--akzent);
+}
+
+.projekt-dauer-wert {
+  font-family: var(--projekt-mono);
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--akzent);
+}
+
+.projekt-dauer:has(input:not(:checked)) .projekt-mass { opacity: .45; }
+
+.projekt-sprache {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.projekt-musik .knopf { justify-self: start; border-radius: 0; }
+
+.projekt-musik-meldung:empty { display: none; }
+
+.projekt-musik-meldung,
+.projekt-musik-stand {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.projekt-musik-ergebnis {
+  display: grid;
+  gap: .5rem;
+  padding: .9rem 1rem;
+  border: 1.5px solid var(--akzent);
+}
+
+.projekt-musik-stand {
+  font-family: var(--projekt-mono);
+  font-size: .9rem;
+}
+
+/* Der Fortschrittsbalken (musik_oeffentlich.js): eine Linie im Bauplan-
+   Stil, eckig, in der Akzentfarbe. Die Fuellung laeuft mit der Zeit; die
+   Uebergangszeit ist der Abfragetakt des Skripts, damit sie stetig wirkt. */
+.musik-balken {
+  display: block;
+  height: .7rem;
+  max-width: 32rem;
+  border: 1.5px solid var(--akzent);
+  background: var(--grund, transparent);
+  overflow: hidden;
+}
+
+.musik-balken-fuellung {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--akzent);
+  transition: width .25s linear;
+}
+
+.musik-balken.ist-fertig .musik-balken-fuellung { width: 100%; }
+
+/* Laenger als geschaetzt: Der Balken steht bei 97 %, die Fuellung blinkt
+   leise, statt stumm zu stehen. */
+.musik-balken.ist-spaet .musik-balken-fuellung { animation: musik-balken-warten 1.6s ease-in-out infinite; }
+
+@keyframes musik-balken-warten {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .45; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .musik-balken-fuellung { transition: none; }
+  .musik-balken.ist-spaet .musik-balken-fuellung { animation: none; opacity: .7; }
+}
+
+.projekt-musik-ergebnis audio { display: block; width: 100%; max-width: 32rem; }
+
+.projekt-ausprobieren .projekt-vermerk { margin: 0; }
+
+/* Der Film unter dem Kopf: volle Breite des Blatts, 16:9, ohne Rahmenzauber. */
+.projekt-film-video {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--rand);
+  background: #fff;
+}
+.projekt-film-text {
+  margin: .6rem 0 0;
+  max-width: 38rem;
+  color: var(--schrift-leise);
+  font-size: .9rem;
+}
+
+/* Der Film im Kopfkasten: breiter als die Zeichnung vorher, weil 16:9. */
+.projekt-kopf-film { max-width: 44rem; margin-inline: auto; }
+.projekt-kopf-film .projekt-film-video { border: 0; }

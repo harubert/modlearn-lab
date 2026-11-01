@@ -1,0 +1,54 @@
+# ModLearn-Aufgabenhilfe. Am Server lauscht die App ausschliesslich auf
+# 127.0.0.1:8090, davor steht Caddy mit dem Zertifikat fuer die jeweilige
+# Domaene. Die Domaene steht nirgends hier: Sie kommt aus DJANGO_ALLOWED_HOSTS
+# und DJANGO_CSRF_TRUSTED_ORIGINS in .env und aus dem vHost in der Caddy-Datei.
+services:
+  web:
+    build: .
+    image: modlearn-web
+    restart: unless-stopped
+    env_file:
+      - .env
+      # Der Schluessel fuer die Qualitaetssicherung liegt neben dem
+      # Projektverzeichnis und nicht darin: So kann ihn kein
+      # 'git archive' und kein Ausrollen versehentlich mitnehmen.
+      # Fehlt die Datei, laeuft alles weiter, nur ohne den Weg nach
+      # draussen.
+      - path: ../.env.cloud
+        required: false
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${APP_PORT:-8090}:8000"
+    volumes:
+      - medien:/app/media
+      - ${GEHEIM_VERZEICHNIS:-../geheim}:/run/geheim:ro
+    mem_limit: 2g
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8000/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-modlearn}
+      POSTGRES_USER: ${POSTGRES_USER:-modlearn}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD fehlt in .env}
+    volumes:
+      - datenbank:/var/lib/postgresql/data
+    mem_limit: 1g
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-modlearn} -d ${POSTGRES_DB:-modlearn}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  datenbank:
+  medien:

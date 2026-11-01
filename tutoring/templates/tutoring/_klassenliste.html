@@ -1,0 +1,108 @@
+{% load static %}
+{% comment %}DIE KLASSE ALS KACHELN, IN JEDER BETRIEBSART
+
+Bis 22.10.2026 hatte jede Betriebsart ihre eigene Tabelle, und nur zwei von
+vier fuehrten in den Verlauf des Kindes. Thomas: "In der Musikstunde kann
+ich nicht in die Chats rein", und die Seite sei zu kompliziert. Jetzt gibt
+es eine Zahlenzeile und eine Kachel je Kind, ueberall dieselbe (Bericht vom
+19.10.2026, Abschnitt 6.3): Tiername (der Link in den Verlauf), eine Zeile,
+was das Kind tut, in der Aufgabenhilfe die fuenf Stufenpunkte, der letzte
+Beitrag, eine Notiz dazu (Diagnose, Lernschritt, Zahlen zum Gespraech,
+letztes Lied), Ampel und Zeit. Wer einen Blick braucht, steht oben und ist
+gerahmt, mit dem Grund in einem Wort.
+
+Die ganze Kachel ist der Weg in den Verlauf: Der Link liegt auf dem Namen,
+und .kachel-name::after dehnt ihn ueber die Kachel. Mehr Zahlen stehen in
+einem Aufklapper, nicht auf der Seite.{% endcomment %}
+<p class="klassenzahlen">
+  <span><strong>{{ zaehler.beigetreten }}</strong> dabei</span>
+  {% if sitzung.ist_sprechcoach %}
+    {% if sprech_summe %}
+      <span><strong>{{ sprech_summe.gespraeche }}</strong> Gespräch{{ sprech_summe.gespraeche|pluralize:"e" }}</span>
+      <span><strong>{{ sprech_summe.beitraege }}</strong> {{ sprech_summe.beitraege|pluralize:"Beitrag,Beiträge" }}</span>
+    {% endif %}
+  {% elif sitzung.ist_musik %}
+    <span><strong>{{ lieder_summe }}</strong> Lied{{ lieder_summe|pluralize:"er" }}</span>
+  {% elif sitzung.ist_safechat %}
+    <span><strong>{{ chat_summe }}</strong> Nachricht{{ chat_summe|pluralize:"en" }}</span>
+    <span><strong>{{ aussen_summe }}</strong> nach draußen</span>
+  {% elif not sitzung.ist_trainer %}
+    <span><strong>{{ zaehler.aufgaben }}</strong> Aufgabe{{ zaehler.aufgaben|pluralize:"n" }}</span>
+    <span><strong>{{ zaehler.hilfen }}</strong> Hilfe{{ zaehler.hilfen|pluralize:"n" }}</span>
+    {% if zaehler.noten %}<span title="Note der Kinder für die Hilfe, 1 sehr gut bis 5 gar nicht; Mittel über {{ zaehler.noten }} benotete Aufgabe{{ zaehler.noten|pluralize:"n" }}"><strong>Ø {{ zaehler.note_mittel }}</strong> Note der Kinder ({{ zaehler.noten }})</span>{% endif %}
+  {% endif %}
+  {% if aktive %}
+    <span role="status"><span class="pulspunkt" aria-hidden="true"></span>
+      {{ aktive|length }} von {{ zeilen|length }} arbeiten gerade</span>
+  {% endif %}
+  {% if auffaellige %}
+    <span class="klassenzahlen-achtung" role="status">{{ auffaellige|length }} brauch{{ auffaellige|length|pluralize:"t,en" }} einen Blick</span>
+  {% endif %}
+</p>
+
+{% if sitzung.ist_sprechcoach and sprech_summe %}
+  {% comment %}Die Masse der Literatur (Regel 14 des Berichts), auf Wunsch:
+  Woerter je Beitrag, Fragen der Kinder, Ziel erreicht, nicht verstanden.
+  Eine ruhige Liste ohne Farbe und ohne Urteil.{% endcomment %}
+  <details class="mehr-zahlen">
+    <summary>Mehr Zahlen zum Gespräch</summary>
+    <ul class="zaehlerliste">
+      <li><span class="zaehlerwert">{{ sprech_summe.woerter_je_beitrag }}</span><span class="zaehlername">Wörter je Beitrag</span></li>
+      <li><span class="zaehlerwert">{{ sprech_summe.fragen }}</span><span class="zaehlername">Fragen der Kinder</span></li>
+      {% if sprech_summe.mit_ziel %}
+        <li><span class="zaehlerwert">{{ sprech_summe.ziel_erreicht }} von {{ sprech_summe.mit_ziel }}</span><span class="zaehlername">Ziel erreicht</span></li>
+      {% endif %}
+      <li><span class="zaehlerwert">{{ sprech_summe.sperren }}</span><span class="zaehlername">nicht verstanden</span></li>
+    </ul>
+  </details>
+{% endif %}
+
+{% if zeilen %}
+<ul class="klassenbild">
+  {% for z in zeilen %}
+    <li class="kachel{% if z.grund %} ist-markiert{% endif %}">
+      {% if z.grund %}<p class="kachel-grund">{{ z.grund }}</p>{% endif %}
+      <p class="kachel-kopf">
+        {% include "tutoring/_tierabzeichen.html" with teilnahme=z.teilnahme %}
+        <a class="kachel-name" href="{% url 'tutoring:lehrperson_verlauf' sitzung.code z.teilnahme.pk %}">
+          {% if z.teilnahme.hat_tier %}{{ z.teilnahme.tier_name }}{% else %}<span class="ohne-tier">kein Tier gewählt</span>{% endif %}<span class="nur-fuer-vorlesen">, Verlauf öffnen</span>
+        </a>
+        {% if z.fertig %}<span class="kachel-fertig">fertig</span>{% endif %}
+      </p>
+      <p class="kachel-aufgabe">
+        {% if z.zeile %}{{ z.zeile }}{% else %}<span class="kachel-leer">{% if sitzung.ist_musik %}noch kein Lied{% elif sitzung.ist_safechat %}noch nichts geschrieben{% elif sitzung.ist_sprechcoach or sitzung.ist_trainer %}noch nicht angefangen{% else %}noch keine Aufgabe{% endif %}</span>{% endif %}
+      </p>
+      {% if z.punkte %}
+        <p class="kachel-punkte">{% include "tutoring/_stufenpunkte.html" with punkte=z.punkte breite=z.breite %}</p>
+      {% endif %}
+      <p class="kachel-beitrag">
+        {% if z.beitrag %}<span class="nur-fuer-vorlesen">Letzter Beitrag: </span>„{{ z.beitrag }}“{% else %}<span class="kachel-leer">noch kein Beitrag</span>{% endif %}
+      </p>
+      <p class="kachel-diagnose">{{ z.notiz }}</p>
+      {% if z.eigenanteil_zeile %}
+        {% comment %}Der Eigenanteil (Thomas, 1.11.2026), ueber alle
+        Aufgaben des Kindes mit Ergebnis; die Regel steht in der
+        Erklaerung unter der Klasse.{% endcomment %}
+        <p class="kachel-anteil" title="Grobe Einschätzung aus den Hilfestufen, kein Messwert">{{ z.eigenanteil_zeile }}</p>
+      {% endif %}
+      {% if z.note_zeile %}
+        <p class="kachel-anteil" title="Die Noten, die das Kind der Hilfe gegeben hat (1 sehr gut bis 5)">{{ z.note_zeile }}</p>
+      {% endif %}
+      <p class="kachel-fuss">
+        <span class="kachel-ampel"><span class="ampelpunkt ampelpunkt-{{ z.ampel }}" aria-hidden="true"></span>{{ z.ampel_kurz }}</span>
+        {% if z.umgehungen %}
+          {% comment %}Offene Karten (31.10.2026): Umgehungsversuche je Kind
+          als Marke, ueber alle Aufgaben der Sitzung. Der Beitrag selbst
+          steht im Verlauf, mit der Begruendung.{% endcomment %}
+          <span class="kachel-umgehung">{{ z.umgehungen }} Umgehungsversuch{{ z.umgehungen|pluralize:"e" }}</span>
+        {% endif %}
+        <span class="kachel-zeit">
+          {% if z.aktiv %}<span class="pulspunkt" aria-hidden="true"></span> arbeitet gerade{% else %}vor {{ z.zuletzt|timesince }}{% endif %}
+        </span>
+      </p>
+    </li>
+  {% endfor %}
+</ul>
+{% else %}
+  <p class="leerhinweis">Noch ist niemand beigetreten.</p>
+{% endif %}

@@ -1,0 +1,151 @@
+{% comment %}Die Züge des Safe Chats als Listeneinträge für <ol id="chatzuege">.
+
+Dasselbe Teilstück an drei Stellen: auf der Seite des Kindes (safechat.html),
+im Verlauf der Lehrperson (_verlauf_safechat.html) und in der JSON-Antwort
+auf einen neuen Zug (chat_views.safechat_zug rendert damit die zwei neuen
+Züge, safechat.js hängt sie an). Kind und Lehrperson lesen also wörtlich
+dasselbe - Thomas (23.10.2026): "Das komplette Protokoll ist vollständig
+dokumentiert und für alle einsichtbar."
+
+Erwartet: zuege (ChatZug), teilnahme (für den Tiernamen), freiwillig
+fuer_lehrperson (dann heißt Schritt 1 nicht "Dein Beitrag"). Auf jedem
+KI-Zug mit Weg nach draußen setzt die Ansicht vor dem Rendern zwei
+Attribute: zug.vorher (der Text des vorangehenden Kind-Zuges) und
+zug.entitaeten_text (die ersetzten Angaben in Worten, etwa "2 Personen,
+1 Ort"; leer, wenn nichts ersetzt wurde).
+
+Die Karten sind dieselben wie in den anderen Verläufen: das Kind rechts
+als "eigenerversuch", die KI links als "hilfe". Neu ist nur die Markenzeile
+und der Aufklapper "Der Weg nach draußen" mit den nummerierten Schritten.
+Jedes details trägt data-protokoll, damit der Knopf "Alles aufklappen" sie
+findet, und eine Kennung, damit der Verlauf der Lehrperson nach dem
+htmx-Nachladen weiß, welche offen waren.
+
+Keine Emojis; die Marken sind Text plus eine kleine Linienzeichnung in
+currentColor (Schild, Schild mit Pfeil, Schild mit Balken).{% endcomment %}
+{% for zug in zuege %}
+  {% if zug.ist_ki %}
+    <li class="chatzug chatzug-ki{% if zug.ist_aussen %} ist-aussen{% endif %}" id="zug-{{ zug.pk }}">
+      <article class="hilfe{% if zug.ist_aussen and not zug.aussen_gesperrt %} hilfe-aussen{% endif %}">
+        <h3 class="hilfe-kopf">
+          {% if zug.ist_aussen and not zug.aussen_gesperrt %}OpenAI, durch den Filter{% else %}Spark{% endif %}
+          <span class="verlauf-zeit">{{ zug.created_at|time:"H:i" }}</span>
+        </h3>
+        <div class="hilfe-text">{{ zug.text|linebreaksbr }}</div>
+
+        {% if zug.ist_aussen %}
+          {% comment %}Die Markenzeile: auf einen Blick, was mit diesem
+          Beitrag passiert ist. Die Farbe der Urteilsmarke folgt der Ampel
+          (grün ruhig, orange auffällig, grau ohne Urteil); daneben steht
+          immer der Text, die Farbe allein trägt nichts.{% endcomment %}
+          <p class="marken safechat-marken">
+            {% if zug.aussen_gesperrt %}
+              <span class="marke-chip marke-gesperrt">
+                <svg class="linien-symbol" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l7.5 3v6c0 4.5-3 7.8-7.5 9.5C7.5 19.8 4.5 16.5 4.5 12V6z"/><path d="M8.5 12h7"/></svg>
+                Nicht hinausgegangen
+              </span>
+              <span class="marke-grund">{{ zug.aussen_gesperrt }}</span>
+            {% else %}
+              <span class="marke-chip marke-aussen">
+                <svg class="linien-symbol" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l7.5 3v6c0 4.5-3 7.8-7.5 9.5C7.5 19.8 4.5 16.5 4.5 12V6z"/><path d="M8.5 12h7M13 9.5l2.5 2.5-2.5 2.5"/></svg>
+                Nach draußen
+              </span>
+              <span class="marke-chip marke-ersetzt"{% if zug.entitaeten_text %} title="{{ zug.entitaeten_text }}"{% endif %}>
+                {% if zug.ersetzt %}{{ zug.ersetzt }} Angabe{{ zug.ersetzt|pluralize:"n" }} ersetzt{% else %}nichts zu ersetzen{% endif %}
+              </span>
+              {% if zug.urteil == "ohne" %}
+                <span class="marke-chip marke-urteil-ohne">OpenAI: ohne Personenbezug</span>
+              {% elif zug.urteil == "mit" %}
+                <span class="marke-chip marke-urteil-mit">OpenAI sieht Personenbezug</span>
+              {% else %}
+                <span class="marke-chip marke-urteil-offen">OpenAI: kein Urteil</span>
+              {% endif %}
+            {% endif %}
+          </p>
+
+          {% comment %}Der Weg nach draußen, Schritt für Schritt, eingeklappt.
+          Aufgeklappt wäre er länger als das Gespräch; der Knopf "Alles
+          aufklappen" öffnet alle auf einmal.{% endcomment %}
+          <details class="protokoll{% if zug.aussen_gesperrt %} ist-gesperrt{% endif %}" data-protokoll id="protokoll-{{ zug.pk }}">
+            <summary>Der Weg nach draußen</summary>
+            <ol class="protokoll-schritte">
+              <li class="protokoll-schritt">
+                <h4 class="schritt-titel">{% if fuer_lehrperson %}Der Beitrag von {{ teilnahme.tier_name }}{% else %}Dein Beitrag{% endif %}</h4>
+                <blockquote class="schritt-text">{{ zug.vorher|default:""|linebreaksbr }}</blockquote>
+              </li>
+              <li class="protokoll-schritt">
+                <h4 class="schritt-titel">So hat der Spark ihn ohne Personen neu geschrieben</h4>
+                {% if zug.aussen_umgeschrieben %}
+                  <blockquote class="schritt-text">{{ zug.aussen_umgeschrieben|linebreaksbr }}</blockquote>
+                {% elif zug.aussen_gesperrt %}
+                  <p class="schritt-leise">Dazu ist es nicht mehr gekommen.</p>
+                {% else %}
+                  <p class="schritt-leise">nichts geändert</p>
+                {% endif %}
+              </li>
+              {% if zug.aussen_gesperrt %}
+                <li class="protokoll-schritt ist-halt">
+                  <h4 class="schritt-titel">Hier hat der Filter angehalten</h4>
+                  <p class="schritt-grund">{{ zug.aussen_gesperrt }}</p>
+                  <p class="schritt-leise">Es ist nichts hinausgegangen. Die Antwort oben kommt vom Spark.</p>
+                </li>
+              {% else %}
+                <li class="protokoll-schritt">
+                  <h4 class="schritt-titel">So ging er hinaus</h4>
+                  <blockquote class="schritt-text schritt-raus">{{ zug.aussen_gesendet|linebreaksbr }}</blockquote>
+                  <p class="schritt-notiz">Ersetzt: {% if zug.entitaeten_text %}{{ zug.entitaeten_text }}{% else %}nichts{% endif %}</p>
+                </li>
+                <li class="protokoll-schritt">
+                  <h4 class="schritt-titel">So kam es zurück</h4>
+                  <blockquote class="schritt-text schritt-rein">{{ zug.aussen_empfangen|linebreaksbr }}</blockquote>
+                  {% if zug.ersetzt %}<p class="schritt-notiz">Noch mit den Platzhaltern des Filters.</p>{% endif %}
+                </li>
+                <li class="protokoll-schritt">
+                  <h4 class="schritt-titel">Was der Spark daraus gemacht hat</h4>
+                  <blockquote class="schritt-text">{{ zug.text|linebreaksbr }}</blockquote>
+                  {% if zug.ersetzt %}<p class="schritt-notiz">Die ersetzten Angaben hat der Spark hier wieder eingesetzt.</p>{% endif %}
+                </li>
+                <li class="protokoll-schritt">
+                  <h4 class="schritt-titel">Urteil der Gegenstelle</h4>
+                  <p class="schritt-urteil schritt-urteil-{{ zug.urteil|default:'offen' }}">{{ zug.urteil_text|default:"kein Urteil" }}</p>
+                  {% if zug.urteil_grund %}
+                    <blockquote class="schritt-text">{{ zug.urteil_grund }}</blockquote>
+                  {% else %}
+                    <p class="schritt-leise">Die Gegenstelle hat dazu nichts gesagt.</p>
+                  {% endif %}
+                </li>
+              {% endif %}
+            </ol>
+            {% if zug.aussen_modell or zug.aussen_tokens_in or zug.aussen_tokens_out or zug.aussen_ms or zug.aussen_cost_micro %}
+              {% comment %}Die Kosten liegen in Mikro-Euro. Sieben Stellen mit
+              führenden Nullen, dann vor und nach der sechstletzten Stelle
+              geschnitten: fünf Nachkommastellen, wie im QS-Block.{% endcomment %}
+              <p class="protokoll-fuss">
+                {{ zug.aussen_modell|default:"Modell nicht bekannt" }}
+                &middot; {{ zug.aussen_tokens_in }} Token ein, {{ zug.aussen_tokens_out }} aus
+                &middot; {{ zug.aussen_ms }} ms
+                &middot; {% with mikro=zug.aussen_cost_micro|stringformat:"07d" %}{{ mikro|slice:":-6" }},{{ mikro|slice:"-6:-1" }}{% endwith %} &euro;
+              </p>
+            {% endif %}
+          </details>
+        {% endif %}
+      </article>
+    </li>
+  {% else %}
+    <li class="chatzug chatzug-kind" id="zug-{{ zug.pk }}">
+      <article class="eigenerversuch ampelrand-{{ zug.flag }}">
+        <h3 class="versuch-kopf">
+          {{ teilnahme.tier_name }}
+          <span class="verlauf-zeit">{{ zug.created_at|time:"H:i" }}</span>
+        </h3>
+        <div class="hilfe-text">{{ zug.text|linebreaksbr }}</div>
+        {% if zug.flag != "gruen" %}
+          <p class="ampelnotiz">
+            <span class="ampelpunkt ampelpunkt-{{ zug.flag }}" aria-hidden="true"></span>
+            {{ zug.ampel_beschreibung }}{% if zug.flag_reason %}: {{ zug.flag_reason }}{% endif %}
+          </p>
+        {% endif %}
+      </article>
+    </li>
+  {% endif %}
+{% endfor %}

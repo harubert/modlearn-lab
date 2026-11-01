@@ -1,0 +1,31 @@
+{% comment %}Die eigenen Lieder dieser Teilnahme, das neueste oben.
+
+Eigene Teilvorlage, weil das Skript sie nach einem fertigen Lied neu holt
+(tutoring:musik_liste). Abspielbar ist, was der Spark fertig gemeldet hat;
+preload="none", damit die Seite nicht beim Laden fuenf MP3 vom Spark zieht.
+Ein Lied, das noch rechnet, verfolgt das Skript oben im Ergebnisfeld.{% endcomment %}
+<p class="musik-noch">
+  {% if noch %}Du kannst noch {{ noch }} von {{ hoechstens }} Lied{{ hoechstens|pluralize:"ern" }} machen.
+  {% elif hoechstens == 1 %}Du hast dein Lied gemacht.
+  {% else %}Du hast alle {{ hoechstens }} Lieder gemacht.{% endif %}
+</p>
+{% if lieder %}
+  <ul class="musik-lieder">
+    {% for eintrag in lieder %}
+      <li class="musik-lied">
+        <p class="musik-lied-kopf">
+          <strong>{{ eintrag.lied.stil }}</strong>
+          <span class="musik-lied-stand">{{ eintrag.lied.sekunden }} s &middot; {{ eintrag.lied.get_zustand_display }}</span>
+        </p>
+        {% if eintrag.lied.text %}<p class="musik-lied-text">{{ eintrag.lied.text }}</p>{% endif %}
+        {% if eintrag.lied.ist_fertig %}
+          <div class="musik-lied-spieler">
+            <audio controls preload="none" src="{{ eintrag.datei }}"></audio>
+          </div>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="leerhinweis">Noch kein Lied. Schreib oben deinen Text und wähl einen Stil.</p>
+{% endif %}

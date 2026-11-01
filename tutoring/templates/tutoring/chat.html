@@ -1,0 +1,266 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titel %}Meine Aufgabe{% endblock %}
+
+{% block kopf_extra %}
+  {# Zwei eigene Stilbogen statt Zeilen in app.css: Zuschnitt und Aufnahme #}
+  {# sind grosse, in sich geschlossene Oberflaechen, und sie werden nur #}
+  {# hier gebraucht. #}
+  <link rel="stylesheet" href="{% static 'css/zuschnitt.css' %}">
+  <link rel="stylesheet" href="{% static 'css/aufnahme.css' %}">
+{% endblock %}
+
+{% block kopf_aktion %}
+<p class="tierabzeichen" aria-label="Du bist {{ teilnahme.tier_name }}">
+  {% include "tutoring/_tierabzeichen.html" %}
+  <span class="tier-name">{{ teilnahme.tier_name }}</span>
+</p>
+{% endblock %}
+
+{% block inhalt %}
+{% comment %}Ein Bildschirm, drei Teile, auf jedem Geraet in derselben
+Reihenfolge: die Aufgabe, das Gespraech, der Verfasser. Am Handy eine
+Spalte, der Weg durch die Hilfen als Punktreihe unter der Aufgabe; ab 900 px
+zwei Spalten, Aufgabe und Weg rechts, fest. Die Stufe steht auf der Karte
+der Hilfe, nicht auf dem Knopf (Benchmark 19.10.2026, Abschnitt 6.3).
+
+Seit 30.10.2026 (Hilfe nach Diagnose) ist nicht jede Karte des Tutors eine
+Stufe: die Nachfrage vor der Hilfe ("Eine Frage an dich"), die Bestaetigung
+mit der Warum-Frage ("Das stimmt."), der Nachsatz darauf ("Dazu noch"). Was
+als Naechstes kommt, steht als data-zug-art am Arbeitsplatz: hilfe.js holt
+eine faellige Bestaetigung beim Laden von selbst.{% endcomment %}
+<div class="arbeitsplatz{% if aufgabe %} hat-aufgabe{% endif %}" id="arbeitsplatz"
+     data-schulstufe="{{ schulstufe }}" data-zug-art="{{ zug_art }}"
+     {% if abgeschlossen %}data-abgeschlossen="ja"{% endif %}
+     {% if aufgabe %}data-url-hilfe="{% url 'tutoring:hilfe' aufgabe.pk %}"
+     data-url-nachfrage-antwort="{% url 'tutoring:nachfrage_beantworten' 0 %}"{% endif %}>
+
+<div class="sitzungsleiste">
+  <p class="sitzungstitel">{{ sitzung.title }}</p>
+  {% comment %}Ein Formular und kein Knopf mit Skript: Die alte Aufgabe wird
+  dabei wirklich abgeschlossen und bleibt in der Lehreransicht als erledigt
+  stehen, statt von der naechsten still ueberschrieben zu werden.{% endcomment %}
+  {% if aufgabe and not abgeschlossen %}
+    <form method="post" action="{% url 'tutoring:aufgabe_abschliessen' %}" id="neue-aufgabe-form">
+      {% csrf_token %}
+      <button type="submit" class="plusknopf">
+        <span aria-hidden="true">+</span> Neue Aufgabe
+      </button>
+    </form>
+  {% endif %}
+</div>
+
+{% if fehler %}
+  <p class="meldung meldung-fehler" role="alert">{{ fehler }}</p>
+{% endif %}
+
+{% if aufgabe %}
+<aside class="seitenspalte" aria-label="Deine Aufgabe und dein Weg">
+  <article class="aufgabenkarte{% if abgeschlossen %} ist-erledigt{% endif %}" id="aufgabenkarte">
+    <p class="aufgabenkopf">
+      <span class="aufgabenmarke">Aufgabe {{ aufgabennummer }}</span>
+      <span class="erledigtmarke" id="erledigtmarke" {% if not abgeschlossen %}hidden{% endif %}>erledigt</span>
+    </p>
+    {% if aufgabe.image_data_url %}
+      <img class="aufgabenfoto" src="{{ aufgabe.image_data_url }}" alt="Dein Foto">
+    {% endif %}
+    <div class="hilfe-text aufgabenwortlaut">{{ aufgabe.text|linebreaksbr }}</div>
+  </article>
+
+  {% comment %}Der Weg durch die Hilfen: fuenf Punkte mit den Kindernamen der
+  Stufen. "erledigt" heisst gegeben, "aktuell" ist die Stufe, die als
+  Naechstes kommt - und die wird seit der Diagnose gewaehlt, nicht gezaehlt:
+  Sie kann unter der hoechsten liegen. Kommt als Naechstes eine Nachfrage
+  (naechste_stufe 0), ist kein Punkt aktuell, und nichts sagt "Stufe 0".
+  Am Handy eine Punktreihe, am PC eine Liste mit Namen.{% endcomment %}
+  <nav class="wegkarte" aria-label="Dein Weg durch die Hilfen">
+    <p class="weg-titel">Dein Weg</p>
+    <ol class="fortschritt" id="fortschritt">
+      {% for s in stufenliste %}
+        <li class="fortschritt-punkt{% if s.erledigt %} ist-erledigt{% endif %}{% if s.aktuell %} ist-aktuell{% endif %}"
+            data-stufe="{{ s.nr }}" data-name="{{ s.name }}"
+            {% if s.aktuell %}aria-current="step"{% endif %}>
+          <span class="punkt" aria-hidden="true">{{ s.nr }}</span>
+          <span class="punkt-name">{{ s.name }}</span>
+          <span class="nur-fuer-vorlesen">Stufe {{ s.nr }}, {{ s.name }}{% if s.erledigt %}, schon gegeben{% elif s.aktuell %}, kommt als Nächstes{% endif %}</span>
+        </li>
+      {% endfor %}
+    </ol>
+  </nav>
+</aside>
+{% endif %}
+
+<section class="gespraech" id="chatraum" aria-label="Das Gespräch">
+  {% if aufgabe %}
+    <ol class="karten" id="verlauf">
+      {% for k in gespraech %}
+        {% if k.art == "hilfe" %}
+          <li class="karte-hilfe schritt" data-stufe="{{ k.hilfe.level }}">
+            <p class="schritt-kopf">
+              <span class="schritt-marke">Tipp {{ k.hilfe.level }} · {{ k.hilfe.kindername }}</span>
+            </p>
+            <div class="hilfe-text">{{ k.hilfe.text|linebreaksbr }}</div>
+          </li>
+        {% elif k.art == "nachfrage" %}
+          {% comment %}Die Frage vor der Hilfe: Der Tutor laesst das Kind
+          laut denken (Zech, S. 321). Keine Stufe, leise Marke.{% endcomment %}
+          <li class="karte-hilfe schritt karte-nachfrage" data-art="nachfrage">
+            <p class="schritt-kopf">
+              <span class="schritt-marke schritt-marke-leise">{{ k.hilfe.kindername }}</span>
+            </p>
+            <div class="hilfe-text">{{ k.hilfe.text|linebreaksbr }}</div>
+          </li>
+        {% elif k.art == "bestaetigung" %}
+          {% comment %}Die Bestaetigung mit der Warum-Frage ist die Karte
+          "Das stimmt." selbst, an ihrer Stelle im Gespraech.{% endcomment %}
+          {% include "tutoring/_fertigkarte.html" with tutor_text=k.hilfe.text kind_text="" versteckt=False %}
+        {% elif k.art == "nachsatz" %}
+          <li class="karte-hilfe schritt karte-nachsatz" data-art="nachsatz">
+            <p class="schritt-kopf">
+              <span class="schritt-marke schritt-marke-leise">{{ k.hilfe.kindername }}</span>
+            </p>
+            <div class="hilfe-text">{{ k.hilfe.text|linebreaksbr }}</div>
+          </li>
+        {% elif k.art == "versuch" %}
+          <li class="karte-kind schritt-versuch">
+            <p class="versuch-kopf">Dein Versuch</p>
+            {% if k.bild %}
+              <img class="aufgabenfoto" src="{{ k.bild }}" alt="Dein Foto zum Versuch">
+            {% endif %}
+            <div class="hilfe-text">{{ k.text|linebreaksbr }}</div>
+          </li>
+        {% elif k.art == "begruendung" %}
+          {% comment %}Die Antwort des Kindes auf die Warum-Frage. Sie ist
+          freiwillig und wird nicht beurteilt.{% endcomment %}
+          <li class="karte-kind schritt-versuch karte-begruendung">
+            <p class="versuch-kopf">Deine Antwort</p>
+            {% if k.bild %}
+              <img class="aufgabenfoto" src="{{ k.bild }}" alt="Dein Foto zur Antwort">
+            {% endif %}
+            <div class="hilfe-text">{{ k.text|linebreaksbr }}</div>
+          </li>
+        {% elif k.art == "frage" %}
+          <li class="karte-kind karte-frage nachfrage-frage">
+            <p class="versuch-kopf">Deine Frage</p>
+            {% if k.frage.image_data_url %}
+              <img class="aufgabenfoto" src="{{ k.frage.image_data_url }}" alt="Dein Foto">
+            {% endif %}
+            <div class="hilfe-text">{{ k.frage.text|linebreaksbr }}</div>
+          </li>
+        {% elif k.art == "antwort" %}
+          <li class="karte-hilfe karte-antwort nachfrage-antwort">
+            <p class="schritt-kopf"><span class="schritt-marke">Antwort auf deine Frage</span></p>
+            <div class="hilfe-text">{{ k.text|linebreaksbr }}</div>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+      {% comment %}Die Karte "Das stimmt.", solange sie noch nicht als
+      Bestaetigung im Gespraech steht: sichtbar, wenn die Diagnose das
+      Ergebnis gerade als richtig erkannt hat (dann holt hilfe.js die
+      Bestaetigung, und ihr Text laeuft hier ein); versteckt, solange die
+      Aufgabe laeuft. Sie zeigt vom Kind nur, was es selbst geschrieben hat.
+      Steht die Bestaetigung schon im Verlauf, ist fertig_karte leer und die
+      Aufgabe abgeschlossen: dann gibt es die Karte oben schon.{% endcomment %}
+      {% if fertig_karte %}
+        {% include "tutoring/_fertigkarte.html" with kind_text=fertig_karte.text tutor_text="" versteckt=False %}
+      {% elif not abgeschlossen %}
+        {% include "tutoring/_fertigkarte.html" with kind_text="" tutor_text="" versteckt=True %}
+      {% endif %}
+    </ol>
+
+    {% include "tutoring/_note.html" %}
+
+    {% comment %}Der Kasten, in den ein Zug des Tutors einlaeuft. hilfe.js
+    beschriftet ihn nach der Art des Zuges (start-Ereignis): Stufe und
+    Kindername bei einer Hilfe, "Eine Frage an dich" bei einer Nachfrage,
+    "Dazu noch" beim Nachsatz. Die Bestaetigung laeuft nicht hier, sondern
+    in der Karte "Das stimmt." ein.{% endcomment %}
+    <article class="karte-hilfe schritt hilfe-neu" id="neue-hilfe" hidden aria-busy="false">
+      <p class="schritt-kopf">
+        <span class="schritt-marke" id="neue-bezeichnung"></span>
+        <span class="schritt-nummer nur-fuer-vorlesen" id="neue-stufe"></span>
+      </p>
+      <div class="hilfe-text" id="neue-text"></div>
+    </article>
+
+    {# Die Loesungsabfrage. Sie kommt vom Server, nicht aus dieser Seite. #}
+    <div class="loesungsabfrage" id="loesungsabfrage" hidden>
+      <p class="loesungsfrage" id="loesungsfrage">Möchtest du die Lösung sehen?</p>
+      <p class="feld-hilfe" id="loesungshinweis"></p>
+      <div class="loesungsknoepfe">
+        <button type="button" class="knopf" id="loesung-ja">Ja, zeig sie mir</button>
+        <button type="button" class="knopf knopf-still" id="loesung-nein">
+          Nein, ich probier weiter
+        </button>
+      </div>
+    </div>
+
+    {% comment %}Nach der letzten Stufe ist der Weg zu Ende, und das ist kein
+    Fehler. Das Kind kann weiter probieren, fragen oder eine neue Aufgabe
+    beginnen.{% endcomment %}
+    <p class="fertighinweis" id="stufenende"
+       {% if not stufen_ausgeschoepft or abgeschlossen or loesung_gezeigt %}hidden{% endif %}>
+      Das waren alle Tipps zu dieser Aufgabe. Du kannst weiter probieren,
+      mich etwas fragen oder mit einer neuen Aufgabe weitermachen.
+    </p>
+  {% else %}
+    <p class="willkommen">
+      Schreib deine Aufgabe auf, fotografiere sie oder sprich sie ein.
+    </p>
+  {% endif %}
+
+  <p class="meldung meldung-fehler" id="hilfe-fehler" role="alert" hidden></p>
+  <p class="nur-fuer-vorlesen" role="status" id="ansage"></p>
+  <div id="chatende"></div>
+</section>
+
+<div class="verfasser" id="verfasser">
+  {% if aufgabe and not abgeschlossen %}
+    {% comment %}Der Hilfeknopf heisst immer gleich. Er steht auch, waehrend
+    eine Hilfe oder Nachfrage auf den Versuch wartet: Wer ihn dann drueckt,
+    sagt damit, dass er einen Tipp braucht, und das ist eine ehrliche
+    Antwort. Vor der ersten Hilfe steht er neben Versuch und Frage: Das Kind
+    darf anfangen, muss aber nicht.{% endcomment %}
+    <div class="tippzeile" id="tippzeile" {% if not tipp_moeglich %}hidden{% endif %}>
+      <button type="button" class="knopf knopf-tipp" id="hilfe-knopf"
+              data-url="{% url 'tutoring:hilfe' aufgabe.pk %}"
+              data-nachfrage-url="{% url 'tutoring:nachfrage_beantworten' 0 %}">
+        <svg class="knopf-zeichen" viewBox="0 0 24 24" width="22" height="22" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M9 18h6M10 21h4M8.5 14.5a5.5 5.5 0 1 1 7 0c-.8.7-1.2 1.5-1.3 2.5h-4.4c-.1-1-.5-1.8-1.3-2.5z"/>
+        </svg>
+        <span>{{ hilfeknopf }}</span>
+      </button>
+    </div>
+  {% endif %}
+
+  {% include "tutoring/_aufgabenwahl.html" %}
+
+  {% include "tutoring/_verfasser.html" %}
+
+  {% if aufgabe and not abgeschlossen %}
+    {% comment %}Der Weg fuer alle, die es selbst herausbekommen haben, bevor
+    die Stufen aus sind, und nach der Loesung der Weg zur naechsten
+    Aufgabe. Ohne ihn laeuft jede Aufgabe bis zum Ende.{% endcomment %}
+    <form class="fertigform" method="post" id="fertigform"
+          action="{% url 'tutoring:aufgabe_abschliessen' %}">
+      {% csrf_token %}
+      <button type="submit" class="knopf-als-weg fertigweg" id="fertig-knopf">
+        {% if loesung_gezeigt %}Nächste Aufgabe{% else %}Ich bin fertig{% endif %}
+      </button>
+    </form>
+  {% endif %}
+</div>
+
+</div>
+{% endblock %}
+
+{% block skripte %}
+<script src="{% static 'js/chat.js' %}" defer></script>
+<script src="{% static 'js/foto.js' %}" defer></script>
+{% if sprache_moeglich %}<script src="{% static 'js/sprache.js' %}" defer></script>{% endif %}
+{% if aufgabe %}<script src="{% static 'js/hilfe.js' %}" defer></script>{% endif %}
+{% endblock %}

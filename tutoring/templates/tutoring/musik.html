@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titel %}Musikstunde{% endblock %}
+
+{% block kopf_extra %}
+  {% comment %}Die Bauteile kommen aus der Probierecke auf /projekt/
+  (Stilkarten, Markenknoepfe, Masslinie fuer die Dauer), damit die
+  Musikstunde und die oeffentliche Fassung gleich aussehen und gleich
+  funktionieren. Die Variablen dazu setzt .musikstunde in app.css.{% endcomment %}
+  <link rel="stylesheet" href="{% static 'css/projekt.css' %}">
+{% endblock %}
+
+{% block kopf_aktion %}
+<p class="tierabzeichen" aria-label="Du bist {{ teilnahme.tier_name }}">
+  {% include "tutoring/_tierabzeichen.html" %}
+  <span class="tier-name">{{ teilnahme.tier_name }}</span>
+</p>
+{% endblock %}
+
+{% block inhalt %}
+<div class="sitzungsleiste">
+  <p class="sitzungstitel">{{ sitzung.title }}</p>
+</div>
+
+<div class="musikstunde">
+  {% if sitzung.task_hint %}
+    <p class="musik-thema">Thema der Stunde:
+      <span class="musik-thema-wort">{{ sitzung.task_hint }}</span></p>
+  {% endif %}
+
+  <noscript><p class="projekt-musik-satz">Für die Musikstunde braucht diese Seite JavaScript.</p></noscript>
+
+  {% comment %}Dieselbe Reihenfolge der Arbeit wie beim Liedermachen: erst
+  der Text, dann der Stil, dann die Dauer, dann der Knopf. Steht schon ohne
+  Netz fest, dass nichts geht, steht gleich der Satz. Sonst holt das Skript
+  Stile und Marken und zeigt erst dann das Formular, damit niemand ohne
+  Stile abschickt. Jede Grenze (Dauer, Textlaenge, Woerter, Anzahl,
+  Vorschlaege) prueft der Server; die Seite zeigt nur, was erlaubt ist.
+
+  Die Sprache des Gesangs waehlt nicht das Kind, die hat die Lehrperson fuer
+  alle eingestellt. Sie steht deshalb als Satz da und nicht als Auswahl.
+
+  Der Textvorschlag vom Spark gibt es nur, wenn die Lehrperson ihn erlaubt
+  hat (texthilfe); dann traegt das Formular data-text, und das Skript zeigt
+  die zwei Wege. Ohne Erlaubnis gibt es nur das Textfeld.{% endcomment %}
+  {% if hinweis %}
+    <p class="projekt-musik-satz" role="status">{{ hinweis }}</p>
+  {% else %}
+    <p class="projekt-musik-satz" id="musik-kind-laden" role="status" hidden>Die Musik-KI wird gefragt …</p>
+
+    <form id="musik-kind" class="projekt-musik" method="post" action="{% url 'tutoring:musik_lied' %}"
+          data-stand="{% url 'tutoring:musik_stand' %}" data-liste="{% url 'tutoring:musik_liste' %}"
+          {% if texthilfe %}data-text="{% url 'tutoring:musik_text' %}"{% endif %} hidden>
+      {% csrf_token %}
+
+      <fieldset class="projekt-musik-teil">
+        <legend><span class="projekt-nummer">01</span>Dein Text</legend>
+
+        {% if texthilfe %}
+          <div class="musik-wege" role="radiogroup" aria-label="Wer schreibt den Text?">
+            <label class="musik-weg">
+              <input type="radio" name="textweg" value="selbst" checked>
+              <span>Ich schreibe selbst</span>
+            </label>
+            <label class="musik-weg">
+              <input type="radio" name="textweg" value="spark">
+              <span>Der Spark schreibt einen Vorschlag</span>
+            </label>
+          </div>
+
+          <div class="musik-spark" id="musik-kind-spark" hidden>
+            <label for="musik-kind-thema">Worum soll das Lied gehen?</label>
+            <input type="text" id="musik-kind-thema" name="thema" maxlength="{{ thema_max }}"
+                   value="{{ thema_vorgabe }}" autocomplete="off"
+                   aria-describedby="musik-kind-thema-hilfe">
+            <p class="projekt-musik-hilfe" id="musik-kind-thema-hilfe">Der Vorschlag kommt in das Textfeld darunter, und du kannst ihn ändern. Wie lang er wird, richtet sich nach der Dauer, die du unten wählst. Höchstens {{ vorschlaege }} Vorschläge.</p>
+            <button type="button" class="knopf" id="musik-kind-vorschlag">Vorschlag holen</button>
+            <p class="projekt-musik-meldung" id="musik-kind-vorschlag-meldung" role="status" aria-live="polite"></p>
+          </div>
+        {% endif %}
+
+        <label class="musik-textlabel" for="musik-kind-text">Liedtext</label>
+        <div class="projekt-marken-knoepfe" id="musik-kind-marken" role="group" aria-label="Marke an der Schreibstelle einfügen"></div>
+        <textarea name="lyrics" id="musik-kind-text" rows="8" maxlength="{{ text_max }}"
+                  aria-describedby="musik-kind-text-hilfe"></textarea>
+        <p class="projekt-musik-hilfe" id="musik-kind-text-hilfe"><span id="musik-kind-zeichen">0</span> von {{ text_max }} Zeichen. Gesungen wird auf {{ gesang }}. Die Marken gliedern das Lied in Strophe, Refrain und so weiter; ohne Text wird es ein Instrumentalstück.</p>
+      </fieldset>
+
+      <fieldset class="projekt-musik-teil">
+        <legend><span class="projekt-nummer">02</span>Stil</legend>
+        <div class="musik-stilgruppen" id="musik-kind-stile"></div>
+        <div class="musik-eigen">
+          <label for="musik-kind-eigen">Eigener Stil <span class="feld-zusatz">(wenn du magst)</span></label>
+          <input type="text" id="musik-kind-eigen" name="eigener_stil" maxlength="{{ eigen_max }}"
+                 placeholder="zum Beispiel: Piratenlied mit Akkordeon und Möwen" autocomplete="off"
+                 aria-describedby="musik-kind-eigen-hilfe">
+          <p class="projekt-musik-hilfe" id="musik-kind-eigen-hilfe">Kommt zum gewählten Stil dazu. Bei „Ganz eigener Stil“ zählt nur, was hier steht.</p>
+        </div>
+      </fieldset>
+
+      <fieldset class="projekt-musik-teil">
+        <legend><span class="projekt-nummer">03</span>Dauer</legend>
+        {% for d in dauern %}
+          <label class="projekt-dauer">
+            <input type="radio" name="sekunden" value="{{ d.sekunden }}" {% if d.sekunden == vorgabe_dauer %}checked{% endif %}>
+            <span class="projekt-dauer-wert">{{ d.sekunden }} s</span>
+            <span class="projekt-strecke" style="--anteil: {{ d.anteil }}%" aria-hidden="true"><span class="projekt-mass"></span></span>
+          </label>
+        {% endfor %}
+      </fieldset>
+
+      <button type="submit" class="knopf" id="musik-kind-senden">Lied machen</button>
+      <p class="projekt-musik-meldung" id="musik-kind-meldung" role="status" aria-live="polite"></p>
+    </form>
+
+    <div class="projekt-musik-ergebnis" id="musik-kind-ergebnis" hidden>
+      <span class="projekt-marker">Dein neues Lied</span>
+      <p class="projekt-musik-stand" id="musik-kind-stand" aria-live="polite"></p>
+      <div id="musik-kind-spieler"></div>
+    </div>
+  {% endif %}
+
+  <section aria-labelledby="lieder-titel">
+    <h2 id="lieder-titel">Deine Lieder</h2>
+    <div id="musik-kind-liste">
+      {% include "tutoring/_musik_lieder.html" %}
+    </div>
+  </section>
+
+  <p class="projekt-vermerk">Bitte keine Namen in den Text. Wenn die Stunde vorbei ist, werden alle Lieder gelöscht.</p>
+</div>
+{% endblock %}
+
+{% block skripte %}
+{% if not hinweis %}<script src="{% static 'js/musik_oeffentlich.js' %}" defer></script>{% endif %}
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block titel %}Ist alles bereit?{% endblock %}
+
+{% block inhalt %}
+<div class="seitenkopf">
+  <h1>Ist alles bereit?</h1>
+  <p class="seitenkopf-zusatz">{{ jetzt|date:"d.m.Y" }}, {{ jetzt|time:"H:i:s" }}</p>
+</div>
+
+{% if alles_gut %}
+  <p class="meldung meldung-gut" role="status">
+    Alles antwortet. Du kannst anfangen.
+  </p>
+{% else %}
+  <p class="meldung meldung-fehler" role="alert">
+    Etwas antwortet nicht. Unten steht, was.
+  </p>
+{% endif %}
+
+<ul class="pruefliste">
+  {% for p in pruefungen %}
+    <li class="pruefzeile{% if not p.ok %} ist-aus{% endif %}">
+      <span class="pruefpunkt" aria-hidden="true"></span>
+      <div class="pruefmitte">
+        <p class="pruefname">
+          {{ p.name }}
+          <span class="nur-fuer-vorlesen">{% if p.ok %}antwortet{% else %}antwortet nicht{% endif %}</span>
+        </p>
+        <p class="pruefwozu">{{ p.wozu }}</p>
+        <p class="pruefauskunft">{{ p.auskunft }}</p>
+      </div>
+      <p class="pruefzeit">{{ p.ms }}<span class="pruefeinheit">ms</span></p>
+    </li>
+  {% endfor %}
+</ul>
+
+<p class="leerhinweis">
+  Jede Zeile ist ein echter Aufruf, keine blosse Verbindungsprüfung. Lade die
+  Seite neu, um noch einmal zu messen.
+</p>
+
+<p><a class="knopf" href="{% url 'tutoring:lehrperson_uebersicht' %}">Zu den Sitzungen</a></p>
+{% endblock %}

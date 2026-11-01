@@ -1,0 +1,32 @@
+{% comment %}Der Verlauf eines Kindes in der Musikstunde: seine Lieder mit
+Text, Stil, Ampel und Abspieler. Das ist das Gegenstueck zum Chat der
+anderen Faecher - Thomas (22.10.2026): "In der Musikstunde kann ich nicht in
+die Chats rein." Die Datei reicht tutoring:lehrperson_lied durch, nur an die
+Lehrperson dieser Sitzung; preload="none", damit die Seite nicht beim Laden
+alle MP3 vom Spark holt.{% endcomment %}
+{% if lieder %}
+  <ul class="musik-lieder">
+    {% for lied in lieder %}
+      <li class="musik-lied" id="lied-{{ lied.pk }}">
+        <p class="musik-lied-kopf">
+          <strong>Lied {{ forloop.counter }}</strong>
+          <span class="musik-lied-stand">{{ lied.stil }} &middot; {{ lied.sekunden }} s &middot; {{ lied.get_zustand_display }} &middot; {{ lied.angelegt_am|time:"H:i" }}</span>
+          <span class="ampelpunkt ampelpunkt-{{ lied.flag }}" aria-hidden="true"></span>
+          <span class="musik-lied-stand">{{ lied.ampel_beschreibung }}{% if lied.flag_reason %}: {{ lied.flag_reason }}{% endif %}</span>
+        </p>
+        {% if lied.text %}
+          <p class="musik-lied-text">{{ lied.text }}</p>
+        {% else %}
+          <p class="musik-lied-stand">Ohne Text, nur Musik.</p>
+        {% endif %}
+        {% if lied.zustand != "fehler" and lied.zustand != "weg" %}
+          <div class="musik-lied-spieler">
+            <audio controls preload="none" src="{% url 'tutoring:lehrperson_lied' sitzung.code lied.pk %}"></audio>
+          </div>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="leerhinweis">{{ teilnahme.tier_name }} hat noch kein Lied gemacht.</p>
+{% endif %}

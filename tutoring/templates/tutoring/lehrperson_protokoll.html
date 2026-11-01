@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block titel %}Protokoll {{ sitzung.code }}{% endblock %}
+
+{% block inhalt %}
+{% comment %}Die Zeitleiste einer Sitzung (Abschnitt 3b): eine Zeile je
+Anfrage an ein Sprachmodell, aufklappbar. Beim Weg nach draussen steht die
+ganze Kommunikation mit der Gegenstelle da: Anweisung, Ausgehendes, Antwort,
+und was lokal daraus wurde (Thomas, 31.10.2026). Was eine Zeile traegt, hat
+die Protokollstufe beim Schreiben entschieden.{% endcomment %}
+<div class="lehrseite">
+<p class="zurueck">
+  <a href="{% url 'tutoring:lehrperson_protokolle' %}">Alle Protokolle</a>
+  {% if not sitzung.closed_at %}&middot; <a href="{% url 'tutoring:lehrperson_sitzung' sitzung.code %}">Zur Sitzung</a>{% endif %}
+</p>
+<div class="seitenkopf">
+  <h1>Protokoll {{ sitzung.code }}</h1>
+  <p class="seitenkopf-zusatz">
+    {{ sitzung.title }} &middot; {{ sitzung.fach_name }}
+    &middot; angelegt {{ sitzung.created_at|date:"d.m.Y H:i" }}{% if sitzung.closed_at %} &middot; beendet {{ sitzung.closed_at|date:"d.m.Y H:i" }}{% endif %}
+    &middot; Aufzeichnung: {{ stufen_text }}
+  </p>
+</div>
+
+<form method="get" class="protokoll-filter">
+  <label>Weg
+    <select name="weg">
+      <option value="">alle</option>
+      <option value="cloud" {% if filter.weg == "cloud" %}selected{% endif %}>nur nach draußen</option>
+      <option value="lokal" {% if filter.weg == "lokal" %}selected{% endif %}>nur am Spark</option>
+    </select>
+  </label>
+  <label><input type="checkbox" name="nur" value="blockiert" {% if filter.nur == "blockiert" %}checked{% endif %}> nur blockierte Aufrufe</label>
+  <label>Stufe
+    <select name="stufe">
+      <option value="">alle</option>
+      {% for s in "12345" %}<option value="{{ s }}" {% if filter.stufe == s %}selected{% endif %}>{{ s }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Kennung
+    <select name="kennung">
+      <option value="">alle</option>
+      {% for k in kennungen %}<option value="{{ k }}" {% if filter.kennung == k %}selected{% endif %}>{{ k|slice:":8" }}</option>{% endfor %}
+    </select>
+  </label>
+  <button type="submit" class="knopf knopf-leise">Filtern</button>
+</form>
+
+<p class="protokoll-summe">
+  {{ summe.anzahl }} Anfrage{{ summe.anzahl|pluralize:"n" }}, davon {{ summe.cloud }} nach draußen{% if summe.blockiert %}, {{ summe.blockiert }} blockiert{% endif %}
+  &middot; {{ summe.tokens_in }} Token ein, {{ summe.tokens_out }} aus
+  &middot; {{ summe.dauer_s|floatformat:1 }} s &middot; {{ summe.kosten_euro|floatformat:4 }} &euro;
+  &middot; Export: <a href="?{{ abfrage }}{% if abfrage %}&amp;{% endif %}export=json">JSON</a>,
+  <a href="?{{ abfrage }}{% if abfrage %}&amp;{% endif %}export=csv">CSV</a>
+</p>
+
+{% for z in zeilen %}
+  <details class="qsblock protokollzeile{% if z.leak_check == "blockiert" %} ist-gesperrt{% endif %}{% if z.ist_cloud %} ist-cloud{% endif %}">
+    <summary>
+      <span class="protokoll-zeit">{{ z.created_at|date:"d.m. H:i:s" }}</span>
+      <span class="marke-chip">{{ z.weg_text }}</span>
+      <span class="protokoll-kurz">{{ z.model_name|default:"Modell unbekannt" }}{% if z.level_requested is not None %} &middot; Stufe {{ z.level_requested }}{% if z.level_granted is not None and z.level_granted != z.level_requested %}, gewährt {{ z.level_granted }}{% endif %}{% endif %} &middot; {{ z.duration_ms }} ms &middot; {{ z.tokens_in }} / {{ z.tokens_out }} Token{% if z.ist_cloud %} &middot; {{ z.leak_text }}{% endif %}{% if z.outcome != "ok" %} &middot; {{ z.outcome }}{% endif %}{% if z.error_kind %} ({{ z.error_kind }}){% endif %}</span>
+    </summary>
+    <dl class="qs-zahlen">
+      <dt>Kennung</dt><dd>{% if z.participant_key %}{{ z.participant_key|slice:":8" }}{% else %}&ndash;{% endif %}</dd>
+      <dt>Aufzeichnung</dt><dd>Stufe {{ z.research_level }}</dd>
+      {% if z.ist_cloud %}
+        <dt>Kosten</dt><dd class="zahl">{{ z.kosten_euro|floatformat:5 }} &euro;</dd>
+        <dt>Ersetzt</dt><dd>{{ z.entitaeten_text|default:"nichts" }}</dd>
+      {% endif %}
+      {% if z.diagnose_text %}<dt>Diagnose</dt><dd>{{ z.diagnose_text }}</dd>{% endif %}
+    </dl>
+    {% if z.instruction %}
+      <details class="protokoll-anweisung">
+        <summary class="qs-kopf">Anweisung an die Gegenstelle</summary>
+        <blockquote class="qs-text">{{ z.instruction|linebreaksbr }}</blockquote>
+      </details>
+    {% endif %}
+    {% if not z.inhalte_aufgezeichnet %}
+      <p class="qs-notiz">Nur Zahlen: Diese Zeile ist auf Stufe 1 (Betrieb) entstanden, ohne Inhalte.</p>
+    {% elif z.leak_check == "blockiert" %}
+      <p class="qs-notiz">Nichts hinausgegangen{% if z.error_kind %}: {{ z.error_kind }}{% endif %}.</p>
+    {% else %}
+      <h4 class="qs-kopf">{% if z.ist_cloud %}Das ist hinausgegangen{% else %}Anfrage an den Spark{% endif %}</h4>
+      <blockquote class="qs-text{% if z.ist_cloud %} qs-raus{% endif %}">{{ z.masked_input|default:"–"|linebreaksbr }}</blockquote>
+      <h4 class="qs-kopf">{% if z.ist_cloud %}Das kam zurück{% else %}Antwort des Spark{% endif %}</h4>
+      <blockquote class="qs-text{% if z.ist_cloud %} qs-rein{% endif %}">{{ z.masked_output|default:"–"|linebreaksbr }}</blockquote>
+      {% if z.raw_output and z.raw_output != z.masked_output %}
+        <h4 class="qs-kopf">Daraus wurde lokal, mit eingesetzten Werten</h4>
+        <blockquote class="qs-text">{{ z.raw_output|linebreaksbr }}</blockquote>
+      {% endif %}
+      {% if z.raw_input and z.raw_input != z.masked_input %}
+        <h4 class="qs-kopf">Die Anfrage im Original</h4>
+        <blockquote class="qs-text">{{ z.raw_input|linebreaksbr }}</blockquote>
+      {% endif %}
+    {% endif %}
+  </details>
+{% empty %}
+  <p class="leerhinweis">Keine Anfrage{% if abfrage %} mit diesem Filter{% endif %}.</p>
+{% endfor %}
+</div>
+{% endblock %}

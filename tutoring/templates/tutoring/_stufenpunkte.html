@@ -1,0 +1,11 @@
+{% comment %}Die Stufenpunkte als Linienzeichnung, im Stil von _fachsymbol.html.
+
+Aufruf: {% include "tutoring/_stufenpunkte.html" with punkte=z.punkte breite=z.breite %}.
+`punkte` kommt aus klassenbild.stufenpunkte() oder punkte_zeichnen(): je Punkt
+Stufe, Zustand, Wort und x-Lage. Gefuellt heisst gegeben, ein Ring darum
+wiederholt, ein Pfeil darueber zurueck (Bericht 6.3). Offen ist ein hohler
+Kreis, gesperrt (ueber der Obergrenze) ein gestrichelter.
+
+currentColor und Strich 1.5 wie ueberall; die Fuellung des gegebenen Punktes
+ist die Aussage selbst, keine Flaeche zur Zierde. Die Zeichnung ist fuer
+Vorleser versteckt, der Satz daneben sagt dasselbe in Worten.{% endcomment %}<svg class="stufenpunkte" viewBox="0 0 {{ breite|default:100 }} 24" width="{{ breite|default:100 }}" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">{% if punkte|length > 1 %}<path class="stufenpunkte-linie" d="M{{ punkte.0.x }} 15H{{ breite|default:100|add:"-10" }}"/>{% endif %}{% for p in punkte %}{% if p.zustand == "gegeben" %}<circle cx="{{ p.x }}" cy="15" r="4.5" fill="currentColor"/>{% elif p.zustand == "wiederholt" %}<circle cx="{{ p.x }}" cy="15" r="4.5" fill="currentColor"/><circle cx="{{ p.x }}" cy="15" r="8"/>{% elif p.zustand == "zurueck" %}<circle cx="{{ p.x }}" cy="15" r="4.5" fill="currentColor"/><path d="M{{ p.x|add:"5" }} 5H{{ p.x|add:"-5" }}m3-3l-3 3 3 3"/>{% elif p.zustand == "gesperrt" %}<circle class="stufenpunkte-gesperrt" cx="{{ p.x }}" cy="15" r="4.5" stroke-dasharray="2 2.2"/>{% else %}<circle cx="{{ p.x }}" cy="15" r="4.5"/>{% endif %}{% endfor %}</svg>{% if not stumm %}<span class="nur-fuer-vorlesen">Stufen: {% for p in punkte %}{{ p.stufe }} {{ p.wort }}{% if not forloop.last %}, {% endif %}{% endfor %}.</span>{% endif %}

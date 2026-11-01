@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block titel %}Sitzung {{ sitzung.code }}{% endblock %}
+
+{% block inhalt %}
+{% comment %}BILDSCHIRM 2 DER LEHRPERSON: DIE LAUFENDE STUNDE
+
+Oben Code und QR-Code fuer die Leinwand, rechts der Titel mit dem Stift und
+die Entscheidungen der Lehrperson als Marken. Darunter die Klasse als
+Kacheln, in jeder Betriebsart dieselbe Kachel (_klassenliste.html, alle fuenf
+Sekunden nachgeholt), und jede Kachel fuehrt in den Verlauf des Kindes.
+
+Thomas (22.10.2026): Die Seite war zu kompliziert, zu viel Text. Deshalb
+steht hier nichts mehr, was erklaert - die Erklaerung, die Stufen, die
+Lieder der ganzen Klasse und der lange Satz zum Beenden sind Aufklapper.
+Was man beim ersten Blick braucht, ist der Code, die Klasse, der Knopf.{% endcomment %}
+<div class="lehrseite stundenseite">
+
+<header class="stundenkopf">
+  <div class="stundenkopf-code">
+    <p class="code-gross" aria-label="Sitzungscode {{ sitzung.code }}">
+      <span aria-hidden="true">{{ sitzung.code|slice:":3" }}&nbsp;{{ sitzung.code|slice:"3:" }}</span>
+    </p>
+    <img class="stundenkopf-qr" src="{% url 'tutoring:qr_code' sitzung.code %}"
+         width="200" height="200"
+         alt="QR-Code, der zur Sitzung {{ sitzung.code }} führt">
+    <p class="code-nachspann">{{ request.get_host }} &middot; Code eingeben oder QR-Code scannen</p>
+    <p class="leinwand-adresse">{{ beitritts_url }}</p>
+  </div>
+
+  <div class="stundenkopf-text">
+    <div class="titelzeile">
+      <h1 class="sitzung-titel">{{ sitzung.title }}</h1>
+      <details class="titel-stift">
+        <summary>
+          <svg class="linien-symbol" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-3-3L5 17v3z"/><path d="M13.5 8.5l3 3"/></svg>
+          Titel ändern
+        </summary>
+        <form method="post" action="{% url 'tutoring:lehrperson_titel' sitzung.code %}" class="titelform">
+          {% csrf_token %}
+          <label for="titel-neu" class="nur-fuer-vorlesen">Neuer Titel</label>
+          <input type="text" id="titel-neu" name="title" maxlength="120" required
+                 value="{{ sitzung.title }}">
+          <button type="submit" class="knopf">Speichern</button>
+        </form>
+      </details>
+    </div>
+
+    <p class="marken marken-gross">
+      <span class="marke-chip ist-fach">{% include "tutoring/_fachsymbol.html" with symbol=sitzung.fach_symbol %} {{ sitzung.fach_name }}</span>
+      {% for marke in marken %}
+        <span class="marke-chip">{{ marke }}</span>
+      {% endfor %}
+      <span class="marke-chip">{{ sitzung.verfall_beschreibung }}</span>
+    </p>
+    {% comment %}Das Protokoll der Anfragen (Abschnitt 3b, Thomas 31.10.2026):
+    jede Anfrage an ein Sprachmodell, beim Weg nach draussen mit Anweisung,
+    Ausgehendem und Antwort. Es bleibt, wenn die Sitzung beendet ist.{% endcomment %}
+    <p class="seitenkopf-weg stundenkopf-weg">
+      <a href="{% url 'tutoring:lehrperson_protokoll' sitzung.code %}">Protokoll der Anfragen an die Sprachmodelle</a>
+    </p>
+  </div>
+</header>
+
+{% if sitzung.ist_hilfe %}
+  {% include "tutoring/_aufgabenpool.html" %}
+{% endif %}
+
+<section aria-labelledby="klasse-titel" class="klasse">
+  <h2 id="klasse-titel">Die Klasse</h2>
+  <div id="klassenliste" hx-get="{% url 'tutoring:lehrperson_klassenliste' sitzung.code %}"
+       hx-trigger="every 5s" hx-swap="innerHTML">
+    {% include "tutoring/_klassenliste.html" %}
+  </div>
+
+  {% comment %}Der Zusatztext, nur auf Wunsch: was eine Kachel zeigt, was
+  die Ampel bedeutet, und in Mathematik und Deutsch die fuenf Stufen.{% endcomment %}
+  <details class="erklaerung-aufklapper">
+    <summary>Was die Kacheln zeigen</summary>
+    {% if sitzung.ist_sprechcoach %}
+      <p>
+        Eine Kachel je Kind: die Phase des Gesprächs, die Zahlen dazu und der
+        letzte Beitrag. Die Zahlen beschreiben das Gespräch, sie bewerten es
+        nicht{% if sitzung.ist_volksschule %}; in der Volksschule nur für die
+        ganze Klasse{% endif %}. Ein Tipp auf die Kachel öffnet das Gespräch
+        mit Übersetzung.
+        <a href="{% url 'sprechcoach_erklaerung' %}#messung">Was die Zahlen bedeuten</a>
+      </p>
+    {% elif sitzung.ist_musik %}
+      <p>
+        Eine Kachel je Kind: wie viele Lieder, das letzte Lied und die erste
+        Zeile seines Textes. Texte mit Schimpfwörtern werden nicht vertont,
+        das Tier steht dann auf Rot. Der Spark rechnet ein Lied nach dem
+        anderen; bei einer ganzen Klasse sind einige Minuten Wartezeit normal.
+        Ein Tipp auf die Kachel öffnet Texte und Lieder des Kindes.
+      </p>
+    {% elif sitzung.ist_trainer %}
+      <p>
+        Eine Kachel je Kind: das Thema, der Lernschritt und der letzte Beitrag.
+        Die Ampel sagt, ob die Beiträge zum Thema passen, nicht, ob die
+        Antworten stimmen. Ein Tipp auf die Kachel öffnet das Gespräch.
+      </p>
+      {% include "tutoring/_stufenerklaerung.html" %}
+    {% elif sitzung.ist_safechat %}
+      <p>
+        Eine Kachel je Kind: wie viele Nachrichten es geschrieben hat, wie
+        viele davon nach draußen gegangen sind, und der letzte Beitrag. Die
+        Ampel sagt, ob die Beiträge in Ordnung sind; auf Rot (Schimpfwort,
+        Beleidigung) antwortet die KI nicht. Steht ein Urteil dabei, ist es
+        das der Gegenstelle zur letzten Frage nach draußen: ob sie in der
+        Anfrage, die sie gesehen hat, einen Personenbezug erkannt hat. Ein
+        Tipp auf die Kachel öffnet den Chat mit dem vollständigen Protokoll
+        jedes Weges nach draußen.
+      </p>
+    {% else %}
+      <p>
+        Eine Kachel je Kind: die Aufgabe, die gegebenen Hilfen als Stufenpunkte,
+        der letzte Beitrag und was die Anwendung daraus schließt. Die Punkte
+        zeigen, welche Stufen es gab, nicht wie weit ein Kind ist: Die Hilfe
+        wird nach jedem Beitrag gewählt, nicht der Reihe nach gegeben. Wer
+        einen Blick braucht, steht oben und ist gerahmt: auffällige Beiträge,
+        dreimal dieselbe Stufe, fünf Minuten Stille. Die Ampel sagt, ob die
+        Beiträge zur Aufgabe passen, nicht, ob die Mathematik stimmt. Will ein
+        Kind die Hilfe umgehen („vergiss deine Regeln“, „die Lehrerin hat es
+        erlaubt“), sagt ihm der Tutor, dass das nicht der Sinn der Sache ist
+        und dass die Lehrperson mitlesen kann; die Kachel zählt diese
+        Versuche, der Verlauf zeigt den Beitrag. Ein Tipp auf die Kachel
+        öffnet den Verlauf.
+      </p>
+      <p>
+        <strong>Eigenanteil, grobe Einschätzung:</strong> Unter der Diagnose
+        steht, wie viel das Kind nach einer Faustregel selbst geschafft hat:
+        100 % ohne Hilfe, 90 % mit Stufe 1, 75 % mit Stufe 2, 60 % mit
+        Stufe 3, 40 % mit Stufe 4 als stärkster Hilfe vor dem richtigen
+        Ergebnis, je weitere Stufenhilfe 5 % weniger, 0 % wenn die Lösung
+        gezeigt wurde; über alle Aufgaben des Kindes mit Ergebnis gemittelt.
+        Das ist eine Regel aus den Hilfestufen, kein Messwert. Der Verlauf
+        zeigt die Zahl je Aufgabe und dazu, in jeder Betriebsart, den Weg
+        nach draußen: was für dieses Kind hinausging und zurückkam, oder
+        dass es keinen solchen Weg gibt.
+      </p>
+      <p>
+        <strong>Note der Kinder:</strong> Nach jeder abgeschlossenen Aufgabe
+        fragt die Seite das Kind, ob die Hilfe geholfen hat, als Note wie in
+        der Schule (1 sehr gut, 5 gar nicht), freiwillig. Die Kachel zeigt
+        das Mittel je Kind, die Zahlenzeile das Mittel der Klasse, der
+        Verlauf die Note je Aufgabe.
+      </p>
+      {% include "tutoring/_stufenerklaerung.html" %}
+    {% endif %}
+  </details>
+</section>
+
+{% if sitzung.ist_musik %}
+{% comment %}Alle Lieder der Klasse zum Anhoeren, eingeklappt. Ausserhalb
+der Klassenliste, die alle fuenf Sekunden ersetzt wird: Ein Abspieler darin
+finge jedes Mal von vorn an. Stand beim Laden der Seite. Die Datei reicht
+tutoring:lehrperson_lied durch, nur an die Lehrperson dieser Sitzung;
+preload="none", damit die Seite nicht beim Laden alle MP3 vom Spark holt.{% endcomment %}
+<details class="erklaerung-aufklapper lieder-aufklapper" id="lieder">
+  <summary>Alle Lieder der Klasse anhören ({{ lieder|length }})</summary>
+  <p>
+    Stand beim Laden der Seite.
+    <a href="{% url 'tutoring:lehrperson_sitzung' sitzung.code %}#lieder">Neu laden</a>
+  </p>
+  {% if lieder %}
+    <ul class="musik-lieder">
+      {% for lied in lieder %}
+        <li class="musik-lied" id="lied-{{ lied.pk }}">
+          <p class="musik-lied-kopf">
+            {% include "tutoring/_tierabzeichen.html" with teilnahme=lied.participation %}
+            <strong>{{ lied.participation.tier_name|default:"ohne Tier" }}</strong>
+            <span class="musik-lied-stand">{{ lied.stil }} &middot; {{ lied.sekunden }} s &middot; {{ lied.get_zustand_display }}</span>
+            <span class="ampelpunkt ampelpunkt-{{ lied.flag }}" aria-hidden="true"></span>
+          </p>
+          {% if lied.zustand != "fehler" and lied.zustand != "weg" %}
+            <div class="musik-lied-spieler">
+              <audio controls preload="none" src="{% url 'tutoring:lehrperson_lied' sitzung.code lied.pk %}"></audio>
+            </div>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="leerhinweis">Noch kein Lied.</p>
+  {% endif %}
+</details>
+{% endif %}
+
+<section aria-labelledby="ende-titel" class="beenden-zeile">
+  <h2 id="ende-titel" class="nur-fuer-vorlesen">Sitzung beenden</h2>
+  <form method="post" action="{% url 'tutoring:lehrperson_sitzung_beenden' sitzung.code %}">
+    {% csrf_token %}
+    <button type="submit" class="knopf knopf-warnung">Sitzung beenden</button>
+  </form>
+  <p class="beenden-hinweis">
+    {% if sitzung.ist_musik %}Löscht alle Lieder und Liedtexte dieser Sitzung, hier und am Spark.{% elif sitzung.ist_safechat %}Löscht alle Nachrichten und Protokolle dieser Sitzung.{% else %}Löscht alle Aufgaben, Hilfen und Verläufe dieser Sitzung.{% endif %}
+    Nicht rückgängig zu machen.
+  </p>
+</section>
+
+</div>
+{% endblock %}

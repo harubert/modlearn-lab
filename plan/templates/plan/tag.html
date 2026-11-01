@@ -1,0 +1,490 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% comment %}Reservierung von Plaetzen auf dem Spark, ein Tag je Seite.
+
+Der Kerngedanke, der die ganze Seite tragen muss: Reserviert wird nicht die
+Maschine, sondern ein Anteil davon, gemessen in Plaetzen. Deshalb steht die
+Erklaerung dazu ueber dem Balken und nicht im Kleingedruckten, deshalb zeigt
+der Balken die Auslastung je Viertelstunde und nicht bloss "belegt oder frei",
+und deshalb nennt jede Lagemeldung, wie viel nach der Buchung fuer andere
+uebrig bleibt.
+
+Die eine Ausnahme davon sind die alleinigen Buchungen: Plaetze addieren sich,
+Modelle nicht. Wer ein Modell braucht, das nicht im Speicher liegt, oder den
+ganzen Anteil nimmt, belegt den Rechner allein. Welches Konzept eine Buchung
+hat, ist deshalb die erste Frage im Formular und steht VOR den Zeitreglern -
+sie entscheidet, was danach ueberhaupt noch zu fragen ist (Schuelerzahl in
+Zehnerschritten, Fach, fuer wen) und ob daneben etwas gehen kann.
+
+Ohne JavaScript bleibt alles bedienbar: Der Balken wird vollstaendig aus
+`raster` und `buchungen` gezeichnet, die Konzepte sind gewoehnliche
+Auswahlknoepfe, die Zeiten sind zwei gewoehnliche Zeitfelder, das Absenden ist
+ein gewoehnliches POST. Nur die Schieberegler, die Plus-Minus-Knoepfe, der
+Wechsel der Felder beim Konzept und die mitlaufende Lagemeldung sind Zugaben;
+sie stehen im HTML auf hidden und werden von plan.js eingeblendet. Ein Regler,
+der ohne Skript nichts tut, waere schlimmer als keiner. Ohne Skript gelten die
+Feldgrenzen des vorgewaehlten Konzepts; der Server prueft beim Absenden
+ohnehin alles noch einmal.
+
+Zwei Zahlen gehen hier nebeneinander um und bedeuten nicht dasselbe:
+plaetze_gesamt ist die gemessene Kapazitaet der Maschine, plaetze_buchbar das,
+was eine Buchung hoechstens belegen darf - ein Zehntel bleibt frei, damit wer
+nicht gebucht hat trotzdem arbeiten kann. Der Balken, die Lage am Regler und
+alles, was "frei" heisst, rechnen mit plaetze_buchbar; plaetze_gesamt steht
+nur dort, wo von der Maschine die Rede ist.
+{% endcomment %}
+
+{% block titel %}Platz auf dem Spark{% endblock %}
+
+{% block kopf_extra %}
+  <link rel="stylesheet" href="{% static 'css/plan.css' %}">
+{% endblock %}
+
+{% block inhalt %}
+<div class="seitenkopf">
+  <h1>Platz auf dem Spark</h1>
+  <p class="seitenkopf-zusatz">{{ tag|date:"l, j. F Y" }}</p>
+</div>
+
+{% comment %}Diese zwei Absaetze sind der wichtigste Text der Seite. Ohne sie
+glaubt jede Lehrperson, eine Buchung sperre den Rechner fuer alle anderen, und
+bucht dann aus Hoeflichkeit nicht.{% endcomment %}
+<div class="plan-zusage">
+  <p class="plan-zusage-kern">
+    Sie reservieren nicht den Rechner, sondern <strong>Plätze darauf</strong>.
+    Ein Platz ist eine Person, die zur selben Zeit arbeitet.
+  </p>
+  <p class="plan-zusage-text">
+    Der Spark hat gemessen rund {{ plaetze_gesamt }} Plätze{% if spitze_bisher %};
+    im laufenden Betrieb waren bisher höchstens {{ spitze_bisher }} davon
+    gleichzeitig belegt{% endif %}. Ihre Buchung ist deshalb eine Zusage – „zu
+    dieser Zeit ist Platz für meine Klasse“ – und keine Sperre. Alle anderen
+    arbeiten weiter, solange noch Plätze frei sind; buchen lassen sich darum
+    höchstens {{ plaetze_buchbar }} Plätze, der Rest bleibt für alle offen.
+    Nur eine Buchung, für die der Rechner umgebaut wird, belegt ihn ganz –
+    das steht dann dabei.
+  </p>
+</div>
+
+<nav class="plan-tage" aria-label="Tag wechseln">
+  <ul>
+    {% for t in tage %}
+      <li>
+        <a class="plan-tagknopf{% if t.datum == tag %} ist-gewaehlt{% endif %}"
+           href="{% url 'plan:tag' %}?datum={{ t.datum|date:'Y-m-d' }}"
+           {% if t.datum == tag %}aria-current="page"{% endif %}>
+          <span class="plan-tagkurz">{{ t.kurz }}</span>
+          {% if t.ist_heute %}<span class="plan-tagheute">heute</span>{% endif %}
+          {% comment %}Der Streifen deutet an, wie viel am Tag schon vergeben
+          ist, also 720 minus die freien Minuten. Er fuellt in dieselbe
+          Richtung wie der Balken weiter unten; zwei Streifen auf einer Seite,
+          von denen einer "frei" und der andere "vergeben" fuellt, waeren eine
+          Falle. Die freien Minuten als Zahl stehen daneben fuer das
+          Vorlesewerkzeug.{% endcomment %}
+          {% widthratio t.frei_min 720 -100 as frei_anteil_negativ %}
+          <span class="plan-tagfrei" aria-hidden="true">
+            <span class="plan-tagfrei-fuellung"
+                  style="--anteil: {{ frei_anteil_negativ|add:'100' }}%"></span>
+          </span>
+          <span class="nur-fuer-vorlesen">, {{ t.frei_min }} Minuten frei</span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</nav>
+
+<p class="meldung meldung-fehler" id="plan-fehler" role="alert"
+   {% if not fehler %}hidden{% endif %}>{{ fehler }}</p>
+
+<section id="plan-tag" class="plan-tagansicht" aria-labelledby="balken-titel">
+  <h2 id="balken-titel">Der Tag in Viertelstunden</h2>
+
+  <p class="plan-legende">
+    <span class="plan-legende-teil">
+      <span class="plan-probe plan-probe-fuellung" aria-hidden="true"></span>
+      vergebene Plätze je Viertelstunde
+    </span>
+    <span class="plan-legende-teil">
+      <span class="plan-probe plan-probe-eigen" aria-hidden="true"></span>
+      Ihre Buchung
+    </span>
+    <span class="plan-legende-teil">
+      <span class="plan-probe plan-probe-fremd" aria-hidden="true"></span>
+      Buchung anderer
+    </span>
+    <span class="plan-legende-teil">
+      <span class="plan-probe plan-probe-wahl" aria-hidden="true"></span>
+      Ihr gewählter Zeitraum
+    </span>
+    <span class="plan-legende-teil">
+      <span class="plan-probe plan-probe-voll" aria-hidden="true"></span>
+      kein Platz mehr frei
+    </span>
+    <span class="plan-legende-teil">
+      <span class="plan-probe plan-probe-alleinig" aria-hidden="true"></span>
+      belegt den Rechner ganz
+    </span>
+  </p>
+
+  {% comment %}Der Balken ist eine Grafik, deshalb ist jede seiner Schichten
+  aria-hidden. Alles, was er zeigt, steht darunter noch einmal in Worten: die
+  Belegung je Stunde in einer Tabelle nur fuer das Vorlesewerkzeug, die
+  Buchungen in einer sichtbaren Liste.
+
+  Das Kreuz in einer eigenen Buchung ist deshalb nur fuer Maus und Finger
+  gedacht (tabindex -1, 44 mal 44 Pixel). Der Knopf, der mit Tastatur und
+  Vorlesewerkzeug erreichbar ist und seine Beschriftung in Worten traegt, steht
+  in der Liste unter dem Balken. Beide senden dasselbe Formular, und beide
+  fragen vorher nach.{% endcomment %}
+  <div class="plan-balken" id="plan-balken" data-schritt="15">
+
+    <div class="plan-achse" aria-hidden="true">
+      {% for r in raster %}{% if r.zeit|slice:"3:5" == "00" %}
+        {% widthratio r.zeit|slice:":2" 1 60 as stunde_mal_60 %}
+        <span class="plan-stunde"
+              style="--von-min: {{ stunde_mal_60|add:'-420' }}">{{ r.zeit|slice:":2" }}</span>
+      {% endif %}{% endfor %}
+    </div>
+
+    <div class="plan-flaeche">
+      <div class="plan-raster" aria-hidden="true">
+        {% for r in raster %}
+          {% comment %}ist-belegt steht an jeder Zelle, in der ueberhaupt etwas
+          vergeben ist: Ein Platz von fuenfzig waeren zwei Prozent Fuellung und
+          damit weniger als ein Pixel. Das CSS gibt solchen Zellen eine
+          Mindestbreite, leeren nicht.
+
+          data-konzepte traegt die Schluessel der Buchungen, die in dieser
+          Viertelstunde laufen. plan.js braucht sie, um zu sagen, WARUM ein
+          Zeitraum nicht geht - "um 10:15 ist eine Modellschulung gebucht" ist
+          eine Auskunft, "null Plaetze frei" keine.{% endcomment %}
+          <div class="plan-zelle{% if r.zeit|slice:"3:5" == "00" %} ist-stunde{% endif %}{% if r.belegt %} ist-belegt{% endif %}{% if r.frei <= 0 %} ist-voll{% endif %}{% if r.alleinig %} ist-alleinig{% endif %}"
+               style="--anteil: {{ r.anteil }}%"
+               data-zeit="{{ r.zeit }}" data-frei="{{ r.frei }}"
+               data-konzepte="{{ r.konzepte }}">
+            <span class="plan-fuellung"></span>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if not meine.grund %}
+        {% comment %}Dieselben Werte wie in den Zeitfeldern unten, als Minuten
+        nach 07:00 und Dauer. Nach einer abgewiesenen Buchung ist das der
+        Zeitraum, den die Lehrperson eingetippt hatte, und nicht wieder die
+        Voreinstellung. plan.js schreibt beides bei jeder Aenderung neu.
+        {% endcomment %}
+        <div class="plan-wahl" id="plan-wahl" aria-hidden="true"
+             style="--von-min: {{ vorgabe.von_min }}; --dauer-min: {{ vorgabe.dauer_min }}"></div>
+      {% endif %}
+
+      <div class="plan-bloecke" aria-hidden="true">
+        {% comment %}von_minute und dauer_minuten kommen fertig aus der
+        Ansicht. Vorher wurde die Lage hier aus den Zeitstrings gerechnet, mit
+        slice und widthratio. Das hielt den Balken auch ohne Skript am Leben,
+        war aber auf das Format "HH:MM" mit fuehrender Null angewiesen; zwei
+        Zahlen im Kontext ergeben dasselbe ohne diese Annahme.
+
+        Eine alleinige Buchung liegt ueber der ganzen Breite und traegt ihr
+        Symbol gross: Sie ist keine Buchung neben anderen, sondern der Grund,
+        warum es daneben keine gibt.{% endcomment %}
+        {% for b in buchungen %}
+          <div class="plan-block{% if b.eigen %} ist-eigen{% endif %}{% if b.alleinig %} ist-alleinig{% endif %}"
+               style="--von-min: {{ b.von_minute }}; --dauer-min: {{ b.dauer_minuten }}"
+               data-von="{{ b.beginn_zeit }}" data-bis="{{ b.ende_zeit }}">
+            <span class="plan-block-zeit">{{ b.beginn_zeit }}–{{ b.ende_zeit }}</span>
+            <span class="plan-block-konzept">{% include "plan/_konzeptsymbol.html" with symbol=b.symbol %} {{ b.konzept_name }}</span>
+            <span class="plan-block-plaetze">{% if b.alleinig %}der ganze Rechner{% else %}{{ b.plaetze }}{% if b.plaetze == 1 %} Platz{% else %} Plätze{% endif %}{% endif %}</span>
+            <span class="plan-block-wer">{% if b.eigen %}Ihre Buchung{% else %}{{ b.besitzer }}{% endif %}</span>
+            {% if b.eigen %}
+              <form class="plan-block-absagen" method="post"
+                    action="{% url 'plan:absagen' %}"
+                    data-nachfrage="Diese Buchung absagen? Der Platz wird sofort wieder frei.">
+                {% csrf_token %}
+                <input type="hidden" name="pk" value="{{ b.pk }}">
+                <button type="submit" class="plan-kreuz" tabindex="-1"
+                        title="Diese Buchung absagen">×</button>
+              </form>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <table class="nur-fuer-vorlesen">
+    <caption>Vergebene Plätze am {{ tag|date:"j. F" }}, zu jeder vollen Stunde,
+      von {{ plaetze_buchbar }} buchbaren</caption>
+    <thead>
+      <tr>
+        <th scope="col">Uhrzeit</th>
+        <th scope="col">vergeben</th>
+        <th scope="col">frei</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in raster %}{% if r.zeit|slice:"3:5" == "00" %}
+        <tr>
+          <th scope="row">{{ r.zeit }}</th>
+          <td>{% if r.alleinig %}der ganze Rechner{% else %}{{ r.belegt }}{% endif %}</td>
+          <td>{{ r.frei }}</td>
+        </tr>
+      {% endif %}{% endfor %}
+    </tbody>
+  </table>
+
+  <h3 class="plan-listentitel">Buchungen an diesem Tag</h3>
+  <ul class="plan-liste">
+    {% for b in buchungen %}
+      <li class="plan-eintrag{% if b.eigen %} ist-eigen{% endif %}{% if b.alleinig %} ist-alleinig{% endif %}" id="buchung-{{ b.pk }}">
+        <span class="plan-eintrag-symbol" aria-hidden="true">{% include "plan/_konzeptsymbol.html" with symbol=b.symbol %}</span>
+        <div class="plan-eintrag-mitte">
+          <p class="plan-eintrag-zeit">
+            {{ b.beginn_zeit }} bis {{ b.ende_zeit }}
+            <span class="plan-eintrag-plaetze">
+              {% if b.alleinig %}
+                belegt den Rechner ganz
+              {% else %}
+                {{ b.plaetze }}{% if b.plaetze == 1 %} Platz{% else %} Plätze{% endif %}
+              {% endif %}
+            </span>
+          </p>
+          <p class="plan-eintrag-text">
+            <span class="plan-eintrag-konzept">{{ b.konzept_name }}</span>
+            {% if b.fach_name %}&middot; {{ b.fach_name }}{% endif %}
+            {% if b.zweck %}&middot; {{ b.zweck }}{% endif %}
+            {% if b.person %}&middot; für {{ b.person }}{% endif %}
+            <span class="plan-eintrag-wer">{% if b.eigen %}Ihre Buchung{% else %}{{ b.besitzer }}{% endif %}</span>
+          </p>
+        </div>
+        {% if b.eigen %}
+          <form class="plan-eintrag-absagen" method="post"
+                action="{% url 'plan:absagen' %}"
+                data-nachfrage="Diese Buchung absagen? Der Platz wird sofort wieder frei.">
+            {% csrf_token %}
+            <input type="hidden" name="pk" value="{{ b.pk }}">
+            <button type="submit" class="knopf knopf-leise">Absagen</button>
+          </form>
+        {% endif %}
+      </li>
+    {% empty %}
+      <li class="leerhinweis">
+        Für diesen Tag liegt noch keine Buchung vor. Alle
+        {{ plaetze_buchbar }} buchbaren Plätze sind den ganzen Tag frei.
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section class="karte plan-buchen" aria-labelledby="buchen-titel">
+  <h2 id="buchen-titel">Plätze reservieren</h2>
+
+  <p class="plan-meine">
+    {{ meine.klasse_name }} &middot;
+    höchstens {{ meine.max_plaetze }} Plätze und {{ meine.max_minuten }} Minuten je Buchung &middot;
+    {% if meine.slots_frei_woche %}
+      noch {{ meine.slots_frei_woche }} Buchung{{ meine.slots_frei_woche|pluralize:"en" }} in dieser Woche
+    {% else %}
+      diese Woche ist Ihr Kontingent aufgebraucht
+    {% endif %}
+  </p>
+
+  {% if not meine.grund and gewaehlt %}
+    <form id="plan-form" method="post" action="{% url 'plan:buchen' %}"
+          data-max-minuten="{{ meine.max_minuten }}"
+          data-max-plaetze="{{ meine.max_jetzt }}"
+          data-plaetze-gesamt="{{ plaetze_buchbar }}">
+      {% csrf_token %}
+      <input type="hidden" name="datum" value="{{ tag|date:'Y-m-d' }}">
+
+      {% comment %}Schritt eins, vor allem anderen: Wofuer? Grosse Flaechen
+      und kein Auswahlfeld, weil die Konzepte die Frage der Seite sind und ein
+      <select> sie hinter einem Klick versteckt. Jede Flaeche ist ein
+      gewoehnlicher Auswahlknopf in einem Label, also auch mit Tastatur und
+      ohne Skript bedienbar. Gezeigt wird nur, was die eigene Nutzerklasse
+      darf - einer Lehrperson der Unterricht, dem Lab alles.
+
+      Die data-Attribute am Knopf sind das, was plan.js beim Wechsel braucht:
+      Schritt, Hoechstmass, Voreinstellung, Beschriftung und Hilfesatz des
+      Zahlenfelds, und ob das Konzept den Rechner allein belegt. Die Saetze
+      kommen aus der Ansicht, damit sie nur an einer Stelle stehen.
+      {% endcomment %}
+      <fieldset class="feld plan-konzepte">
+        <legend>Wofür buchen Sie?</legend>
+        <ul class="plan-konzeptliste">
+          {% for k in konzepte %}
+            <li>
+              <label class="plan-konzept{% if k.schluessel == gewaehlt.schluessel %} ist-gewaehlt{% endif %}{% if k.alleinig %} ist-alleinig{% endif %}">
+                <input type="radio" name="konzept" value="{{ k.schluessel }}"
+                       {% if k.schluessel == gewaehlt.schluessel %}checked{% endif %}
+                       data-name="{{ k.name }}"
+                       data-schritt="{{ k.schritt }}"
+                       data-max="{{ k.max_plaetze }}"
+                       data-vorgabe="{{ k.vorgabe_plaetze }}"
+                       data-alleinig="{{ k.alleinig|yesno:'1,0' }}"
+                       data-schuelerzahl="{{ k.schuelerzahl|yesno:'1,0' }}"
+                       data-plaetze-wort="{{ k.plaetze_wort }}"
+                       data-plaetze-hilfe="{{ k.plaetze_hilfe }}">
+                <span class="plan-konzept-symbol" aria-hidden="true">{% include "plan/_konzeptsymbol.html" with symbol=k.symbol %}</span>
+                <span class="plan-konzept-name">{{ k.name }}</span>
+                <span class="plan-konzept-satz">{{ k.satz }}</span>
+                {% if k.alleinig %}
+                  <span class="plan-konzept-hinweis">Belegt den Rechner ganz</span>
+                {% endif %}
+              </label>
+            </li>
+          {% endfor %}
+        </ul>
+      </fieldset>
+
+      {% comment %}Die Regler rechnen in Minuten seit Mitternacht: 420 ist
+      07:00, 1140 ist 19:00. So muss plan.js nirgends umrechnen. `von` endet
+      bei 18:45 und `bis` beginnt bei 07:15, damit zwischen beiden immer
+      mindestens eine Viertelstunde liegen kann.
+
+      Die Regler tragen keinen name und werden also nicht gesendet; gesendet
+      werden die beiden Zeitfelder darunter. Sie sind auch der genauere Weg:
+      eine Unterrichtsstunde endet um 10:50, und das trifft kein
+      Viertelstundenraster.{% endcomment %}
+      <div class="plan-regler" id="plan-regler" hidden>
+        <div class="plan-regler-zeile">
+          <label for="von">Beginn</label>
+          <input type="range" id="von" min="420" max="1125" step="15"
+                 value="{{ vorgabe.von_min|add:420 }}"
+                 aria-label="Beginn der Buchung, Schieberegler in Viertelstunden"
+                 aria-valuetext="{{ vorgabe.von }} Uhr">
+        </div>
+        <div class="plan-regler-zeile">
+          <label for="bis">Ende</label>
+          <input type="range" id="bis" min="435" max="1140" step="15"
+                 value="{{ vorgabe.von_min|add:420|add:vorgabe.dauer_min }}"
+                 aria-label="Ende der Buchung, Schieberegler in Viertelstunden"
+                 aria-valuetext="{{ vorgabe.bis }} Uhr">
+        </div>
+      </div>
+
+      <div class="feld plan-zeitfelder">
+        <div class="plan-zeitfeld">
+          <label for="von-zeit">Von</label>
+          <input type="time" id="von-zeit" name="von" value="{{ vorgabe.von }}"
+                 min="07:00" max="18:45" required>
+        </div>
+        <div class="plan-zeitfeld">
+          <label for="bis-zeit">Bis</label>
+          <input type="time" id="bis-zeit" name="bis" value="{{ vorgabe.bis }}"
+                 min="07:15" max="19:00" required>
+        </div>
+      </div>
+
+      <div class="feld">
+        <label for="plaetze" id="plaetze-wort">{{ gewaehlt.plaetze_wort }}</label>
+        <p class="feld-hilfe" id="plaetze-hilfe">{{ gewaehlt.plaetze_hilfe }}</p>
+        {% comment %}Schritt, Hoechstmass und Beschriftung gehoeren zum
+        gewaehlten Konzept: Beim Unterricht zaehlt das Feld Schuelerinnen und
+        Schueler in Zehnerschritten, bei der sicheren Verwaltung Plaetze
+        einzeln. Die Knoepfe springen um denselben Schritt. Sie sind bis
+        plan.js verborgen, das Zahlenfeld allein genuegt auch ohne Skript.
+        {% endcomment %}
+        <div class="plan-zahl">
+          <button type="button" class="plan-schritt" id="plaetze-weniger"
+                  aria-label="{{ gewaehlt.schritt }} weniger" hidden>&minus;</button>
+          <input type="number" id="plaetze" name="plaetze"
+                 value="{{ vorgabe.plaetze }}" min="{{ gewaehlt.schritt }}"
+                 max="{{ gewaehlt.max_plaetze }}" step="{{ gewaehlt.schritt }}"
+                 inputmode="numeric" required
+                 aria-describedby="plaetze-hilfe plaetze-deutung">
+          <button type="button" class="plan-schritt" id="plaetze-mehr"
+                  aria-label="{{ gewaehlt.schritt }} mehr" hidden>+</button>
+        </div>
+        <p class="plan-deutung" id="plaetze-deutung">
+          Höchstens {{ gewaehlt.max_plaetze }} auf einmal – was davon in
+          Ihrem Zeitraum frei ist, zeigt der Balken oben.
+        </p>
+      </div>
+
+      {% comment %}Fach und Person gehoeren zum Unterricht. Bei einem Konzept
+      ohne Schuelerzahl bleibt der Block verborgen, und was trotzdem ankommt,
+      verwirft die Ansicht. Beide Felder duerfen leer bleiben: Sie sind
+      Auskunft fuer die anderen, keine Pruefgrundlage.{% endcomment %}
+      <div class="plan-unterricht" id="plan-unterricht"
+           {% if not gewaehlt.schuelerzahl %}hidden{% endif %}>
+        <div class="feld">
+          <label for="fach">Fach <span class="feld-zusatz">(wenn Sie möchten)</span></label>
+          <select id="fach" name="fach">
+            <option value="">ohne Angabe</option>
+            {% for f in faecher %}
+              <option value="{{ f.schluessel }}"
+                      {% if f.schluessel == vorgabe.fach %}selected{% endif %}>{{ f.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="feld">
+          <label for="person">Für wen <span class="feld-zusatz">(wenn Sie möchten)</span></label>
+          <p class="feld-hilfe" id="person-hilfe">
+            Wenn Sie für jemand anderen buchen: die Lehrperson oder die Klasse.
+          </p>
+          <input type="text" id="person" name="person" maxlength="120"
+                 value="{{ vorgabe.person }}" aria-describedby="person-hilfe">
+        </div>
+      </div>
+
+      <div class="feld">
+        <label for="zweck">Wofür</label>
+        <p class="feld-hilfe" id="zweck-hilfe">
+          Kurz, damit die anderen sehen, was läuft: „Mathematik 3b,
+          Sachaufgaben“.
+        </p>
+        <input type="text" id="zweck" name="zweck" maxlength="120" required
+               value="{{ vorgabe.zweck }}" aria-describedby="zweck-hilfe">
+      </div>
+
+      {% comment %}Der Hinweis steht VOR dem Absenden und auch ohne Skript:
+      Wer den Rechner ganz nimmt, soll das lesen, bevor er es tut, und nicht
+      erst in der Buchungsliste.{% endcomment %}
+      <p class="plan-alleinig" id="plan-alleinig" role="status"
+         {% if not gewaehlt.alleinig %}hidden{% endif %}>
+        Diese Buchung <strong>belegt den Rechner ganz</strong>: In diesem
+        Zeitraum kann niemand sonst buchen oder arbeiten.
+      </p>
+
+      {% comment %}Ohne Skript steht hier die Auskunft, die ohne Rechnen zu
+      haben ist. plan.js ersetzt sie bei jeder Aenderung durch die gerechnete
+      Lage.{% endcomment %}
+      <p class="plan-lage" id="plan-lage" role="status">
+        Buchen lassen sich {{ plaetze_buchbar }} Plätze. Ob in Ihrem Zeitraum
+        genug davon frei sind, lesen Sie oben im Balken ab; beim Absenden wird es
+        noch einmal geprüft.
+      </p>
+
+      <button type="submit" class="knopf knopf-gross" id="senden">{% if gewaehlt.alleinig %}Rechner reservieren{% else %}Plätze reservieren{% endif %}</button>
+    </form>
+  {% else %}
+    {% comment %}Der Grund steht hier im Wortlaut der Ansicht. Ein Formular,
+    das sichtbar ist und beim Absenden jedes Mal dieselbe Absage bringt, ist
+    schlechter als keines.{% endcomment %}
+    <p class="leerhinweis">
+      {{ meine.grund }}
+      Wenden Sie sich an die Leitung des Labs, wenn Sie trotzdem
+      Unterrichtszeit auf dem Spark brauchen.
+    </p>
+  {% endif %}
+</section>
+
+<p class="plan-fussnote">
+  <a href="{% url 'plan:rueckblick' %}">Gebucht und gebraucht</a> – was in den
+  letzten Wochen reserviert war und was wirklich gleichzeitig lief.
+</p>
+
+{% comment %}Alle Konzepte fuer plan.js, auch die, die diese Klasse nicht
+buchen darf: Im Balken kann eine Modellschulung des Labs liegen, und das
+Skript soll sagen koennen, was das ist. json_script entschaerft den Inhalt,
+das Skript liest ihn mit JSON.parse.{% endcomment %}
+{{ konzepte_alle|json_script:"plan-konzepte-daten" }}
+{% endblock %}
+
+{% block skripte %}
+  {% comment %}nachfrage.js fragt vor dem Absagen nach. Es ist schon da und
+  greift ueber data-nachfrage, deshalb kein zweites Skript dafuer.{% endcomment %}
+  <script src="{% static 'js/nachfrage.js' %}" defer></script>
+  <script src="{% static 'js/plan.js' %}" defer></script>
+{% endblock %}

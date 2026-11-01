@@ -1,0 +1,58 @@
+{% comment %}Der Aufgabenpool der Lehrperson (Thomas, 1.11.2026): Aufgaben in
+die laufende Sitzung stellen, mit Vorpruefung (Spark, mit Qualitaets-
+sicherung auch draussen); die Kinder waehlen daraus und bekommen zu jeder
+den Tutor. Erwartet: sitzung, aufgabenpool (mit n und fertig), pool_fehler.{% endcomment %}
+<section class="aufgabenpool" id="aufgabenpool" aria-labelledby="pool-titel">
+  <h2 id="pool-titel">Aufgaben für die Klasse</h2>
+  <p class="feld-hilfe">
+    Du kannst während der Stunde Aufgaben hineinstellen. Jede wird gleich am
+    Spark gelöst{% if sitzung.cloud_enabled %} und draußen geprüft{% endif %}, damit du
+    siehst, ob das System sie kann; die Kinder sehen sie auf ihrer Seite und
+    bekommen zu jeder den Tutor. Das Prüfen dauert einige Sekunden.
+  </p>
+  <form method="post" enctype="multipart/form-data" class="poolform"
+        action="{% url 'tutoring:lehrperson_aufgabe_hinzufuegen' sitzung.code %}">
+    {% csrf_token %}
+    <label class="feld-name" for="pool-text">Aufgabentext</label>
+    <textarea id="pool-text" name="text" rows="3" maxlength="2000"
+              placeholder="Zum Beispiel: Lena hat 7 Murmeln und bekommt 5 dazu. Wie viele hat sie jetzt?"></textarea>
+    <label class="feld-name" for="pool-foto">oder ein Foto der Aufgabe (der Spark schreibt sie ab)</label>
+    <input type="file" id="pool-foto" name="foto" accept="image/*">
+    <button type="submit" class="knopf">Aufgabe hinzufügen und prüfen</button>
+  </form>
+  {% if pool_fehler == "aufgabe" %}
+    <p class="meldung meldung-fehler" role="alert">Die Aufgabe ist leer, und vom Foto ließ sich nichts ablesen.</p>
+  {% endif %}
+  {% if aufgabenpool %}
+  <ol class="poolliste">
+    {% for v in aufgabenpool %}
+      <li class="poolaufgabe status-{{ v.status }}" id="pool-{{ v.pk }}">
+        <p class="pool-kopf">
+          <strong>Aufgabe {{ v.position }}</strong>
+          <span class="marke-chip pool-status{% if v.ist_einig %} ist-aktiv{% endif %}">{{ v.status_titel }}</span>
+          <span class="pool-zahl">{{ v.n }} Kind{{ v.n|pluralize:"er" }} dran, {{ v.fertig }} fertig</span>
+        </p>
+        <blockquote class="aufgabentext">{{ v.text|linebreaksbr }}</blockquote>
+        <p class="pool-pruefung">{{ v.status_text }}</p>
+        {% if v.spark_solution or v.checked_solution %}
+          <details class="qsblock">
+            <summary>Die Lösungen der Prüfung (nur für dich, kein Kind sieht sie)</summary>
+            {% if v.spark_solution %}<h4 class="qs-kopf">Spark ({{ v.spark_ms }} ms)</h4>
+              <blockquote class="qs-text">{{ v.spark_solution|linebreaksbr }}</blockquote>{% endif %}
+            {% if v.checked_solution %}<h4 class="qs-kopf">Externe KI ({{ v.checked_model }}, {{ v.checked_ms }} ms, {{ v.checked_kosten_euro|floatformat:5 }} €)</h4>
+              <blockquote class="qs-text">{{ v.checked_solution|linebreaksbr }}</blockquote>{% endif %}
+            {% if v.checked_blocked %}<p class="qs-grund">Weg nach draußen: {{ v.checked_blocked }}</p>{% endif %}
+          </details>
+        {% endif %}
+        <form method="post" class="pool-entfernen"
+              action="{% url 'tutoring:lehrperson_aufgabe_entfernen' sitzung.code v.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="knopf knopf-leise">Aufgabe {{ v.position }} entfernen</button>
+        </form>
+      </li>
+    {% endfor %}
+  </ol>
+  {% else %}
+    <p class="leerhinweis">Noch keine Aufgabe im Pool. Die Kinder können solange eigene Aufgaben eintippen oder fotografieren.</p>
+  {% endif %}
+</section>

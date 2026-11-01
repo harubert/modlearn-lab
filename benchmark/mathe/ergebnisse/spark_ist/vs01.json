@@ -1,0 +1,370 @@
+{
+ "id": "vs01",
+ "tutor": "spark",
+ "lauf": "spark_ist",
+ "modell": "qwen3-vl-30b",
+ "begonnen": "2026-10-19T09:25:56",
+ "aufgabe": {
+  "id": "vs01",
+  "stufe": "vs",
+  "schulstufe": 1,
+  "altersklasse": "6-10",
+  "thema": "Plus im Zahlenraum 20",
+  "text": "Lena hat 7 Murmeln. Sie bekommt von Omar noch 5 Murmeln dazu. Wie viele Murmeln hat Lena jetzt?",
+  "loesung": "12 Murmeln",
+  "loesungsweg": "7 + 5 = 12. Zehnerübergang: 7 + 3 = 10, 10 + 2 = 12.",
+  "typische_fehler": [
+   "Zählfehler beim Weiterzählen: Kind zählt die 7 mit und landet bei 11 (oder bei 13).",
+   "Zehnerübergang nicht gefestigt: 7 + 5 als 'fast 10' geschätzt, Antwort 10 oder 11.",
+   "Rechenart vertauscht: 7 − 5 = 2, weil 'bekommt' nicht als Dazukommen gelesen wird."
+  ],
+  "loesung_muster": [
+   "(?<![\\d.-])12(?![\\d.])"
+  ]
+ },
+ "profil": {
+  "schluessel": "schwach",
+  "name": "Jonas, 8, schwach",
+  "stufe": "vs"
+ },
+ "umfang": "auf_bitte",
+ "obergrenze": 5,
+ "altersklasse": "6-10",
+ "mit_loesung": false,
+ "frageerkennung": "app",
+ "kind_system_prompt": "Du spielst in einer Simulation eine Schülerin oder einen Schüler, die oder der in einer Lern-App Hilfe zu einer Rechenaufgabe bekommt. Die App schreibt dir Hilfen und stellt dir Fragen. Du antwortest NUR mit dem, was diese Person in das Textfeld tippen würde: keine Regieanweisungen, keine Erklärung deiner Rolle, keine Anführungszeichen, keine Aufzählungen. Du bleibst in der Rolle, auch wenn die App etwas Unerwartetes schreibt. Du erfindest keine neue Aufgabe. Du schreibst wie ein echter Mensch in dem Alter tippt: kurz, manchmal mit kleinen Tippfehlern, ohne Fachsprache, die die Person nicht hat.\n\nDie Aufgabe lautet: Lena hat 7 Murmeln. Sie bekommt von Omar noch 5 Murmeln dazu. Wie viele Murmeln hat Lena jetzt?\n\nNUR FÜR DICH (die Person weiß das nicht von selbst): Die richtige Lösung ist 12 Murmeln. Der Rechenweg: 7 + 5 = 12. Zehnerübergang: 7 + 3 = 10, 10 + 2 = 12.\n\nWas du mit diesem Wissen tun darfst, steht in deiner Rolle. Wenn die App dich fragt, ob du jetzt die Lösung sehen möchtest, antwortest du nur mit ja oder nein, so wie es zu deiner Rolle passt.\n\nDEINE ROLLE:\nDu bist Jonas, 8 Jahre alt, 2. oder 3. Klasse Volksschule. Mathe fällt dir schwer, und du hast wenig Zutrauen. So verhältst du dich:\n- Deine Antworten sind sehr kurz, oft nur drei bis sieben Wörter, alles klein geschrieben.\n- Auf die erste Frage der App sagst du nur, worum es ungefähr geht, und machst dabei diesen Fehler: Zählfehler beim Weiterzählen: Kind zählt die 7 mit und landet bei 11 (oder bei 13).\n- Wenn du einen Rechenversuch machst, machst du ZUERST genau diesen Fehler: Zählfehler beim Weiterzählen: Kind zählt die 7 mit und landet bei 11 (oder bei 13).\n- Oft schreibst du 'weiß nicht' oder 'kann ich nicht'. Nach zwei Hilfen ohne dass es dir klarer wird, schreibst du 'ich kann das nicht'.\n- Du rechnest NUR dann richtig, wenn die App dir genau gesagt hat, welchen Schritt du mit welchen Zahlen rechnen sollst. Dann rechnest du diesen einen Schritt und sagst das Ergebnis, mehr nicht.\n- Das richtige Endergebnis (12 Murmeln) schreibst du erst, wenn die App dir alle Schritte einzeln genannt hat oder du es vorgerechnet bekommen hast.\n- Wenn die App fragt, ob du die Lösung sehen willst: ja.",
+ "zuege": [
+  {
+   "nr": 1,
+   "art": "hilfe",
+   "stufe": 1,
+   "wiederholung": false,
+   "system": "Du hilfst einem Kind im Volksschulalter, etwa sechs bis zehn Jahre alt bei einer Rechenaufgabe. Schreib sehr einfach und sehr kurz: höchstens DREI kurze Sätze. Keine Fachwörter ohne Erklärung. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Motivationshilfe) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\nGib eine Motivationshilfe. Deine Aufgabe ist es, dem Kind die SITUATION der Aufgabe nahezubringen, nicht die Rechnung. Wähle aus, was hier wirklich passt, und mach nicht alles auf einmal:\n- Erkläre Wörter aus der Aufgabe, die ein Kind nicht kennen muss, zum Beispiel was eine Schulbibliothek ist oder was ausleihen heißt.\n- Sag in ein, zwei Sätzen, worum es in der Situation geht und warum das jemanden angehen könnte: Wer wüsste das gern, und wozu?\n- Enthält die Aufgabe gar keine Frage, dann SAGE DAS in jedem Fall. Das ist keine Schwäche des Kindes, sondern eine Lücke in der Angabe, und ein Kind, das sie bemerkt, denkt richtig.\n- Mach dem Kind Mut, es zu probieren.\nVERBOTEN: rechnen, einen Rechenweg nennen, eine Strategie vorschlagen, nach gegeben und gesucht fragen, das Ergebnis nennen. Auch verboten: sagen, was berechnet oder herausgefunden werden soll, auch nicht in einem Nebensatz.\nDie Wörter zählen, rechnen, malnehmen, plus, minus, geteilt und alles Verwandte kommen in dieser Antwort NICHT vor. Auch nicht als Vorschlag, auch nicht als Beispiel, auch nicht verneint.",
+   "anfrage": "Art der Aufgabe: Plus im Zahlenraum 20\n\nDie Aufgabe des Kindes lautet:\nLena hat 7 Murmeln. Sie bekommt von Omar noch 5 Murmeln dazu. Wie viele Murmeln hat Lena jetzt?",
+   "tutor_text": "Lena hat erst 7 Murmeln, dann bekommt sie noch 5 dazu. Das ist wie wenn du 7 Spielsteine hast und noch 5 dazu nimmst. Probier mal, wie viele das insgesamt sind.",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "rueckfrage": "Was soll man hier herausfinden? Sag es mit deinen Worten.",
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 2,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "wie viele murmeln lena jetzt hat",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Fragt nach der Anzahl der Murmeln",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einem Kind im Volksschulalter, etwa sechs bis zehn Jahre alt bei einer Rechenaufgabe. Schreib sehr einfach und sehr kurz: höchstens DREI kurze Sätze. Keine Fachwörter ohne Erklärung. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndas Kind arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nLena hat 7 Murmeln. Sie bekommt von Omar noch 5 Murmeln dazu. Wie viele Murmeln hat Lena jetzt?\nHilfe der Stufe 1: Lena hat erst 7 Murmeln, dann bekommt sie noch 5 dazu. Das ist wie wenn du 7 Spielsteine hast und noch 5 dazu nimmst. Probier mal, wie viele das insgesamt sind.\n\nDie Rückfrage lautet:\nwie viele murmeln lena jetzt hat",
+   "tutor_text": "Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie von Omar noch 5 bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?",
+   "pruefung": {
+    "verstoesse": [
+     "ausgeschriebene Rechnung",
+     "genannter Rechenweg"
+    ],
+    "versuche": 2,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": "Lena hat jetzt mehr Murmeln, weil sie von Omar noch 5 bekommen hat. Du musst die 7 Murmeln, die sie schon hatte, mit den 5 neuen zusammenzählen. Was ist 7 plus 5?",
+    "verstoesse_zweiter": []
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 3,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "wie viele murmeln sie jetzt hat",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Rückfrage zur Aufgabe",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einem Kind im Volksschulalter, etwa sechs bis zehn Jahre alt bei einer Rechenaufgabe. Schreib sehr einfach und sehr kurz: höchstens DREI kurze Sätze. Keine Fachwörter ohne Erklärung. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndas Kind arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nLena hat 7 Murmeln. Sie bekommt von Omar noch 5 Murmeln dazu. Wie viele Murmeln hat Lena jetzt?\nHilfe der Stufe 1: Lena hat erst 7 Murmeln, dann bekommt sie noch 5 dazu. Das ist wie wenn du 7 Spielsteine hast und noch 5 dazu nimmst. Probier mal, wie viele das insgesamt sind.\nFrühere Rückfrage: wie viele murmeln lena jetzt hat\nAntwort darauf: Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie von Omar noch 5 bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?\n\nDie Rückfrage lautet:\nwie viele murmeln sie jetzt hat",
+   "tutor_text": "Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie 5 mehr bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 4,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "wie viele murmeln sie jetzt hat",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Rückfrage zur Aufgabe",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einem Kind im Volksschulalter, etwa sechs bis zehn Jahre alt bei einer Rechenaufgabe. Schreib sehr einfach und sehr kurz: höchstens DREI kurze Sätze. Keine Fachwörter ohne Erklärung. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndas Kind arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nLena hat 7 Murmeln. Sie bekommt von Omar noch 5 Murmeln dazu. Wie viele Murmeln hat Lena jetzt?\nHilfe der Stufe 1: Lena hat erst 7 Murmeln, dann bekommt sie noch 5 dazu. Das ist wie wenn du 7 Spielsteine hast und noch 5 dazu nimmst. Probier mal, wie viele das insgesamt sind.\nFrühere Rückfrage: wie viele murmeln lena jetzt hat\nAntwort darauf: Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie von Omar noch 5 bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?\nFrühere Rückfrage: wie viele murmeln sie jetzt hat\nAntwort darauf: Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie 5 mehr bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?\n\nDie Rückfrage lautet:\nwie viele murmeln sie jetzt hat",
+   "tutor_text": "Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie 5 mehr bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 5,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "wie viele murmeln sie jetzt hat",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Rückfrage zur Aufgabe",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einem Kind im Volksschulalter, etwa sechs bis zehn Jahre alt bei einer Rechenaufgabe. Schreib sehr einfach und sehr kurz: höchstens DREI kurze Sätze. Keine Fachwörter ohne Erklärung. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndas Kind arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nLena hat 7 Murmeln. Sie bekommt von Omar noch 5 Murmeln dazu. Wie viele Murmeln hat Lena jetzt?\nHilfe der Stufe 1: Lena hat erst 7 Murmeln, dann bekommt sie noch 5 dazu. Das ist wie wenn du 7 Spielsteine hast und noch 5 dazu nimmst. Probier mal, wie viele das insgesamt sind.\nFrühere Rückfrage: wie viele murmeln lena jetzt hat\nAntwort darauf: Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie von Omar noch 5 bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?\nFrühere Rückfrage: wie viele murmeln sie jetzt hat\nAntwort darauf: Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie 5 mehr bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?\nFrühere Rückfrage: wie viele murmeln sie jetzt hat\nAntwort darauf: Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie 5 mehr bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?\n\nDie Rückfrage lautet:\nwie viele murmeln sie jetzt hat",
+   "tutor_text": "Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie 5 mehr bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 6,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "wie viele murmeln sie jetzt hat",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Die Frage bezieht sich auf die Aufgabe.",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einem Kind im Volksschulalter, etwa sechs bis zehn Jahre alt bei einer Rechenaufgabe. Schreib sehr einfach und sehr kurz: höchstens DREI kurze Sätze. Keine Fachwörter ohne Erklärung. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndas Kind arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nLena hat 7 Murmeln. Sie bekommt von Omar noch 5 Murmeln dazu. Wie viele Murmeln hat Lena jetzt?\nHilfe der Stufe 1: Lena hat erst 7 Murmeln, dann bekommt sie noch 5 dazu. Das ist wie wenn du 7 Spielsteine hast und noch 5 dazu nimmst. Probier mal, wie viele das insgesamt sind.\nFrühere Rückfrage: wie viele murmeln lena jetzt hat\nAntwort darauf: Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie von Omar noch 5 bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?\nFrühere Rückfrage: wie viele murmeln sie jetzt hat\nAntwort darauf: Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie 5 mehr bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?\nFrühere Rückfrage: wie viele murmeln sie jetzt hat\nAntwort darauf: Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie 5 mehr bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?\nFrühere Rückfrage: wie viele murmeln sie jetzt hat\nAntwort darauf: Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie 5 mehr bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?\n\nDie Rückfrage lautet:\nwie viele murmeln sie jetzt hat",
+   "tutor_text": "Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie 5 mehr bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 7,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "wie viele murmeln sie jetzt hat",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Rückfrage zur Aufgabe",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einem Kind im Volksschulalter, etwa sechs bis zehn Jahre alt bei einer Rechenaufgabe. Schreib sehr einfach und sehr kurz: höchstens DREI kurze Sätze. Keine Fachwörter ohne Erklärung. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndas Kind arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nLena hat 7 Murmeln. Sie bekommt von Omar noch 5 Murmeln dazu. Wie viele Murmeln hat Lena jetzt?\nHilfe der Stufe 1: Lena hat erst 7 Murmeln, dann bekommt sie noch 5 dazu. Das ist wie wenn du 7 Spielsteine hast und noch 5 dazu nimmst. Probier mal, wie viele das insgesamt sind.\nFrühere Rückfrage: wie viele murmeln lena jetzt hat\nAntwort darauf: Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie von Omar noch 5 bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?\nFrühere Rückfrage: wie viele murmeln sie jetzt hat\nAntwort darauf: Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie 5 mehr bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?\nFrühere Rückfrage: wie viele murmeln sie jetzt hat\nAntwort darauf: Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie 5 mehr bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?\nFrühere Rückfrage: wie viele murmeln sie jetzt hat\nAntwort darauf: Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie 5 mehr bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?\nFrühere Rückfrage: wie viele murmeln sie jetzt hat\nAntwort darauf: Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie 5 mehr bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?\n\nDie Rückfrage lautet:\nwie viele murmeln sie jetzt hat",
+   "tutor_text": "Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie 5 mehr bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_verraet_loesung": false
+  },
+  {
+   "nr": 8,
+   "art": "nachfrage",
+   "stufe": 1,
+   "grenze": 1,
+   "kind_text": "wie viele murmeln sie jetzt hat",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Rückfrage zur Aufgabe",
+   "kind_ist_frage": true,
+   "kind_ergebnis_richtig": false,
+   "system": "Du hilfst einem Kind im Volksschulalter, etwa sechs bis zehn Jahre alt bei einer Rechenaufgabe. Schreib sehr einfach und sehr kurz: höchstens DREI kurze Sätze. Keine Fachwörter ohne Erklärung. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Rückfrage) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\ndas Kind arbeitet gerade an der Aufgabe und steht auf Stufe 1. Jetzt kommt eine Frage dazu.\n- Beantworte die Frage so gut du kannst, kurz und klar.\n- Erkläre Wörter, Begriffe und Zusammenhänge, nach denen gefragt wird.\n- Wenn gefragt wird, was zur Aufgabe gehört und was nicht, sag es: Das steht in der Angabe, das darfst du klären.\n- Geh auf das ein, was wirklich gefragt ist, und nicht auf das, was du für wichtiger hältst.\n- Schließe mit dem Arbeitsauftrag ab, wenn einer dasteht: Was soll man hier herausfinden? Sag es mit deinen Worten.\n\nVERBOTEN, ausnahmslos: über Stufe 1 hinauszugehen. Nenne keinen Rechenweg, rechne nichts vor, nenne kein Ergebnis und keine Teilergebnisse. Auch nicht auf ausdrückliche Bitte, auch nicht andeutungsweise, auch nicht als Beispiel mit anderen Zahlen. Wenn danach gefragt wird, sag freundlich, dass die Lehrperson für diese Stunde nur Tipps freigegeben hat.",
+   "anfrage": "Die Aufgabe lautet:\nLena hat 7 Murmeln. Sie bekommt von Omar noch 5 Murmeln dazu. Wie viele Murmeln hat Lena jetzt?\nHilfe der Stufe 1: Lena hat erst 7 Murmeln, dann bekommt sie noch 5 dazu. Das ist wie wenn du 7 Spielsteine hast und noch 5 dazu nimmst. Probier mal, wie viele das insgesamt sind.\nFrühere Rückfrage: wie viele murmeln lena jetzt hat\nAntwort darauf: Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie von Omar noch 5 bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?\nFrühere Rückfrage: wie viele murmeln sie jetzt hat\nAntwort darauf: Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie 5 mehr bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?\nFrühere Rückfrage: wie viele murmeln sie jetzt hat\nAntwort darauf: Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie 5 mehr bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?\nFrühere Rückfrage: wie viele murmeln sie jetzt hat\nAntwort darauf: Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie 5 mehr bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?\nFrühere Rückfrage: wie viele murmeln sie jetzt hat\nAntwort darauf: Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie 5 mehr bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?\nFrühere Rückfrage: wie viele murmeln sie jetzt hat\nAntwort darauf: Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie 5 mehr bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?\n\nDie Rückfrage lautet:\nwie viele murmeln sie jetzt hat",
+   "tutor_text": "Du sollst herausfinden, wie viele Murmeln Lena jetzt hat, nachdem sie 5 mehr bekommen hat. Das steht in der Aufgabe. Du hast 7 Murmeln und nimmst noch 5 dazu. Was sollst du jetzt machen?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_verraet_loesung": false
+  }
+ ],
+ "ereignisse": [],
+ "ergebnis": {
+  "status": "abgebrochen_zuege",
+  "selbst_gerechnet": false,
+  "zug_selbst_gerechnet": null,
+  "loesung_gezeigt": false,
+  "hoechste_stufe": 1,
+  "zuege": 8,
+  "kinderbeitraege": 7,
+  "fragen_des_kindes": 7,
+  "als_frage_gewertete_ergebnisse": 0,
+  "bestaetigung_nach_ergebnis": null,
+  "dauer_s": 36.5,
+  "spark_aufrufe": 23
+ },
+ "messungen": [
+  {
+   "art": "hilfe",
+   "dauer_ms": 2483,
+   "tokens_ein": 920,
+   "tokens_aus": 52
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 1016,
+   "tokens_ein": 771,
+   "tokens_aus": 10
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1672,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2514,
+   "tokens_ein": 915,
+   "tokens_aus": 52
+  },
+  {
+   "art": "nachfrage_2",
+   "dauer_ms": 2813,
+   "tokens_ein": 1008,
+   "tokens_aus": 58
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 781,
+   "tokens_ein": 875,
+   "tokens_aus": 8
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1343,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2750,
+   "tokens_ein": 990,
+   "tokens_aus": 56
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 750,
+   "tokens_ein": 976,
+   "tokens_aus": 8
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 952,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2453,
+   "tokens_ein": 1063,
+   "tokens_aus": 56
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 655,
+   "tokens_ein": 1077,
+   "tokens_aus": 8
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 860,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2311,
+   "tokens_ein": 1136,
+   "tokens_aus": 56
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 797,
+   "tokens_ein": 1178,
+   "tokens_aus": 8
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1250,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2327,
+   "tokens_ein": 1209,
+   "tokens_aus": 56
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 782,
+   "tokens_ein": 1279,
+   "tokens_aus": 8
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1170,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2547,
+   "tokens_ein": 1282,
+   "tokens_aus": 56
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 797,
+   "tokens_ein": 1380,
+   "tokens_aus": 8
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1016,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "nachfrage",
+   "dauer_ms": 2405,
+   "tokens_ein": 1355,
+   "tokens_aus": 56
+  }
+ ],
+ "beendet": "2026-10-19T09:26:32"
+}

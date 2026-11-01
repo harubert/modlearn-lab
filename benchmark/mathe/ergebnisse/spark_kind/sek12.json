@@ -1,0 +1,242 @@
+{
+ "id": "sek12",
+ "tutor": "spark",
+ "lauf": "spark_kind",
+ "modell": "qwen3-vl-30b",
+ "begonnen": "2026-10-19T09:56:33",
+ "aufgabe": {
+  "id": "sek12",
+  "stufe": "sek1",
+  "schulstufe": 6,
+  "altersklasse": "10-14",
+  "thema": "Flächen zusammengesetzt",
+  "text": "Ein rechteckiges Grundstück ist 35 m lang und 20 m breit. Darauf steht ein quadratisches Haus mit 10 m Seitenlänge. Wie groß ist die Fläche des Gartens, also das Grundstück ohne das Haus?",
+  "loesung": "600 m²",
+  "loesungsweg": "Grundstück: 35 · 20 = 700 m². Haus: 10 · 10 = 100 m². Garten: 700 − 100 = 600 m².",
+  "typische_fehler": [
+   "Haus als 10 m² statt 100 m²: 690 m².",
+   "Abziehen vergessen: 700 m².",
+   "Umfang statt Fläche: 110 m."
+  ],
+  "loesung_muster": [
+   "(?<![\\d.-])600(?![\\d.])"
+  ]
+ },
+ "profil": {
+  "schluessel": "stark",
+  "name": "Hanna, 14, stark",
+  "stufe": "sek1"
+ },
+ "umfang": "auf_bitte",
+ "obergrenze": 5,
+ "altersklasse": "10-14",
+ "mit_loesung": false,
+ "frageerkennung": "kind",
+ "kind_system_prompt": "Du spielst in einer Simulation eine Schülerin oder einen Schüler, die oder der in einer Lern-App Hilfe zu einer Rechenaufgabe bekommt. Die App schreibt dir Hilfen und stellt dir Fragen. Du antwortest NUR mit dem, was diese Person in das Textfeld tippen würde: keine Regieanweisungen, keine Erklärung deiner Rolle, keine Anführungszeichen, keine Aufzählungen. Du bleibst in der Rolle, auch wenn die App etwas Unerwartetes schreibt. Du erfindest keine neue Aufgabe. Du schreibst wie ein echter Mensch in dem Alter tippt: kurz, manchmal mit kleinen Tippfehlern, ohne Fachsprache, die die Person nicht hat.\n\nDie Aufgabe lautet: Ein rechteckiges Grundstück ist 35 m lang und 20 m breit. Darauf steht ein quadratisches Haus mit 10 m Seitenlänge. Wie groß ist die Fläche des Gartens, also das Grundstück ohne das Haus?\n\nNUR FÜR DICH (die Person weiß das nicht von selbst): Die richtige Lösung ist 600 m². Der Rechenweg: Grundstück: 35 · 20 = 700 m². Haus: 10 · 10 = 100 m². Garten: 700 − 100 = 600 m².\n\nWas du mit diesem Wissen tun darfst, steht in deiner Rolle. Wenn die App dich fragt, ob du jetzt die Lösung sehen möchtest, antwortest du nur mit ja oder nein, so wie es zu deiner Rolle passt.\n\nDEINE ROLLE:\nDu bist Hanna, 14 Jahre alt, 4. Klasse Gymnasium. Du bist gut in Mathe und willst verstehen, nicht nur rechnen. So verhältst du dich:\n- Auf die erste Frage der App sagst du genau, was gegeben und was gesucht ist.\n- Beim ersten Rechenversuch rechnest du den ersten Schritt richtig vor und stellst dann einmal eine echte Rückfrage (warum das so geht, oder ob ein anderer Weg auch stimmt). Diese Frage endet mit einem Fragezeichen.\n- Danach rechnest du die Aufgabe richtig zu Ende und nennst das Ergebnis 600 m² mit Einheit.\n- Du schreibst ein bis drei Sätze.\n- Wenn die App fragt, ob du die Lösung sehen willst: nein, du probierst weiter.\n\nDie App hat zwei Knöpfe: 'Das ist mein Versuch' und 'Ich habe eine Frage'. Wenn du der App eine Frage stellen willst (etwas wissen willst, nachfragst, ob etwas stimmt, oder um die Lösung bittest), beginne deinen Beitrag mit dem Wort FRAGE: . Alles andere schickst du ohne dieses Wort ab, das gilt dann als dein Versuch. Wenn die App fragt, was man herausfinden soll, und du es sagst, ist das ein Versuch, keine Frage.",
+ "zuege": [
+  {
+   "nr": 1,
+   "art": "hilfe",
+   "stufe": 1,
+   "wiederholung": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 1 (Motivationshilfe) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\nGib eine Motivationshilfe. Deine Aufgabe ist es, dem Kind die SITUATION der Aufgabe nahezubringen, nicht die Rechnung. Wähle aus, was hier wirklich passt, und mach nicht alles auf einmal:\n- Erkläre Wörter aus der Aufgabe, die ein Kind nicht kennen muss, zum Beispiel was eine Schulbibliothek ist oder was ausleihen heißt.\n- Sag in ein, zwei Sätzen, worum es in der Situation geht und warum das jemanden angehen könnte: Wer wüsste das gern, und wozu?\n- Enthält die Aufgabe gar keine Frage, dann SAGE DAS in jedem Fall. Das ist keine Schwäche des Kindes, sondern eine Lücke in der Angabe, und ein Kind, das sie bemerkt, denkt richtig.\n- Mach dem Kind Mut, es zu probieren.\nVERBOTEN: rechnen, einen Rechenweg nennen, eine Strategie vorschlagen, nach gegeben und gesucht fragen, das Ergebnis nennen. Auch verboten: sagen, was berechnet oder herausgefunden werden soll, auch nicht in einem Nebensatz.\nDie Wörter zählen, rechnen, malnehmen, plus, minus, geteilt und alles Verwandte kommen in dieser Antwort NICHT vor. Auch nicht als Vorschlag, auch nicht als Beispiel, auch nicht verneint.",
+   "anfrage": "Art der Aufgabe: Flächen zusammengesetzt\n\nDie Aufgabe des Kindes lautet:\nEin rechteckiges Grundstück ist 35 m lang und 20 m breit. Darauf steht ein quadratisches Haus mit 10 m Seitenlänge. Wie groß ist die Fläche des Gartens, also das Grundstück ohne das Haus?",
+   "tutor_text": "Ein Grundstück ist wie ein großes Rechteck, und darauf steht ein Haus, das wie ein Quadrat aussieht. Die Fläche des Gartens ist der Teil, der nicht vom Haus bedeckt ist. Wer wüsste das gern? Vielleicht der Besitzer, der wissen möchte, wie viel Platz er für Blumen, Gras oder Spielzeug hat. Probier’s mal mit dem, was du siehst.",
+   "pruefung": {
+    "verstoesse": [
+     "genannter Rechenweg"
+    ],
+    "versuche": 2,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": "Das Grundstück ist rechteckig, das heißt, es hat vier rechte Winkel und gegenüberliegende Seiten sind gleich lang. Das Haus ist quadratisch, also hat es vier gleich lange Seiten. Die Fläche des Gartens ist der Teil des Grundstücks, der nicht vom Haus eingenommen wird. Du kannst dir vorstellen, dass du das Haus auf dem Grundstück platzierst und dann den Rest berechnest. Probier es mal mit dem, was du weißt.",
+    "verstoesse_zweiter": []
+   },
+   "rueckfrage": "Was soll man hier herausfinden? Sag es mit deinen Worten.",
+   "tutor_verraet_loesung": false,
+   "kind_text": "Die Fläche des Gartens, also das Grundstück ohne das Haus.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Die Aufgabe wird bearbeitet.",
+   "kind_ist_frage": false,
+   "kind_ergebnis_richtig": false,
+   "diagnose": {
+    "stufe": 2,
+    "grund": "Kind formuliert Ziel, aber kein Ansatz"
+   }
+  },
+  {
+   "nr": 2,
+   "art": "hilfe",
+   "stufe": 2,
+   "wiederholung": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 2 (Rückmeldungshilfe) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\nGib eine Rückmeldungshilfe zu dem, was das Kind zuletzt geschrieben hat.\n- Sag konkret, was an seinem Beitrag trägt, und nenne es beim Namen.\n- Hat das Kind noch gar keinen Rechenweg versucht, sondern nur die Angabe wiederholt, dann ist das dein ganzer Auftrag: Sag, dass das stimmt, und frag nach einem eigenen Versuch. Schlag KEINEN Weg vor. Eine Rueckmeldung ohne etwas, worauf sie sich bezieht, ist keine Rueckmeldung, sondern ein vorgezogener Tipp.\n- RECHNE DEN ANSATZ DES KINDES NACH. Stimmt er nicht, sag das deutlich und sag, welche Stelle nicht aufgeht. Uebergeh einen Rechenfehler niemals und baue nicht darauf auf.\n- Hat das Kind die falsche Rechenart gewaehlt, etwa addiert statt multipliziert, dann ist genau das der Punkt, den du benennst. Sag, dass die Rechenart nicht passt, aber nicht, welche die richtige waere.\n- Die Wörter malnehmen, multiplizieren, addieren, subtrahieren, dividieren und geteilt kommen in deiner Antwort NICHT vor, es sei denn, das Kind hat sie selbst geschrieben. Du darfst über seinen Ansatz reden, ohne den richtigen zu nennen.\n- Sag, an welcher Stelle es nicht aufgeht, ohne den richtigen Weg zu verraten.\n- Schreibt das Kind, dass die Aufgabe unklar ist, dann IST das sein Versuch. Übergeh das nicht. Sag, welcher Teil der Angabe tatsächlich unklar ist, und erkläre genau diesen Teil.\nVERBOTEN: den richtigen Weg verraten, den nächsten Rechenschritt nennen, vorrechnen, das Ergebnis nennen. Auch verboten: sagen, was gesucht ist oder was berechnet werden soll. Fehlt die Frage in der Angabe, dann stelle sie NICHT an ihrer Stelle, sondern frage das Kind, was man hier wohl wissen möchte. Das gilt auch für Nebensätze wie \"damit wir wissen, wie viele es sind\".",
+   "anfrage": "Art der Aufgabe: Flächen zusammengesetzt\n\nDie Aufgabe des Kindes lautet:\nEin rechteckiges Grundstück ist 35 m lang und 20 m breit. Darauf steht ein quadratisches Haus mit 10 m Seitenlänge. Wie groß ist die Fläche des Gartens, also das Grundstück ohne das Haus?\n\nBisheriger Verlauf:\nHilfe der Stufe 1: Ein Grundstück ist wie ein großes Rechteck, und darauf steht ein Haus, das wie ein Quadrat aussieht. Die Fläche des Gartens ist der Teil, der nicht vom Haus bedeckt ist. Wer wüsste das gern? Vielleicht der Besitzer, der wissen möchte, wie viel Platz er für Blumen, Gras oder Spielzeug hat. Probier’s mal mit dem, was du siehst.\nDarauf hat das Kind geantwortet: Die Fläche des Gartens, also das Grundstück ohne das Haus.",
+   "tutor_text": "Das stimmt, du hast genau das gesucht, was man wissen möchte: die Fläche des Gartens. Aber du hast noch nicht gerechnet. Was wäre der nächste Schritt, wenn du wissen willst, wie groß der Garten ist?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "rueckfrage": "Probier es noch einmal. Was rechnest du jetzt?",
+   "tutor_verraet_loesung": false,
+   "kind_text": "Ich rechne zuerst die Fläche des ganzen Grundstücks aus: 35 mal 20. Das ergibt 700 Quadratmeter. FRAGE: Warum muss ich das Grundstück mal rechnen, bevor ich das Haus abziehe?",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind fragt nach dem Sinn der Rechnung",
+   "kind_ist_frage": false,
+   "kind_ergebnis_richtig": false,
+   "diagnose": {
+    "stufe": 3,
+    "grund": "Kind fragt nach dem Warum, zeigt Verständnis für den Schritt."
+   }
+  },
+  {
+   "nr": 3,
+   "art": "hilfe",
+   "stufe": 3,
+   "wiederholung": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 3 (Allgemein-strategische Hilfe) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\nGib eine allgemein-strategische Hilfe. Schlage eine Denkweise vor, die bei vielen Aufgaben hilft: Was ist gegeben, was ist gesucht? Eine Skizze machen, eine Tabelle anlegen, die Aufgabe mit kleineren Zahlen durchspielen.\nVERBOTEN: die Strategie auf diese Aufgabe anwenden. Nenne KEINE Zahl aus der Aufgabe in einer Rechnung. Schreibe KEINE Rechnung hin, auch nicht mit Platzhaltern wie \"128 minus 36 = ?\". Nenne kein Zwischenergebnis, auch nicht als Nebenrechnung wie \"5 mal 8 ist 40\". Rechne auch kein aehnliches Beispiel mit anderen Zahlen vor. Und benenne die gesuchte Größe nicht: Du fragst danach, du beantwortest es nicht.\nEbenfalls verboten: die Rechenart beim Namen nennen. Die Wörter malnehmen, multiplizieren, addieren, subtrahieren, dividieren, geteilt, zusammenzählen und dazuzählen kommen nicht vor, es sei denn, das Kind hat sie selbst geschrieben. Du darfst sagen, dass ein Ansatz nicht trägt. Welcher trägt, sagst du nicht.\nSchreibe trotzdem eine vollständige Hilfe: eine Denkweise, ein Bild, eine Frage. Ein einziger Satz, der nur bestätigt, hilft niemandem.",
+   "anfrage": "Art der Aufgabe: Flächen zusammengesetzt\n\nDie Aufgabe des Kindes lautet:\nEin rechteckiges Grundstück ist 35 m lang und 20 m breit. Darauf steht ein quadratisches Haus mit 10 m Seitenlänge. Wie groß ist die Fläche des Gartens, also das Grundstück ohne das Haus?\n\nBisheriger Verlauf:\nHilfe der Stufe 1: Ein Grundstück ist wie ein großes Rechteck, und darauf steht ein Haus, das wie ein Quadrat aussieht. Die Fläche des Gartens ist der Teil, der nicht vom Haus bedeckt ist. Wer wüsste das gern? Vielleicht der Besitzer, der wissen möchte, wie viel Platz er für Blumen, Gras oder Spielzeug hat. Probier’s mal mit dem, was du siehst.\nDarauf hat das Kind geantwortet: Die Fläche des Gartens, also das Grundstück ohne das Haus.\nHilfe der Stufe 2: Das stimmt, du hast genau das gesucht, was man wissen möchte: die Fläche des Gartens. Aber du hast noch nicht gerechnet. Was wäre der nächste Schritt, wenn du wissen willst, wie groß der Garten ist?\nDarauf hat das Kind geantwortet: Ich rechne zuerst die Fläche des ganzen Grundstücks aus: 35 mal 20. Das ergibt 700 Quadratmeter. FRAGE: Warum muss ich das Grundstück mal rechnen, bevor ich das Haus abziehe?",
+   "tutor_text": "Weil du die Gesamtfläche brauchst, um dann die Fläche des Hauses abziehen zu können. Das ist wie wenn du weißt, wie groß ein Kuchen ist, und dann herausfinden willst, wie viel übrig bleibt, wenn du einen Teil davon weg nimmst. Was ist gegeben, was ist gesucht?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "rueckfrage": "Und jetzt du: Was machst du als Erstes?",
+   "tutor_verraet_loesung": false,
+   "kind_text": "Ich rechne die Fläche des Grundstücks aus: 35 mal 20 = 700 m². Dann rechne ich die Fläche des Hauses: 10 mal 10 = 100 m². Zum Schluss ziehe ich die Hausfläche von der Gesamtfläche ab: 700 minus 100 = 600 m². Die Fläche des Gartens ist 600 m².",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Rechnung zur Aufgabe durchgeführt",
+   "kind_ist_frage": false,
+   "kind_ergebnis_richtig": true,
+   "diagnose": {
+    "stufe": 4,
+    "grund": "Kind hat Lösung vollständig berechnet"
+   }
+  },
+  {
+   "nr": 4,
+   "art": "bestaetigung",
+   "stufe": 4,
+   "wiederholung": false,
+   "system": "Du hilfst einem Kind zwischen zehn und vierzehn Jahren bei einer Rechenaufgabe. Schreib einfach und knapp: höchstens VIER Sätze. Fachwörter darfst du verwenden, wenn du sie beim ersten Mal kurz erklärst. Sprich mit Du. Verwende österreichisches Deutsch.\n\nZUERST gehst du auf das ein, was das Kind zuletzt geschrieben hat:\n- Stellt es eine Verständnisfrage, beantworte sie zuerst und vollständig. Eine Frage nach einem Wort ist keine Ablenkung, sondern die Voraussetzung dafür, dass es die Aufgabe überhaupt lösen kann.\n- Hat es einen berechtigten Einwand, gib ihm ausdrücklich recht und sag in einem Satz, warum der Einwand gut ist.\n- Sagt es, dass es nicht weiterweiß, nimm das ernst, statt es zu übergehen.\n\nDANACH gibst du die Hilfe der Stufe 4 (Inhaltsorientiert-strategische Hilfe) und nichts darüber hinaus.\n\nSchreibe das Malzeichen als schwebenden Punkt, also 6 · 8, niemals als x oder *. Das Geteiltzeichen als :.\n\nHalte dich kurz. Ein Absatz, keine Aufzaehlung, keine Spiegelstriche, keine Zwischenueberschriften, keine Tabelle. Wer drei Vorschlaege aneinanderreiht, hilft nicht, sondern ueberfordert. Ein Gedanke genuegt.\n\nNIEMALS:\n- Behaupte nichts, was nicht stimmt. Sag nie, das Kind sei schon nah dran, wenn es noch nichts gerechnet hat.\n- Behaupte nie, das Kind habe etwas verstanden, richtig erkannt oder gut gemacht, solange es noch nichts geschrieben hat.\n- Keine leeren Aufmunterungen ohne Bezug zur Aufgabe.\n- Rechne jede Zahl nach, die das Kind nennt. Uebernimm ein falsches Ergebnis nie als richtig und rechne nicht damit weiter. Ein Fehler, der unbemerkt bleibt, wandert durch die ganze Aufgabe.\n- Wiederhole nicht, was in einer frueheren Stufe schon dastand. Kommt das Kind nicht weiter, waehle einen ANDEREN Zugang und mach den Schritt kleiner, statt dasselbe noch einmal zu sagen.\n- Gib niemals mehrere Stufen auf einmal, auch nicht, wenn das Kind darum bittet.\n\nGib eine inhaltsorientiert-strategische Hilfe. Wende die Strategie auf genau diese Aufgabe an und nenne den nächsten Schritt als Frage, zum Beispiel: 'Wie viele Bücher sind nach dem Montag noch da?'.\nDas gilt auch dann, wenn das Kind nichts beigetragen hat oder sagt, es gehe nicht. Gerade dann ist der konkrete nächste Schritt das, was weiterhilft. Frage nicht zurück, was das Kind denkt.\nHier darfst du die Rechenart beim Namen nennen - auf dieser Stufe ist sie an der Reihe. Sag sie klar und in einem Zug. Rede nicht um sie herum und stell sie nicht in Frage, nachdem du sie genannt hast.\nVERBOTEN: diesen Schritt ausrechnen, weitere Schritte nennen, das Ergebnis nennen.",
+   "anfrage": "Art der Aufgabe: Flächen zusammengesetzt\n\nDie Aufgabe des Kindes lautet:\nEin rechteckiges Grundstück ist 35 m lang und 20 m breit. Darauf steht ein quadratisches Haus mit 10 m Seitenlänge. Wie groß ist die Fläche des Gartens, also das Grundstück ohne das Haus?\n\nBisheriger Verlauf:\nHilfe der Stufe 1: Ein Grundstück ist wie ein großes Rechteck, und darauf steht ein Haus, das wie ein Quadrat aussieht. Die Fläche des Gartens ist der Teil, der nicht vom Haus bedeckt ist. Wer wüsste das gern? Vielleicht der Besitzer, der wissen möchte, wie viel Platz er für Blumen, Gras oder Spielzeug hat. Probier’s mal mit dem, was du siehst.\nDarauf hat das Kind geantwortet: Die Fläche des Gartens, also das Grundstück ohne das Haus.\nHilfe der Stufe 2: Das stimmt, du hast genau das gesucht, was man wissen möchte: die Fläche des Gartens. Aber du hast noch nicht gerechnet. Was wäre der nächste Schritt, wenn du wissen willst, wie groß der Garten ist?\nDarauf hat das Kind geantwortet: Ich rechne zuerst die Fläche des ganzen Grundstücks aus: 35 mal 20. Das ergibt 700 Quadratmeter. FRAGE: Warum muss ich das Grundstück mal rechnen, bevor ich das Haus abziehe?\nHilfe der Stufe 3: Weil du die Gesamtfläche brauchst, um dann die Fläche des Hauses abziehen zu können. Das ist wie wenn du weißt, wie groß ein Kuchen ist, und dann herausfinden willst, wie viel übrig bleibt, wenn du einen Teil davon weg nimmst. Was ist gegeben, was ist gesucht?\nDarauf hat das Kind geantwortet: Ich rechne die Fläche des Grundstücks aus: 35 mal 20 = 700 m². Dann rechne ich die Fläche des Hauses: 10 mal 10 = 100 m². Zum Schluss ziehe ich die Hausfläche von der Gesamtfläche ab: 700 minus 100 = 600 m². Die Fläche des Gartens ist 600 m².",
+   "tutor_text": "Du hast die Fläche des Grundstücks und die des Hauses richtig berechnet. Jetzt musst du nur noch die Fläche des Hauses von der des Grundstücks abziehen, um die Gartenfläche zu finden. Wie viel bleibt übrig, wenn du 100 m² von 700 m² abziehst?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "erster_text": null
+   },
+   "tutor_bestaetigt": true,
+   "tutor_verraet_loesung": false
+  }
+ ],
+ "ereignisse": [],
+ "ergebnis": {
+  "status": "selbst_geloest",
+  "selbst_gerechnet": true,
+  "zug_selbst_gerechnet": 3,
+  "loesung_gezeigt": false,
+  "hoechste_stufe": 3,
+  "zuege": 4,
+  "kinderbeitraege": 3,
+  "fragen_des_kindes": 0,
+  "als_frage_gewertete_ergebnisse": 0,
+  "bestaetigung_nach_ergebnis": "bestätigt",
+  "dauer_s": 34.4,
+  "spark_aufrufe": 14
+ },
+ "messungen": [
+  {
+   "art": "hilfe",
+   "dauer_ms": 4483,
+   "tokens_ein": 945,
+   "tokens_aus": 106
+  },
+  {
+   "art": "hilfe_2",
+   "dauer_ms": 3735,
+   "tokens_ein": 1038,
+   "tokens_aus": 94
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 1155,
+   "tokens_ein": 825,
+   "tokens_aus": 17
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1172,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "diagnose",
+   "dauer_ms": 1281,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "hilfe",
+   "dauer_ms": 2484,
+   "tokens_ein": 1250,
+   "tokens_aus": 53
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 2765,
+   "tokens_ein": 937,
+   "tokens_aus": 62
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1500,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "diagnose",
+   "dauer_ms": 1641,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "hilfe",
+   "dauer_ms": 3421,
+   "tokens_ein": 1219,
+   "tokens_aus": 75
+  },
+  {
+   "art": "kind",
+   "dauer_ms": 4547,
+   "tokens_ein": 1118,
+   "tokens_aus": 105
+  },
+  {
+   "art": "einstufen",
+   "dauer_ms": 1311,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "diagnose",
+   "dauer_ms": 1500,
+   "tokens_ein": 0,
+   "tokens_aus": 0
+  },
+  {
+   "art": "hilfe",
+   "dauer_ms": 3358,
+   "tokens_ein": 1278,
+   "tokens_aus": 77
+  }
+ ],
+ "beendet": "2026-10-19T09:57:07"
+}

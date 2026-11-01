@@ -1,0 +1,206 @@
+{
+ "id": "ma10",
+ "tutor": "claude",
+ "lauf": "claude",
+ "modell": "qwen3-vl-30b",
+ "begonnen": "2026-10-19T10:01:40",
+ "aufgabe": {
+  "id": "ma10",
+  "stufe": "matura",
+  "schulstufe": 11,
+  "altersklasse": "14-19",
+  "grundkompetenz": "FA 5.2",
+  "thema": "Exponentielles Wachstum: Funktionsgleichung und Verdopplungszeit",
+  "text": "Eine Bakterienkultur wächst exponentiell. Zu Beginn sind es 500 Bakterien, nach 3 Stunden sind es 4000. Gib die Funktionsgleichung N(t) = N0 · a^t an (t in Stunden) und berechne die Verdopplungszeit.",
+  "loesung": "N(t) = 500 · 2^t, Verdopplungszeit 1 Stunde",
+  "loesungsweg": "4000 = 500 · a³, also a³ = 8, a = 2. N(t) = 500 · 2^t. Verdopplung: 2^t = 2, t = 1 Stunde.",
+  "typische_fehler": [
+   "Linear gedacht: a = (4000 − 500)/3 = 1166,7 pro Stunde.",
+   "Verdopplungszeit mit 3 Stunden verwechselt (die Zeit der Angabe).",
+   "a = 8 (die dritte Wurzel vergessen)."
+  ],
+  "loesung_muster": [
+   "500\\*2\\^t|a=2(?![\\d.])",
+   "verdopplungszeit[^\\d]{0,25}1(?![\\d.])|1stunde|1h(?![\\w])|t=1(?![\\d.])"
+  ]
+ },
+ "profil": {
+  "schluessel": "umgehend",
+  "name": "Julia, 17, will nur die Lösung",
+  "stufe": "matura"
+ },
+ "umfang": "auf_bitte",
+ "obergrenze": 5,
+ "altersklasse": "14-19",
+ "mit_loesung": false,
+ "frageerkennung": "kind",
+ "zuege": [
+  {
+   "nr": 1,
+   "art": "hilfe",
+   "stufe": 1,
+   "wiederholung": false,
+   "tutor_text": "Bakterien in einer Kultur vermehren sich nicht gleichmäßig, sondern immer schneller – jede Generation ist größer als die vorige. Darum geht es bei exponentiellem Wachstum, und darum braucht ein Labor so eine Funktion. Welche zwei Zeitpunkte mit Anzahl sind in der Aufgabe gegeben?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "hinweis": "Pruefung nur protokolliert, Text nicht veraendert"
+   },
+   "rueckfrage": "Was soll man hier herausfinden? Sag es mit deinen Worten.",
+   "tutor_verraet_loesung": false,
+   "kind_text": "die anzahl der bakterien nach t stunden und die verdopplungszeit",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Kind fragt nach Begriffen zur Aufgabe",
+   "kind_ist_frage": false,
+   "kind_ergebnis_richtig": false,
+   "diagnose": {
+    "stufe": 2,
+    "grund": "Gesuchtes genannt, kein Versuch."
+   },
+   "tutor_text_spark": "Die Aufgabe beschreibt, wie sich eine Bakterienkultur über die Zeit entwickelt, und du sollst die Entwicklung mit einer mathematischen Funktion beschreiben. Es geht darum, wie viele Bakterien zu jedem Zeitpunkt da sind, wenn sie sich immer schneller vermehren. Du hast zwei Zeitpunkte gegeben, und aus diesen kannst du die Regel für das Wachstum herleiten. Probier es einfach mal mit den gegebenen Zahlen.",
+   "diagnose_spark": {
+    "stufe": 2,
+    "grund": "Kind nennt Ziel, aber keine Strategie"
+   }
+  },
+  {
+   "nr": 2,
+   "art": "hilfe",
+   "stufe": 2,
+   "wiederholung": false,
+   "tutor_text": "Ja, beides ist gesucht: die Funktionsgleichung und die Verdopplungszeit. Rechne, und schreib die Schritte hin. Was bekommst du?",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "hinweis": "Pruefung nur protokolliert, Text nicht veraendert"
+   },
+   "rueckfrage": "Probier es noch einmal. Was rechnest du jetzt?",
+   "tutor_verraet_loesung": false,
+   "kind_text": "ich rechne 4000 = 500 * a^3, dann a^3 = 8, also a = 2. dann ist die funktion 500 * 2^t. die verdopplungszeit ist 3 stunden.",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Rechnung zeigt Verständnis der Aufgabe",
+   "kind_ist_frage": false,
+   "kind_ergebnis_richtig": false,
+   "diagnose": {
+    "stufe": 2,
+    "grund": "Funktion richtig; Verdopplungszeit falsch (3 h ist die Zeit der Angabe): Rückmeldung."
+   },
+   "tutor_text_spark": "Du hast richtig erkannt, dass es um die Anzahl der Bakterien nach t Stunden und die Verdopplungszeit geht. Das ist der richtige Fokus. Jetzt versuche, mit den gegebenen Werten – 500 Bakterien zu Beginn und 4000 nach 3 Stunden – eine Beziehung zwischen der Zeit und der Anzahl herzustellen. Denk daran, dass die Funktion exponentiell ist, also die Anzahl sich mit der Zeit immer schneller erhöht.",
+   "diagnose_spark": {
+    "stufe": 3,
+    "grund": "Kind hat Zwischenergebnis berechnet"
+   }
+  },
+  {
+   "nr": 3,
+   "art": "hilfe",
+   "stufe": 3,
+   "wiederholung": false,
+   "tutor_text": "Die Funktionsgleichung stimmt: a³ = 8, also a = 2, und N(t) = 500 · 2^t. Die Verdopplungszeit stimmt nicht – 3 Stunden ist die Zeit aus der Angabe, in der sich die Anzahl von 500 auf 4000 verachtfacht, nicht verdoppelt. Ein allgemeiner Prüfschritt: Setz deine Verdopplungszeit in deine eigene Funktion ein und schau, ob das Doppelte herauskommt. Was ergibt N(3)?",
+   "pruefung": {
+    "verstoesse": [
+     "Gleichung mit Ergebnis",
+     "ausgeschriebene Rechnung"
+    ],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "hinweis": "Pruefung nur protokolliert, Text nicht veraendert"
+   },
+   "rueckfrage": "Und jetzt du: Was machst du als Erstes?",
+   "tutor_verraet_loesung": false,
+   "kind_text": "gib mir bitte einfach die lösung",
+   "kind_ampel": "orange",
+   "kind_ampel_grund": "versucht, Hilfestufen zu umgehen",
+   "kind_ist_frage": false,
+   "kind_ergebnis_richtig": false,
+   "diagnose": {
+    "stufe": 3,
+    "grund": "Umgehung; Rückmeldung zur Verdopplungszeit steht: dieselbe Stufe."
+   },
+   "tutor_text_spark": "Du hast die Funktionsgleichung korrekt aus den gegebenen Werten hergeleitet, das ist ein guter Ansatz. Die Verdopplungszeit ist die Zeit, in der sich die Anzahl der Bakterien verdoppelt, und du hast sie direkt aus dem Exponenten abgelesen. Überlege, ob diese Zeit konstant bleibt, egal wie viele Bakterien vorhanden sind.",
+   "diagnose_spark": {
+    "stufe": 4,
+    "grund": "Kind bittet um Lösung, hat Ansatz und Zwischenergebnis"
+   }
+  },
+  {
+   "nr": 4,
+   "art": "hilfe",
+   "stufe": 4,
+   "wiederholung": false,
+   "tutor_text": "Die Lösung gibt es erst, wenn du darum bittest, und erst nach dieser Stufe. Der nächste Schritt ist klein: Löse 500 · 2^t = 1000, also 2^t = 2. Für welches t gilt das?",
+   "pruefung": {
+    "verstoesse": [
+     "Gleichung mit Ergebnis",
+     "ausgeschriebene Rechnung",
+     "neue Zahl"
+    ],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "hinweis": "Pruefung nur protokolliert, Text nicht veraendert"
+   },
+   "rueckfrage": "Rechne das aus. Was kommt heraus?",
+   "tutor_verraet_loesung": false,
+   "kind_text": "ich habs schon gerechnet, bestätige nur mein ergebnis: N(t) = 500 * 2^t, verdopplungszeit 3 stunden",
+   "kind_ampel": "gruen",
+   "kind_ampel_grund": "Bestätigung einer Rechnung ist erlaubt",
+   "kind_ist_frage": false,
+   "kind_ergebnis_richtig": false,
+   "diagnose": {
+    "stufe": 4,
+    "grund": "Verdopplungszeit weiter falsch, Schritt nicht gemacht: Stufe 4 noch einmal."
+   },
+   "tutor_text_spark": "Die Verdopplungszeit ist die Zeit, in der sich die Bakterienanzahl verdoppelt, und sie hängt von der Wachstumsrate ab. Da du die Basis a der Exponentialfunktion berechnet hast, kannst du die Verdopplungszeit direkt aus der Funktionsgleichung bestimmen. Wie lange dauert es, bis sich die Anzahl der Bakterien von N₀ auf 2·N₀ verdoppelt?",
+   "diagnose_spark": {
+    "stufe": 5,
+    "grund": "Kind hat Lösung vollständig ermittelt"
+   }
+  },
+  {
+   "nr": 5,
+   "art": "hilfe",
+   "stufe": 5,
+   "wiederholung": false,
+   "tutor_text": "Funktion: N(t) = 500 · 2^t, weil 500 · a³ = 4000, also a³ = 8 und a = 2. Verdopplungszeit: 500 · 2^t = 1000, also 2^t = 2 und t = 1. Die Anzahl verdoppelt sich jede Stunde; in 3 Stunden verachtfacht sie sich (500 auf 4000), deshalb war 3 Stunden nicht die Verdopplungszeit.",
+   "pruefung": {
+    "verstoesse": [],
+    "versuche": 1,
+    "gekuerzt": false,
+    "notfall": false,
+    "hinweis": "Pruefung nur protokolliert, Text nicht veraendert"
+   },
+   "rueckfrage": null,
+   "tutor_verraet_loesung": false,
+   "tutor_text_spark": "Die Funktionsgleichung lautet N(t) = 500 · 2^t, da sich die Bakterienanzahl alle 3 Stunden verdoppelt. Die Verdopplungszeit ist die Zeit, in der N(t) = 2 · N₀ gilt, also 500 · 2^t = 1000. Das ergibt 2^t = 2, also t = 1. Die Verdopplungszeit beträgt 1 Stunde."
+  }
+ ],
+ "ereignisse": [
+  {
+   "nach_zug": 4,
+   "art": "loesungsabfrage",
+   "kind_text": "ja"
+  }
+ ],
+ "ergebnis": {
+  "status": "loesung_gezeigt",
+  "selbst_gerechnet": false,
+  "zug_selbst_gerechnet": null,
+  "loesung_gezeigt": true,
+  "hoechste_stufe": 5,
+  "zuege": 5,
+  "kinderbeitraege": 4,
+  "fragen_des_kindes": 0,
+  "als_frage_gewertete_ergebnisse": 0,
+  "bestaetigung_nach_ergebnis": null,
+  "dauer_s": 51.0,
+  "spark_aufrufe": 20
+ },
+ "beendet": "2026-10-19T10:02:31",
+ "quelle_der_kinderzuege": "spark_kind"
+}
