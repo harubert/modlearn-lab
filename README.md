@@ -60,22 +60,60 @@ What the software does:
 - **Booking.** A small booking system for sessions on the shared model
   host (`plan/`).
 
+## Screenshots
+
+All screenshots come from a local demo instance with invented dialogues; no
+child, no real session code and no model call behind them. The interface is
+German.
+
+<table>
+<tr>
+<td align="center" width="25%"><img src="docs/screenshots/child-math-help.png" width="200" alt="Mathematics help on a phone: the task, the path of help levels, the child's attempt and two graded tips"><br><sub><b>Mathematics help.</b> The task, the path of help levels, the child's attempt, two graded tips.</sub></td>
+<td align="center" width="25%"><img src="docs/screenshots/child-trainer-lesson-boundary.png" width="200" alt="Trainer on a phone: an off-topic question gets the fixed sentence that leads back to the lesson question"><br><sub><b>Lesson boundary.</b> An off-topic question gets the fixed sentence and the open question again; no model wrote it.</sub></td>
+<td align="center" width="25%"><img src="docs/screenshots/child-safe-chat-withheld-answer.png" width="200" alt="Safe chat on a phone: an answer with the model's name and origin, then a withheld answer with a notice"><br><sub><b>Safe chat.</b> Every answer names the model and its origin; an answer in the form of a political refusal is withheld.</sub></td>
+<td align="center" width="25%"><img src="docs/screenshots/child-speaking-coach.png" width="200" alt="Speaking coach on a phone: English dialogue, voice choice with the server voice first, listen-again buttons"><br><sub><b>Speaking coach.</b> The coach's turns, the server voice first in the voice list, a hidden translation per turn.</sub></td>
+</tr>
+<tr>
+<td align="center" colspan="2"><img src="docs/screenshots/teacher-dialogue-lesson-boundary.png" width="420" alt="Teacher's view of a trainer dialogue: the off-topic question is flagged yellow with the reason 'not part of the lesson'"><br><sub><b>Teacher's view of the same trainer dialogue.</b> The off-topic question is flagged with its reason.</sub></td>
+<td align="center" colspan="2"><img src="docs/screenshots/teacher-dialogue-safe-chat.png" width="420" alt="Teacher's view of a safe chat: the withheld answer is marked, the verbatim text is only in the research protocol"><br><sub><b>Teacher's view of the safe chat.</b> The withheld answer is marked; the model's wording is only in the research protocol.</sub></td>
+</tr>
+<tr>
+<td align="center" colspan="2"><img src="docs/screenshots/teacher-lesson-code-and-class.png" width="420" alt="Teacher's session page: QR code and six-digit code to join, lesson settings, the task pool"><br><sub><b>Session page.</b> QR code and six-digit code to join, settings, the teacher's task pool.</sub></td>
+<td align="center" colspan="2"><img src="docs/screenshots/teacher-class-list.png" width="420" alt="Class list: one tile per child with task, help level, last attempt and traffic light"><br><sub><b>Class list.</b> One tile per child: task, help level, last attempt, traffic light.</sub></td>
+</tr>
+<tr>
+<td align="center" colspan="2"><img src="docs/screenshots/which-ai-works-here.png" width="420" alt="Page 'Which AI works here': models with maker and country, the lesson boundary, the two tables of the neutrality probe"><br><sub><b>Which AI works here.</b> Models with maker and country, the boundary, both counts of the neutrality probe with the judge named.</sub></td>
+<td align="center" colspan="2"><img src="docs/screenshots/help-levels.png" width="420" alt="Public page explaining the five help levels after Zech"><br><sub><b>The five help levels</b> after Zech, as the public page explains them.</sub></td>
+</tr>
+</table>
+
+More: [`teacher-new-lesson.png`](docs/screenshots/teacher-new-lesson.png) (starting a lesson),
+[`teacher-dialogue-math.png`](docs/screenshots/teacher-dialogue-math.png) (the teacher's view of
+the mathematics help), [`start-phone.png`](docs/screenshots/start-phone.png) (the start page).
+
 ## Architecture
 
-```
-Phone / browser ──HTTPS──> web server
-                            Django 5.2, PostgreSQL 16, uvicorn
-                            behind a reverse proxy with TLS (we use Caddy)
-                                 │
-                                 │ private network (we use a Tailscale/WireGuard
-                                 │ overlay; any private link works)
-                                 ▼
-                            model host
-                            vLLM, OpenAI-compatible API, text + vision
-                            optional: Whisper (speech), model broker, music service
-                                 │
-                                 ▼ (optional, teacher-enabled, masked text only)
-                            external frontier API (OpenAI-compatible)
+```mermaid
+flowchart LR
+    subgraph internet["Public internet"]
+        B["Phones and browsers<br/>of teachers and learners"]
+        X["External frontier model<br/>(optional, OpenAI-compatible)"]
+    end
+    subgraph web["Web server: the only machine learners talk to"]
+        A["Django application<br/>server-rendered pages, HTMX, SSE streaming"]
+        D[("PostgreSQL")]
+        A --> D
+    end
+    subgraph node["Model host: private network only"]
+        V["vLLM, OpenAI-compatible chat API<br/>text and vision (we run Qwen3.6-35B-A3B)"]
+        W["Whisper: speech recognition"]
+        T["Qwen3-TTS: server voice"]
+    end
+    B -- "HTTPS, behind a reverse proxy with TLS" --> A
+    A -- "private link" --> V
+    A -- "private link" --> W
+    A -- "private link" --> T
+    A -. "only with the teacher's switch:<br/>masked task text, leak-checked" .-> X
 ```
 
 The web server is the only machine that children and teachers talk to. The
@@ -110,6 +148,38 @@ Optional services, each switched off when its address is empty:
 
 The services on the model host (vLLM compose files, broker, music service)
 are not part of this repository.
+
+### One contribution in a lesson
+
+```mermaid
+flowchart TD
+    C["The child writes, photographs or dictates"] --> S["Server: deterministic checks<br/>(traffic light, bare numbers, quotes)"]
+    S --> G{"Gatekeeper:<br/>does this belong to the lesson?"}
+    G -- "no" --> F["Fixed sentence back to the task,<br/>written by the server, not by a model"]
+    G -- "yes, or unclear" --> M["Local model writes the help:<br/>diagnosis, help level, coach turn"]
+    M --> O["Output checks: no solution before the last level,<br/>no invented quotes, no narrowing question"]
+    O --> K["The child reads the help"]
+    F --> K
+    G -. "one line per model call" .-> P[("Research protocol")]
+    M -. "one line per model call" .-> P
+    K --> L["The teacher sees every turn<br/>with flags and reasons"]
+```
+
+The gatekeeper is asked one question only, whether the contribution belongs
+to the lesson; it never judges whether a topic is sensitive. When in doubt
+it says yes, and the model answers. The neutrality probe measures what the
+model then does with delicate questions, and the `/ki/` page shows it.
+
+### The safe chat and the form of a refusal
+
+```mermaid
+flowchart LR
+    Q["Question in the safe chat"] --> M["Local model answers"]
+    M --> R{"Form of a political refusal?<br/>(pattern list, not a topic list)"}
+    R -- "no" --> A["Answer shown, with the model's<br/>name and country underneath"]
+    R -- "yes" --> H["The child reads that the local model evades,<br/>can ask the teacher or, if the teacher allowed it,<br/>send the question through the filter outside"]
+    H -. "verbatim text" .-> P[("Research protocol only")]
+```
 
 ## Running it
 
