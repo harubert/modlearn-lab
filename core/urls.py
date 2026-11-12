@@ -11,6 +11,7 @@ urlpatterns = [
     path("trainer-erklaerung/", views.trainer_erklaerung, name="trainer_erklaerung"),
     path("sprechcoach-erklaerung/", views.sprechcoach_erklaerung, name="sprechcoach_erklaerung"),
     path("projekt/", views.projekt, name="projekt"),
+    path("ki/", views.ki, name="ki"),
     path("datenschutz/", views.datenschutz, name="datenschutz"),
     path("barrierefreiheit/", views.barrierefreiheit, name="barrierefreiheit"),
     path("healthz", views.healthz, name="healthz"),

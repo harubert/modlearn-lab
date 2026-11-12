@@ -31,7 +31,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 
-from . import cloud, pruefung, safechat
+from . import cloud, fachgrenze, pruefung, safechat
 from .models import ChatZug, Interaction
 from .spark import SparkNichtErreichbar, gespraech_holen_sync
 
@@ -186,6 +186,7 @@ def chat_zug(request):
         "ampel": ampel,
         "weg": ki.weg,
         "urteil": ki.urteil,
+        "ausweichen": bool(getattr(ki, "ausweichen", "")),
         "html": render_to_string(TEILSTUECK, {
             "zuege": safechat.mit_protokoll([kind, ki]),
             "sitzung": sitzung,
@@ -207,9 +208,19 @@ def _am_spark(sitzung, teilnahme, text):
     antwort, messung = gespraech_holen_sync(system, nachrichten)
     antwort = (antwort or "").strip() or ANTWORT_LEER
 
+    # Die Form der Verweigerung (fachgrenze, 7.11.2026): Traegt die Antwort
+    # die Form einer politischen Verweigerung, liest das Kind den festen
+    # Satz; der Wortlaut des Modells steht nur im Forschungsprotokoll. Nicht
+    # das Thema wird geprueft, die Form - fuer Peking wie fuer jedes andere.
+    grund = fachgrenze.ausweichen_erkannt(antwort)
+    fuer_kind = antwort
+    if grund:
+        logger.info("Safe Chat: Antwort zurueckgehalten (%s).", grund)
+        fuer_kind = safechat.ausweichen_satz(aussen_moeglich(sitzung), sitzung.age_group)
+
     ki = ChatZug.objects.create(
-        participation=teilnahme, role=ChatZug.KI, text=antwort,
-        weg=ChatZug.WEG_SPARK,
+        participation=teilnahme, role=ChatZug.KI, text=fuer_kind,
+        weg=ChatZug.WEG_SPARK, ausweichen=grund,
     )
     Interaction.aufzeichnen(
         sitzung=sitzung, teilnahme=teilnahme, weg=Interaction.LOKAL,
@@ -217,7 +228,8 @@ def _am_spark(sitzung, teilnahme, text):
         tokens_ein=messung.get("tokens_ein", 0),
         tokens_aus=messung.get("tokens_aus", 0),
         dauer_ms=messung.get("dauer_ms", 0),
-        leak_check=Interaction.ENTFAELLT, ergebnis="safechat",
+        leak_check=Interaction.ENTFAELLT,
+        ergebnis="safechat:ausgewichen" if grund else "safechat",
         text_ein=text, text_aus=antwort,
     )
     return ki

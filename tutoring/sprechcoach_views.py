@@ -40,7 +40,8 @@ from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
-from . import levels, pruefung, sprechablauf, sprechaufgaben, sprechcoach
+from . import (fachgrenze, levels, pruefung, sprechablauf, sprechaufgaben,
+               sprechcoach, stimme)
 from .models import SprachLauf, SprachZug
 from .spark import (SparkNichtErreichbar, antwort_holen_sync, sprache_moeglich,
                     transkription)
@@ -112,6 +113,11 @@ def _umgebung(teilnahme, lauf):
         # Wohin der Browser eine Aeusserung schickt. Eigener Endpunkt neben
         # views.sprache_erkennen: Der Sprechcoach braucht mehr als den Text.
         "hoeren_url": reverse("tutoring:sprechcoach_hoeren"),
+        # Die Stimme vom Server (tutoring/stimme.py, 7.11.2026): Steht hier
+        # eine Adresse, holt das Skript die Saetze des Coaches als Ton vom
+        # Rechner der Hochschule statt sie dem Browser zu ueberlassen. Leer
+        # heisst: Browserstimme wie bisher.
+        "stimme_url": reverse("tutoring:stimme_zug") if stimme.moeglich() else "",
         # Der Ablauf (Regel 11 und 12). Die Seite zeigt, was der Server
         # entschieden hat; sie entscheidet nichts selbst.
         "aufgabe": aufgabe,
@@ -262,14 +268,6 @@ def coach_zug(request):
         return _abweisen(request, "Sag oder schreib bitte etwas.")
 
     phase_vorher = lauf.phase
-    ampel, grund = pruefung.einstufen(text)
-    SprachZug.objects.create(
-        run=lauf, role=SprachZug.LERNEND, text=text,
-        source=_herkunft_aus(request, ""), flag=ampel, flag_reason=grund,
-        phase=phase_vorher,
-    )
-    teilnahme.einstufung_merken(ampel)
-    sitzung.beruehren()
 
     # Die Sprachsperre. Der Coach TUT, als verstehe er kein Deutsch: Spricht
     # ein Kind deutsch, antwortet er in der Zielsprache, dass er es nicht
@@ -280,11 +278,52 @@ def coach_zug(request):
     # es durch. Bei getipptem Text fehlt es, dann entscheidet die Wortliste
     # allein und irrt im Zweifel zugunsten des Kindes.
     erkannt = (request.POST.get("erkannt") or "").strip()
-    if not sprechcoach.ist_zielsprache(text, sitzung.target_language, erkannt):
+    zielsprache = sprechcoach.ist_zielsprache(text, sitzung.target_language, erkannt)
+
+    # Die Fachgrenze (7.11.2026) auch im Gespraech: Neben der Ampel urteilt
+    # der Pfoertner, ob der Beitrag zur Sprechstunde gehoert. Dort gehoert
+    # fast alles dazu, was das Kind in der Zielsprache sagt - das Sprechen
+    # ist der Stoff (fachgrenze.ZUSATZ_SPRACHE); nein ist die Frage nach
+    # Auskunft ueber ein fremdes Wissensgebiet. Nur fuer Beitraege in der
+    # Zielsprache: Ein deutscher Satz bekommt die Sperre und erreicht das
+    # Modell ohnehin nicht.
+    urteil = fachgrenze.Urteil()
+    if zielsprache:
+        (ampel, grund), urteil = fachgrenze.ampel_und_urteil(
+            text, sitzung.subject or "englisch", thema=_thema(sitzung),
+            altersklasse=sitzung.age_group,
+            zusatz=fachgrenze.ZUSATZ_SPRACHE.format(
+                sprache=sprechcoach.sprache_name(sitzung.target_language)),
+        )
+        ampel, grund = fachgrenze.ampel_mit_grenze(ampel, grund, urteil)
+    else:
+        ampel, grund = pruefung.einstufen(text)
+    SprachZug.objects.create(
+        run=lauf, role=SprachZug.LERNEND, text=text,
+        source=_herkunft_aus(request, ""), flag=ampel, flag_reason=grund,
+        phase=phase_vorher,
+    )
+    teilnahme.einstufung_merken(ampel)
+    fachgrenze.aufzeichnen(sitzung, teilnahme, urteil, text, ergebnis="sprechcoach:pfoertner")
+    sitzung.beruehren()
+
+    if not zielsprache:
         zug = SprachZug.objects.create(
             run=lauf, role=SprachZug.COACH,
             text=sprechcoach.nicht_verstanden(sitzung.target_language),
             not_understood=True, phase=phase_vorher,
+        )
+    elif urteil.fremd:
+        # Der Beitrag gehoert nicht zur Stunde: Kein Modell formuliert. Der
+        # feste Satz in der Zielsprache (fachgrenze.satz_sprache), die Phase
+        # bleibt, die letzte Frage des Coaches ist der Rueckweg. Derselbe
+        # Satz, worum auch immer es ging.
+        satz, uebersetzung = fachgrenze.satz_sprache(
+            sitzung.target_language, rueckfrage=_letzte_frage(lauf),
+        )
+        zug = SprachZug.objects.create(
+            run=lauf, role=SprachZug.COACH, text=satz, translation=uebersetzung,
+            phase=phase_vorher,
         )
     else:
         # Der Server entscheidet ueber die Phase, nicht das Modell.
@@ -308,6 +347,10 @@ def coach_zug(request):
         "uebersetzung": zug.translation,
         "korrektur": zug.correction,
         "nicht_verstanden": zug.not_understood,
+        # Die Kennung des Zuges: Mit ihr holt die Seite den Ton vom Server
+        # (stimme_views), statt freien Text zum Sprechen zu schicken.
+        "zug": zug.pk,
+        "fachgrenze": urteil.fremd,
         "zuege": lauf.zuege.count(),
         # Im Rueckblick nimmt die Ansicht keinen Beitrag mehr an. Das Skript
         # spricht den Abschied und laedt dann die Seite mit dem Rueckblick.
@@ -318,6 +361,22 @@ def coach_zug(request):
         "schritt": lauf.schritt,
         "phasenhinweis": sprechablauf.phasenhinweis(lauf.phase, sitzung.sprechaufgabe),
     })
+
+
+def _thema(sitzung):
+    """Das Thema fuer den Pfoertner: das Ziel der Aufgabe, sonst das der Lehrperson."""
+    aufgabe = sitzung.sprechaufgabe
+    return sitzung.task_hint if sprechaufgaben.ist_frei(aufgabe) else aufgabe["ziel"]
+
+
+def _letzte_frage(lauf):
+    """Die letzte Frage des Coaches, als Rueckweg hinter dem festen Satz."""
+    letzter = (lauf.zuege.filter(role=SprachZug.COACH, not_understood=False)
+               .order_by("-created_at", "-pk").first())
+    if letzter is None:
+        return ""
+    fragen = [s for s in sprechcoach.saetze(letzter.text) if s.strip().endswith("?")]
+    return fragen[-1].strip() if fragen else ""
 
 
 def _phase_nach_beitrag(sitzung, lauf):

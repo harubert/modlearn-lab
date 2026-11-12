@@ -1,6 +1,7 @@
 """Startseite, Rechtstexte, Zustandsprüfung und die Anmeldung."""
 
 import hmac
+import json
 import re
 
 from django.conf import settings
@@ -59,6 +60,77 @@ def datenschutz(request):
     return render(request, "core/datenschutz.html", {
         "stand": STAND_RECHTSTEXTE,
         "protokollstufe": settings.PROTOKOLLSTUFE,
+    })
+
+
+# Die Seite "Welche KI hier arbeitet" traegt ihren eigenen Stand: Sie aendert
+# sich mit jedem Modellwechsel und jeder Neutralitaetsprobe.
+STAND_KI = "9. November 2026"
+
+
+def neutralitaet_zahlen():
+    """Die Zahlen der letzten Neutralitaetsprobe, oder None.
+
+    Die Datei schreibt benchmark/neutralitaet/probe.py --seite. Alles, was
+    darin fehlt oder unlesbar ist, heisst: keine Zahlen. Die Seite erfindet
+    keine.
+    """
+    pfad = settings.NEUTRALITAET_ERGEBNIS
+    try:
+        daten = json.loads(pfad.read_text(encoding="utf-8"))
+    except (OSError, ValueError, AttributeError):
+        return None
+    if not isinstance(daten, dict) or not daten.get("stellen"):
+        return None
+    stellen = []
+    for schluessel, name in (("roh", "Das Modell ohne Anweisung"),
+                             ("mathe", "Mathematikstunde"),
+                             ("sachunterricht", "Sachunterricht"),
+                             ("safechat", "Safe Chat")):
+        werte = daten["stellen"].get(schluessel)
+        if not isinstance(werte, dict):
+            continue
+        urteil = (daten.get("urteil") or {}).get(schluessel) or {}
+        gleich_beurteilt = (daten.get("gleich_beurteilt") or {}).get(schluessel, "")
+        stellen.append({"name": name, "china": werte.get("china", {}),
+                        "vergleich": werte.get("vergleich", {}),
+                        "urteil_china": urteil.get("china", {}) if isinstance(urteil, dict) else {},
+                        "urteil_vergleich": urteil.get("vergleich", {}) if isinstance(urteil, dict) else {},
+                        "gleich_beurteilt": gleich_beurteilt})
+    if not stellen:
+        return None
+    # Das Urteil von Hand (N1, 9.11.2026): nur, wenn die Datei eines traegt. Die
+    # Seite sagt dann auch, wer geurteilt hat; ein Urteil ohne Urheber waere keins.
+    hat_urteil = bool(daten.get("urteil")) and bool(daten.get("beurteilt_von"))
+    return {"datum": daten.get("datum", ""), "modell": daten.get("modell", ""),
+            "paare": daten.get("paare", 0), "stellen": stellen,
+            "hat_urteil": hat_urteil,
+            "beurteilt_von": daten.get("beurteilt_von", "") if hat_urteil else "",
+            "urteil_datum": daten.get("urteil_datum", "") if hat_urteil else ""}
+
+
+def ki(request):
+    """Welche KI hier arbeitet: Modelle, Herkunft, Fachgrenze, Neutralitaetsprobe.
+
+    Anlass (Thomas, 6. und 7.11.2026): Die Landes-KI VOKI laeuft wie unser
+    Tutor auf einem Qwen-Modell und hat Fragen zu Tiananmen verweigert (ORF
+    Vorarlberg, 3.11.2026). Vier Teile in dieser Reihenfolge, weil die
+    Reihenfolge entscheidet, ob eine Einordnung als Fairness oder als Ausrede
+    gelesen wird: Fakten, Zweck, Massnahme, Einordnung. Die Modellnamen kommen
+    aus den Einstellungen, nicht aus dem Text: Die Seite soll nach einem
+    Modellwechsel von selbst stimmen.
+    """
+    from tutoring import fachgrenze
+
+    return render(request, "core/ki.html", {
+        "stand": STAND_KI,
+        "spark": fachgrenze.herkunft(settings.SPARK_MODEL),
+        "pfoertner": (fachgrenze.herkunft(settings.PFOERTNER_MODEL)
+                      if settings.PFOERTNER_MODEL else None),
+        "gehoer": (fachgrenze.herkunft(settings.SPARK_AUDIO_MODEL)
+                   if settings.SPRACHEINGABE_MOEGLICH else None),
+        "qs": fachgrenze.herkunft(settings.CLOUD_MODEL) if settings.CLOUD_ENABLED else None,
+        "zahlen": neutralitaet_zahlen(),
     })
 
 

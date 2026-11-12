@@ -13,7 +13,9 @@ wissen muss (mit_protokoll). Keine Anfrage, keine Datenbank; die Ansichten
 stehen in chat_views.py.
 """
 
-from . import levels, shield
+from django.conf import settings
+
+from . import fachgrenze, levels, shield
 
 # So lang darf ein Beitrag sein. Ein Chat ist kein Aufsatz; und was nach
 # draussen geht, wird vorher dreimal gelesen (umformulieren, erkennen,
@@ -53,6 +55,44 @@ def aussen_gesperrt_satz(grund):
 
 # Die Schreibweise aus dem Auftrag, als Alias: AUSSEN_GESPERRT_SATZ(grund).
 AUSSEN_GESPERRT_SATZ = aussen_gesperrt_satz
+
+# Wenn die Antwort des Spark die Form einer politischen Verweigerung traegt
+# (fachgrenze.ausweichen_erkannt, 7.11.2026): Das Kind liest nicht den
+# Wortlaut des Modells, sondern diesen Satz. Ehrlich, kurz, mit dem Weg, der
+# in dieser Stunde offen ist.
+AUSWEICHEN_SATZ = {
+    ("du", True): "Die KI am Spark weicht hier aus. Du kannst die Frage mit "
+                  "„Draußen fragen“ nach draußen schicken oder deine Lehrperson fragen.",
+    ("du", False): "Die KI am Spark weicht hier aus. Frag das deine Lehrperson.",
+    ("sie", True): "Die KI am Spark weicht hier aus. Sie können die Frage mit "
+                   "„Draußen fragen“ nach draußen schicken.",
+    ("sie", False): "Die KI am Spark weicht hier aus. In dieser Stunde gibt es "
+                    "keinen zweiten Weg; die Lehrperson kann ihn freigeben.",
+}
+
+
+def ausweichen_satz(aussen_moeglich, altersklasse=None):
+    """Der Satz an das Kind, wenn die Antwort des Spark zurueckgehalten wurde."""
+    form = "sie" if altersklasse == "erwachsen" else "du"
+    return AUSWEICHEN_SATZ[(form, bool(aussen_moeglich))]
+
+
+def herkunft(zug):
+    """Woher die Antwort dieses Zuges kommt, als Satzteil fuer die Herkunftszeile.
+
+    Leer fuer Zuege des Kindes und fuer Hinweise der Anwendung (gesperrter Weg,
+    zurueckgehaltene Antwort): Dort hat kein Modell geschrieben.
+    """
+    if getattr(zug, "role", LERNEND) != KI:
+        return ""
+    if getattr(zug, "ausweichen", "") or getattr(zug, "aussen_gesperrt", ""):
+        return ""
+    if getattr(zug, "weg", "spark") == "aussen":
+        return fachgrenze.herkunft_satz(
+            getattr(zug, "aussen_modell", "") or settings.CLOUD_MODEL,
+            wo="außerhalb der PH, nur durch den Filter",
+        )
+    return fachgrenze.herkunft_satz(settings.SPARK_MODEL)
 
 
 # --- Die Anweisung an den Spark --------------------------------------------
@@ -182,9 +222,11 @@ def mit_protokoll(zuege):
         if getattr(zug, "role", LERNEND) == KI:
             zug.vorher = vorher
             zug.entitaeten_text = entitaeten_text(getattr(zug, "aussen_entitaeten", None))
+            zug.herkunft = herkunft(zug)
             vorher = ""
         else:
             zug.vorher = ""
             zug.entitaeten_text = ""
+            zug.herkunft = ""
             vorher = getattr(zug, "text", "") or ""
     return zuege

@@ -7,7 +7,7 @@ QR-Code auf der Leinwand direkt in die Sitzung fuehrt und niemand tippen muss.
 from django.urls import path
 
 from . import (chat_views, musik_views, protokoll_views, sprechcoach_views,
-               trainer_views, views)
+               stimme_views, trainer_views, views)
 
 app_name = "tutoring"
 
@@ -77,6 +77,11 @@ urlpatterns = [
     # Der stille Ausweg "Ich komme nicht weiter": deutsche Erklaerung plus ein
     # Beispielsatz in der Zielsprache. Kein Zug, nur eine Auskunft.
     path("sprechcoach/hilfe/", sprechcoach_views.coach_hilfe, name="sprechcoach_hilfe"),
+    # Die Stimme vom Server (7.11.2026): ein Zug des Coaches als WAV, nach
+    # Kennung, nie nach freiem Text. Fehlt die Adresse in den Einstellungen,
+    # antwortet der Weg mit 404 und die Seite bleibt bei der Browserstimme.
+    path("sprechcoach/stimme/", stimme_views.zug_sprechen, name="stimme_zug"),
+    path("sprechcoach/stimme/saetze/", stimme_views.saetze_zaehlen, name="stimme_saetze"),
     # Die Musikstunde, vierte Betriebsart. Dieselben vier Wege wie die
     # Probierecke auf /projekt/musik/, aber an die Teilnahme gebunden.
     path("musik/", musik_views.musikseite, name="musik"),

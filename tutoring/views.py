@@ -8,6 +8,8 @@ unterschieden werden Teilnehmende ueber ein Tier, das sie selbst waehlen.
 """
 
 import asyncio
+import concurrent.futures
+import dataclasses
 import io
 import json
 import logging
@@ -27,7 +29,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
-from . import (aufgabenpool, ausgabepruefung, spark, bereitschaft, bildkette, cloud, faecher,
+from . import (aufgabenpool, ausgabepruefung, spark, bereitschaft, bildkette, cloud, faecher, fachgrenze,
                klassenbild, levels, musikstunde, pruefung, safechat,
                sprechaufgaben, sprechcoach, stundenform, tiere)
 from .models import (FORSCHUNG_VOLL, FOTOGRAFIERT, GETIPPT, HERKUNFT, VORGEGEBEN, SessionTask,
@@ -1923,14 +1925,9 @@ def antwort_geben(request):
     if absicht == levels.ABSICHT_FRAGE:
         # Eine Frage ist kein Versuch. Das Kind hat es gesagt, nicht die
         # Anwendung geraten. Die Ampel kommt hier weiter von der Einstufung:
-        # Fuer eine Frage laeuft keine Diagnose.
-        stufe, grund = pruefung.einstufen(text)
-        frage = Question.objects.create(
-            task=aufgabe, text=text, image_data_url=foto,
-            source=_herkunft_aus(request, foto), flag=stufe, flag_reason=grund,
-        )
-        teilnahme.einstufung_merken(stufe)
-        sitzung.beruehren()
+        # Fuer eine Frage laeuft keine Diagnose, aber der Pfoertner
+        # (fachgrenze, 7.11.2026).
+        frage = _frage_anlegen(request, sitzung, teilnahme, aufgabe, text, foto)
         if per_skript:
             return JsonResponse({"ok": True, "frage": frage.pk})
         return redirect("tutoring:chat")
@@ -1969,16 +1966,45 @@ def antwort_geben(request):
     frage_der_hilfe = levels.letzte_frage(
         ziel.text if ziel.art == levels.ART_NACHFRAGE else letzter_hilfetext
     )
-    befund = pruefung.diagnose(
-        stand, aufgabe.text, text, _gespraech_bisher(aufgabe),
-        obergrenze=aufgabe.obergrenze, schulstufe=sitzung.schulstufe,
-        altersklasse=sitzung.age_group, loesung=aufgabe.checked_solution,
-        frage_der_hilfe=frage_der_hilfe,
-        hilfen_bisher=len(hilfen),
-        fehler_vorher=sum(1 for z in zuege if z.result == Hint.ERGEBNIS_FALSCH),
-        nachfragen_bisher=sum(1 for z in zuege if z.art == levels.ART_NACHFRAGE),
-        letzte_war_nachfrage=ziel.art == levels.ART_NACHFRAGE,
-    )
+    # Die Fachgrenze (7.11.2026) auch auf dem Versuchsweg: Neben der Diagnose
+    # urteilt der Pfoertner, ob der Beitrag zur Stunde gehoert. Eine Rechnung
+    # oder eine Zahl gehoert immer dazu, ohne Aufruf (fachgrenze.ohne_pruefung);
+    # fuer alles andere laufen Diagnose und Pfoertner gleichzeitig, damit der
+    # Versuch nicht laenger wartet. Keiner der beiden fasst die Datenbank an.
+    gespraech_bisher = _gespraech_bisher(aufgabe)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
+        diagnose_laeuft = pool.submit(
+            pruefung.diagnose,
+            stand, aufgabe.text, text, gespraech_bisher,
+            obergrenze=aufgabe.obergrenze, schulstufe=sitzung.schulstufe,
+            altersklasse=sitzung.age_group, loesung=aufgabe.checked_solution,
+            frage_der_hilfe=frage_der_hilfe,
+            hilfen_bisher=len(hilfen),
+            fehler_vorher=sum(1 for z in zuege if z.result == Hint.ERGEBNIS_FALSCH),
+            nachfragen_bisher=sum(1 for z in zuege if z.art == levels.ART_NACHFRAGE),
+            letzte_war_nachfrage=ziel.art == levels.ART_NACHFRAGE,
+        )
+        pfoertner_laeuft = pool.submit(
+            fachgrenze.pruefen, text, sitzung.subject or "mathematik",
+            thema=sitzung.task_hint, aufgabe=aufgabe.text,
+            altersklasse=sitzung.age_group,
+        )
+        befund = diagnose_laeuft.result()
+        urteil = pfoertner_laeuft.result()
+    fachgrenze.aufzeichnen(sitzung, teilnahme, urteil, text)
+    if urteil.fremd:
+        # Der Beitrag gehoert nicht zur Stunde. Er bleibt als Beitrag stehen
+        # (die Lehrperson sieht ihn gelb mit dem festen Grund), zaehlt aber
+        # nicht als Versuch: kein Ergebnis, kein Fehler, keine Stufe. Der
+        # naechste Zug ist die Nachfrage mit dem festen Satz des Fachs; kein
+        # Modell formuliert sie (_hilfe_erzeugen). Lage und Absicht der
+        # Diagnose bleiben fuer das Protokoll erhalten.
+        ampel, ampel_grund = fachgrenze.ampel_mit_grenze(befund.ampel, befund.ampel_grund, urteil)
+        befund = dataclasses.replace(
+            befund, stufe=levels.ERST_FRAGEN, grund=fachgrenze.GRUND,
+            ergebnis=pruefung.OFFEN, fehler="", ampel=ampel, ampel_grund=ampel_grund,
+            form="",
+        )
     if offene is None:
         # Ein weiterer Versuch zur selben Hilfe. Angehaengt, nicht
         # ueberschrieben: Die Lehrperson soll beide sehen.
@@ -2015,8 +2041,43 @@ def antwort_geben(request):
     if per_skript:
         return JsonResponse({
             "ok": True, "ergebnis": befund.ergebnis, "fertig": befund.fertig,
+            **({"fachgrenze": True} if urteil.fremd else {}),
         })
     return redirect("tutoring:chat")
+
+
+def _frage_anlegen(request, sitzung, teilnahme, aufgabe, text, foto):
+    """Legt eine Rueckfrage an: Ampel und Pfoertner gleichzeitig.
+
+    Die Fachgrenze (7.11.2026): Sagt der Pfoertner nein, traegt die Frage gelb
+    mit dem festen Grund, und _nachfrage_erzeugen antwortet mit dem Satz der
+    Anwendung statt mit dem Modell. Der Pfoertner selbst ist ein Modellaufruf
+    und bekommt seine Zeile im Forschungsprotokoll.
+    """
+    (stufe, grund), urteil = fachgrenze.ampel_und_urteil(
+        text, sitzung.subject or "mathematik", thema=sitzung.task_hint,
+        aufgabe=aufgabe.text, altersklasse=sitzung.age_group,
+    )
+    stufe, grund = fachgrenze.ampel_mit_grenze(stufe, grund, urteil)
+    frage = Question.objects.create(
+        task=aufgabe, text=text, image_data_url=foto,
+        source=_herkunft_aus(request, foto), flag=stufe, flag_reason=grund,
+    )
+    teilnahme.einstufung_merken(stufe)
+    if urteil.modell_gefragt:
+        Interaction.aufzeichnen(
+            sitzung=sitzung, teilnahme=teilnahme, weg=Interaction.LOKAL,
+            modell=urteil.messung.get("modell", ""),
+            tokens_ein=urteil.messung.get("tokens_ein", 0),
+            tokens_aus=urteil.messung.get("tokens_aus", 0),
+            dauer_ms=urteil.messung.get("dauer_ms", 0),
+            leak_check=Interaction.ENTFAELLT,
+            ergebnis=f"pfoertner:{urteil.zur_stunde}",
+            fehlerart=urteil.messung.get("fehlerart", ""),
+            text_ein=text, text_aus=urteil.grund,
+        )
+    sitzung.beruehren()
+    return frage
 
 
 @require_POST
@@ -2053,13 +2114,7 @@ def nachfrage_stellen(request):
         )
 
     foto = _foto_aus(request)
-    stufe, grund = pruefung.einstufen(text)
-    frage = Question.objects.create(
-        task=aufgabe, text=text, image_data_url=foto,
-        source=_herkunft_aus(request, foto), flag=stufe, flag_reason=grund,
-    )
-    teilnahme.einstufung_merken(stufe)
-    sitzung.beruehren()
+    frage = _frage_anlegen(request, sitzung, teilnahme, aufgabe, text, foto)
     return JsonResponse({"ok": True, "id": frage.pk})
 
 
@@ -2105,6 +2160,25 @@ async def _nachfrage_erzeugen(frage, sitzung, teilnahme, gespraech, eigenes=None
     """
     if grenze is None:
         grenze = sitzung.max_level
+    if frage.flag_reason == fachgrenze.GRUND:
+        # Die Fachgrenze (7.11.2026): Der Pfoertner hat nein gesagt. Kein
+        # Modell antwortet; das Kind liest den festen Satz des Fachs mit dem
+        # Rueckweg zur offenen Frage. Protokolliert wie jeder Zug.
+        text = fachgrenze.satz(
+            sitzung.subject or "mathematik", sitzung.age_group,
+            thema=sitzung.task_hint, rueckfrage=rueckfrage,
+        )
+        yield _ereignis("start", {"stufe": 0, "bezeichnung": "Antwort auf deine Frage"})
+        yield _ereignis("stueck", {"text": text})
+        await _nachfrage_sichern(frage.pk, text)
+        await _anfrage_aufzeichnen(
+            sitzung, teilnahme, None, {}, frage.text, text, ergebnis="fachgrenze",
+        )
+        yield _ereignis("fertig", {
+            "stufe": 0, "bezeichnung": "Antwort auf deine Frage",
+            "naechste_stufe": None, "rueckfrage": None, "nachfrage": True,
+        })
+        return
     system = levels.nachfrage_prompt(
         grenze, sitzung.age_group, unterwegs=unterwegs, rueckfrage=rueckfrage,
         umfang_titel=_umfang_titel(sitzung),
@@ -2278,6 +2352,32 @@ async def _hilfe_erzeugen(aufgabe, sitzung, zug, teilnahme, daten,
     ohne dass eine Hilfe gespeichert ist. Am Handy im Hoersaal ist das kein
     Sonderfall.
     """
+    if zug.art == levels.ART_NACHFRAGE and daten.get("fachgrenze"):
+        # Die Fachgrenze (7.11.2026): Der letzte Beitrag gehoerte nicht zur
+        # Stunde. Kein Modell formuliert; die Nachfrage ist der feste Satz
+        # des Fachs mit dem Rueckweg zur letzten Frage des Tutors.
+        # Gespeichert und protokolliert wie jede Nachfrage, damit der
+        # Verlauf der Lehrperson genau das zeigt, was das Kind gelesen hat.
+        text = fachgrenze.satz(
+            sitzung.subject or "mathematik", sitzung.age_group,
+            thema=sitzung.task_hint, rueckfrage=daten.get("rueckweg") or "",
+        )
+        bezeichnung = levels.ART_NAMEN[levels.ART_NACHFRAGE]
+        yield _ereignis("start", {"stufe": 0, "bezeichnung": bezeichnung, "art": zug.art})
+        yield _ereignis("stueck", {"text": text})
+        await _hilfe_sichern(aufgabe.pk, teilnahme.pk, daten.get("stand", 0), text,
+                             sitzung.pk, art=levels.ART_NACHFRAGE)
+        await _anfrage_aufzeichnen(
+            sitzung, teilnahme, None, {}, daten["gespraech"], text,
+            ergebnis="fachgrenze", diagnose=daten.get("kategorien"),
+        )
+        yield _ereignis("fertig", {
+            "stufe": 0, "bezeichnung": bezeichnung, "art": zug.art,
+            "naechste_stufe": None, "naechste_beschriftung": levels.HILFEKNOPF,
+            "rueckfrage": None, "wartet": True, "freiwillig": False,
+        })
+        return
+
     geprueft = daten.get("geprueft", "")
     art = zug.art
     stufe = zug.stufe if zug.ist_hilfe else 0
@@ -2730,6 +2830,14 @@ def _aufgabe_holen(task_id, teilnahme_id):
         # den festen Satz dazu (levels.UMGEHUNG_SATZ).
         "umgehung": bool(letzte is not None
                          and letzte.absicht == levels.ABSICHT_UMGEHUNG),
+        # Die Fachgrenze (7.11.2026): Der letzte Beitrag gehoerte nicht zur
+        # Stunde (goal_note traegt den festen Grund), und der naechste Zug ist
+        # die Nachfrage. Dann schreibt _hilfe_erzeugen den festen Satz des
+        # Fachs statt das Modell zu fragen; der Rueckweg ist die letzte Frage
+        # des Tutors.
+        "fachgrenze": bool(letzte is not None and letzte.goal_note == fachgrenze.GRUND
+                           and zug is not None and zug.art == levels.ART_NACHFRAGE),
+        "rueckweg": levels.letzte_frage(letzte.text) if letzte is not None else "",
         "form": form,
         # Eng nicht nur bei derselben Stufe: Auch wer nach zwei Hilfen noch
         # keinen Ansatz hat, braucht die engere Frage (Zech, S. 288). Lauf E,

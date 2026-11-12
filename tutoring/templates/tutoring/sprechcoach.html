@@ -77,11 +77,11 @@ lauf.zuege.count waere eine eigene Abfrage. Also einmal holen.{% endcomment %}
         <label for="stimme">Welche Stimme spricht</label>
         <select id="stimme" name="stimme"></select>
         <p class="coach-stimmhinweis">
-          Klingt die Stimme blechern, nimm eine andere aus der Liste. Stimmen
-          mit „über das Netz“ klingen meist besser; dafür schickt dein Gerät
-          den Text des Coaches zum Hersteller des Browsers. <strong>Deine
-          eigene Stimme geht nie dorthin</strong> – sie bleibt beim Rechner
-          der Hochschule.
+          Klingt die Stimme blechern, nimm eine andere aus der Liste. Die
+          „Stimme der Hochschule“ rechnet auf dem Rechner der Hochschule;
+          Stimmen mit „über das Netz“ schicken den Text des Coaches zum
+          Hersteller des Browsers. <strong>Deine eigene Stimme geht nie
+          dorthin</strong> – sie bleibt beim Rechner der Hochschule.
         </p>
       </div>
     </details>
@@ -129,11 +129,15 @@ lauf.zuege.count waere eine eigene Abfrage. Also einmal holen.{% endcomment %}
     </div>
   {% endif %}
 
+  {% comment %}data-stimme ist die Adresse der Stimme vom Server (7.11.2026);
+  leer heisst Browserstimme. data-zug am Zug ist die Kennung, mit der das
+  Skript den Ton holt: Gesprochen wird nur, was die Anwendung geschrieben
+  hat, nie freier Text.{% endcomment %}
   <ol class="coach-verlauf" id="coach-verlauf" data-sprache="{{ lauf.sprache_code }}"
-      data-sprachname="{{ lauf.sprache_name }}"
+      data-sprachname="{{ lauf.sprache_name }}" data-stimme="{{ stimme_url }}"
       aria-label="Euer Gespräch" aria-busy="false">
     {% for zug in lauf.zuege.all %}
-      <li class="zug {% if zug.ist_coach %}zug-coach{% else %}zug-lernend{% endif %}{% if zug.nicht_verstanden %} zug-nachfrage{% endif %}">
+      <li class="zug {% if zug.ist_coach %}zug-coach{% else %}zug-lernend{% endif %}{% if zug.nicht_verstanden %} zug-nachfrage{% endif %}" data-zug="{{ zug.pk }}">
         <p class="zug-kopf">
           <span class="zug-wer">{% if zug.ist_coach %}Coach{% else %}Du{% endif %}</span>
           <span class="zug-sprachmarke">{{ lauf.sprache_name }}</span>

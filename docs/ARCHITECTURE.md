@@ -327,6 +327,7 @@ Every setting the application reads from the environment is listed in
 |---|---|
 | `SPARK_BASE_URL`, `SPARK_MODEL` | the chat endpoint on the compute node (any OpenAI-compatible server) |
 | `SPARK_AUDIO_BASE_URL`, `SPARK_AUDIO_MODEL` | speech recognition; empty switches the microphone off |
+| `SPARK_TTS_BASE_URL`, `SPARK_TTS_MODEL`, `SPARK_TTS_STIMME`, `SPARK_TTS_ATTRAPPE` | text to speech on the compute node (OpenAI-style `/audio/speech`); empty falls back to the browser voice; the dummy produces a tone sequence for development without the node |
 | `SPARK_BROKER_URL`, `SPARK_BROKER_SECRET_DATEI` | model broker and the file with its secret; without the file the switch button is absent |
 | `MUSIK_URL` | music service; shares the broker's secret |
 | `CLOUD_BASE_URL`, `CLOUD_MODEL`, `CLOUD_API_KEY`, `CLOUD_PROVIDER` | the external path; the key lives in a separate file outside the project tree, and without key and model the switch is a visible dry run |

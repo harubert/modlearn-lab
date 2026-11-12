@@ -33,6 +33,19 @@ currentColor (Schild, Schild mit Pfeil, Schild mit Balken).{% endcomment %}
         </h3>
         <div class="hilfe-text">{{ zug.text|linebreaksbr }}</div>
 
+        {% if zug.ausweichen %}
+          {% comment %}Die Antwort des Spark trug die Form einer politischen
+          Verweigerung (fachgrenze.ausweichen_erkannt). Das Kind liest den
+          festen Satz oben; hier steht, warum, in den Worten der Pruefung.{% endcomment %}
+          <p class="marken safechat-marken">
+            <span class="marke-chip marke-gesperrt">Antwort zurückgehalten</span>
+            <span class="marke-grund">Die KI am Spark {{ zug.ausweichen }}; ihren Wortlaut sieht nur das Forschungsprotokoll.</span>
+          </p>
+        {% endif %}
+        {% if zug.herkunft %}
+          <p class="herkunft">Antwort von {{ zug.herkunft }}. <a href="{% url 'ki' %}">Welche KI hier arbeitet</a></p>
+        {% endif %}
+
         {% if zug.ist_aussen %}
           {% comment %}Die Markenzeile: auf einen Blick, was mit diesem
           Beitrag passiert ist. Die Farbe der Urteilsmarke folgt der Ampel

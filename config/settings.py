@@ -175,6 +175,19 @@ SPARK_MODEL = env("SPARK_MODEL", "qwen3.6-35b-a3b")
 SPARK_TIMEOUT_SECONDS = int(env("SPARK_TIMEOUT_SECONDS", "60"))
 SPARK_RETRIES = int(env("SPARK_RETRIES", "1"))
 
+# --- Der Pfoertner (Fachgrenze, 7.11.2026) ---------------------------------
+# Wer entscheidet, ob ein Beitrag zur Stunde gehoert (tutoring/fachgrenze.py).
+# Ohne eigene Adresse urteilt das Modell am Spark (Stufe A). Ein zweites
+# Modell, das nicht aus China kommt (Stufe B, geplant Ministral 3), bekommt
+# hier Adresse und Namen; es schreibt nie fuer das Kind.
+PFOERTNER_BASE_URL = env("PFOERTNER_BASE_URL", "")
+PFOERTNER_MODEL = env("PFOERTNER_MODEL", "")
+PFOERTNER_TIMEOUT_SECONDS = int(env("PFOERTNER_TIMEOUT_SECONDS", "20"))
+# Die Zahlen der Neutralitaetsprobe (benchmark/neutralitaet/probe.py --seite)
+# fuer die Seite "Welche KI hier arbeitet". Fehlt die Datei, sagt die Seite,
+# dass die Pruefung noch aussteht.
+NEUTRALITAET_ERGEBNIS = BASE_DIR / "docs" / "neutralitaet" / "ergebnis.json"
+
 # --- Spracherkennung am Spark ---------------------------------------------
 # Fehlt die Adresse, ist der Mikrofonknopf sichtbar abgeschaltet statt kaputt.
 # Derselbe Umgang wie beim Cloud-Schalter.
@@ -182,6 +195,20 @@ SPARK_AUDIO_BASE_URL = env("SPARK_AUDIO_BASE_URL", "")
 SPARK_AUDIO_MODEL = env("SPARK_AUDIO_MODEL", "whisper-large-v3")
 SPARK_AUDIO_TIMEOUT_SECONDS = int(env("SPARK_AUDIO_TIMEOUT_SECONDS", "60"))
 SPRACHEINGABE_MOEGLICH = bool(SPARK_AUDIO_BASE_URL)
+
+# --- Sprachausgabe am Spark (tutoring/stimme.py, 7.11.2026) ----------------
+# Der Dienst aus ablage/spark-tts (Qwen3-TTS, Port 8003, OpenAI-Form
+# /v1/audio/speech). Fehlt die Adresse, liest der Browser mit seiner eigenen
+# Stimme wie bisher. Die Attrappe erzeugt am Entwicklungs-PC ohne Netz eine
+# Tonfolge statt Sprache, damit der ganze Weg gebaut und geprueft werden
+# kann; mit Adresse ist sie wirkungslos. Die Stimme "Ryan" hat Thomas am
+# 6.11.2026 gewaehlt.
+SPARK_TTS_BASE_URL = env("SPARK_TTS_BASE_URL", "")
+SPARK_TTS_MODEL = env("SPARK_TTS_MODEL", "qwen3-tts-1.7b")
+SPARK_TTS_STIMME = env("SPARK_TTS_STIMME", "Ryan")
+SPARK_TTS_TIMEOUT_SECONDS = int(env("SPARK_TTS_TIMEOUT_SECONDS", "60"))
+SPARK_TTS_ATTRAPPE = env("SPARK_TTS_ATTRAPPE", "") in ("1", "ja", "true")
+SPRACHAUSGABE_MOEGLICH = bool(SPARK_TTS_BASE_URL) or SPARK_TTS_ATTRAPPE
 
 # --- Zuschaltbare Cloud-Hilfe (Privacy Shield, Abschnitt 3a) ---------------
 # Fehlt der Schlüssel, bleibt der Schalter sichtbar, sendet aber nichts.

@@ -17,7 +17,7 @@ from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
-from . import levels, pruefung, trainer
+from . import fachgrenze, levels, pruefung, trainer
 from .models import TrainerLauf, TrainerZug
 from .spark import SparkNichtErreichbar, antwort_holen_sync, sprache_moeglich
 
@@ -139,8 +139,20 @@ def trainer_zug(request):
         return _abweisen(request, "Schreib oder sprich bitte etwas.")
 
     # --- Der Beitrag der lernenden Person --------------------------------
+    #
+    # Die Fachgrenze (7.11.2026): Ampel und Pfoertner gleichzeitig, damit der
+    # Beitrag nicht laenger wartet. Wer das Thema erst nennt oder bestaetigt,
+    # kann noch nicht abschweifen; dort urteilt nur die Ampel.
+    urteil_grenze = fachgrenze.Urteil()
     if text or foto:
-        ampel, grund = pruefung.einstufen(text)
+        if text and lauf.state not in (trainer.THEMA, trainer.BESTAETIGEN):
+            (ampel, grund), urteil_grenze = fachgrenze.ampel_und_urteil(
+                text, sitzung.subject, thema=_thema(sitzung, lauf),
+                altersklasse=sitzung.age_group,
+            )
+            ampel, grund = fachgrenze.ampel_mit_grenze(ampel, grund, urteil_grenze)
+        else:
+            ampel, grund = pruefung.einstufen(text)
         TrainerZug.objects.create(
             run=lauf, role=TrainerZug.LERNEND, text=text, image_data_url=foto,
             source=_herkunft_aus(request, foto), state=lauf.state,
@@ -149,9 +161,48 @@ def trainer_zug(request):
         teilnahme.einstufung_merken(ampel)
         if lauf.state == trainer.THEMA and not lauf.topic:
             lauf.topic = text[:300]
+        if urteil_grenze.modell_gefragt:
+            # Der Pfoertner ist ein Modellaufruf wie jeder andere: eine Zeile
+            # im Forschungsprotokoll, mit Urteil und Grund statt Antwort.
+            _aufzeichnen(sitzung, teilnahme, "pfoertner", urteil_grenze.messung,
+                         text, f"{urteil_grenze.zur_stunde}: {urteil_grenze.grund}")
 
     sitzung.beruehren()
     vorheriger_zustand = lauf.state
+
+    if urteil_grenze.fremd:
+        # Der Beitrag gehoert nicht zur Stunde: Kein Modell formuliert. Die
+        # Anwendung antwortet mit dem festen Satz des Fachs, der Zustand
+        # bleibt, die offene Frage wird wiederholt. Derselbe Satz fuer jedes
+        # fremde Thema (fachgrenze.satz).
+        frage = _offene_frage(lauf)
+        erklaerung = fachgrenze.satz(
+            sitzung.subject, sitzung.age_group,
+            thema=lauf.topic or sitzung.task_hint, rueckfrage=frage,
+        )
+        TrainerZug.objects.create(
+            run=lauf, role=TrainerZug.TRAINER, text=erklaerung, question=frage,
+            state=lauf.state, representation=lauf.representation,
+        )
+        if lauf.topic:
+            lauf.save(update_fields=["topic"])
+        if request.headers.get("X-Antwort") != "json":
+            return redirect("tutoring:trainer")
+        return JsonResponse({
+            "ok": True,
+            "zustand": lauf.state,
+            "zustand_text": trainer.ZUSTAND_TEXT.get(lauf.state, ""),
+            "trainer": erklaerung,
+            "frage": frage,
+            "urteil": "",
+            "fachgrenze": True,
+            "fortschritt": {
+                "schritt": lauf.step_no,
+                "aufgaben_gestellt": lauf.tasks_given,
+                "aufgaben_richtig": lauf.tasks_right,
+            },
+            "fertig": False,
+        })
 
     # --- Erst das Urteil ueber die eben gegebene Antwort -----------------
     #
@@ -250,6 +301,16 @@ def trainer_zug(request):
         },
         "fertig": lauf.finished_at is not None,
     })
+
+
+def _thema(sitzung, lauf):
+    """Das Thema fuer den Pfoertner: das der Lehrperson und das gewaehlte."""
+    teile = []
+    if sitzung.task_hint:
+        teile.append(f"Thema der Lehrperson: {sitzung.task_hint}")
+    if lauf.topic and lauf.topic != sitzung.task_hint:
+        teile.append(f"gewähltes Thema: {lauf.topic}")
+    return "; ".join(teile)
 
 
 def _letzte_erklaerung(lauf):

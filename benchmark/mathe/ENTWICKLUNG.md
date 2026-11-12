@@ -183,3 +183,18 @@ kommt heraus?“ als Doppelfrage unter der Hilfe) betrifft die Leiter bis
 D3: Seit E endet jede Hilfe mit ihrer eigenen Frage, und die Seite zeigt
 keinen zweiten Arbeitsauftrag mehr. Die Vorlagen der Schlussfrage seit F2
 (`levels.SCHLUSSFRAGE_VORLAGE`) sind einzelne Fragen.
+
+## Nach G3: die Fachgrenze (7.11.2026)
+
+Seit dem 7.11. steht auf dem Frageweg der Aufgabenhilfe der Pförtner
+(`tutoring/fachgrenze.py`): Eine Rückfrage, die nicht zur Stunde gehört,
+bekommt den festen Satz der Anwendung statt einer Antwort des Modells.
+Seit dem Abend des 7.11. läuft der Pförtner auch auf dem Versuchsweg,
+parallel zur Diagnose: Sagt er nein, zählt der Beitrag nicht als Versuch
+und die nächste Nachfrage ist der feste Satz. Für Beiträge zur Stunde
+ändert sich nichts an Diagnose und Hilfen; eine Rechnung oder Zahl wird
+ihm gar nicht vorgelegt. `lauf.py` baut die Pipeline ohne Pförtner nach;
+die simulierten Kinder fragen nichts Fachfremdes. G3 bleibt damit der
+Vergleichsstand für Paper A. Ob der Pförtner selbst Peking wie Berlin
+behandelt, misst ein eigener Lauf (`benchmark/neutralitaet/`), nicht
+dieser Benchmark.

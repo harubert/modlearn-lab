@@ -189,6 +189,11 @@
    * Ring, der zuhoert, ohne dass jemand mitschreibt, waere eine Luege. */
   var HOEREN_URL = (tafel && tafel.getAttribute("data-erkennen")) || "";
   var WORKLET_URL = (tafel && tafel.getAttribute("data-worklet")) || "";
+  /* Die Stimme vom Server (7.11.2026): Steht hier eine Adresse, holt die
+   * Seite den Ton eines Coach-Zuges vom Rechner der Hochschule, nach der
+   * Kennung des Zuges und Satz fuer Satz. Leer heisst Browserstimme, wie
+   * bisher. Beides zusammen: Faellt der Server aus, liest der Browser. */
+  var STIMME_URL = (verlauf && verlauf.getAttribute("data-stimme")) || "";
   var MIKRO_MOEGLICH = !!(HOEREN_URL && navigator.mediaDevices &&
     navigator.mediaDevices.getUserMedia && window.fetch && window.FormData &&
     (window.AudioContext || window.webkitAudioContext));
@@ -426,6 +431,16 @@
   var SCHLUESSEL_STIMME = "modlearn-sprechcoach-stimme" + (SPRACHE ? "-" + SPRACHE : "");
 
   var stimme = null;
+  /* Die Stimme vom Server ist, wenn es sie gibt, die Voreinstellung: Sie
+   * rechnet auf dem Rechner der Hochschule, nicht beim Browserhersteller.
+   * Wer eine Browserstimme waehlt, schaltet sie ab; gemerkt wird das im
+   * selben Schluessel wie die Stimmenwahl. */
+  var SERVERSTIMME = "server";
+  var serverTon = null;          // das Audio-Element, das gerade spricht
+  var serverTonPausiert = null;  // nach einer Unterbrechung: zum Weiterlesen
+  var serverToene = {};          // "Kennung:Satz" -> Blob-Adresse, fuer "nochmal hoeren"
+  var vorgelesenZug = "";        // die Kennung des Zuges, der gerade gelesen wird
+  var ungelesenZug = "";
   var vorlesenAn = true;
   var wunschGeklaert = false;
   var hinweisErlaubt = false;   // siehe stimmensucheAbschliessen()
@@ -451,6 +466,17 @@
     try {
       window.localStorage.setItem(schluessel, wert);
     } catch (e) { /* siehe merkenLesen */ }
+  }
+
+  function serverStimmeAn() {
+    if (!STIMME_URL || !window.Audio || !window.fetch || !window.URL) { return false; }
+    var gemerkt = merkenLesen(SCHLUESSEL_STIMME);
+    return !gemerkt || gemerkt === SERVERSTIMME;
+  }
+
+  /* Gibt es ueberhaupt etwas, das vorlesen kann: Server oder Browser? */
+  function stimmeDa() {
+    return serverStimmeAn() || !!stimme;
   }
 
   /* Der Standard kommt aus der Vorlage (vorlesen_an) und ist beim
@@ -515,16 +541,24 @@
   function stimmenlisteFuellen() {
     if (!stimmenfeld || !stimmwahl) { return; }
     var liste = stimmenDerSprache();
-    if (liste.length < 2) { stimmwahl.hidden = true; return; }
+    var mitServer = !!STIMME_URL;
+    if (liste.length + (mitServer ? 1 : 0) < 2) { stimmwahl.hidden = true; return; }
 
     leeren(stimmenfeld);
+    if (mitServer) {
+      var server = document.createElement("option");
+      server.value = SERVERSTIMME;
+      server.textContent = "Stimme der Hochschule – am eigenen Rechner";
+      server.selected = serverStimmeAn();
+      stimmenfeld.appendChild(server);
+    }
     for (var i = 0; i < liste.length; i++) {
       var eintrag = document.createElement("option");
       eintrag.value = liste[i].voiceURI || liste[i].name;
       eintrag.textContent = liste[i].name
         + (liste[i].localService ? " – auf dem Gerät" : " – über das Netz");
-      if (stimme && (liste[i].voiceURI === stimme.voiceURI
-                     || liste[i].name === stimme.name)) {
+      if (!serverStimmeAn() && stimme && (liste[i].voiceURI === stimme.voiceURI
+                                          || liste[i].name === stimme.name)) {
         eintrag.selected = true;
       }
       stimmenfeld.appendChild(eintrag);
@@ -533,12 +567,12 @@
   }
 
   function tonknopfZeichnen() {
-    if (stummzeile) { stummzeile.hidden = !!stimme || !hinweisErlaubt; }
+    if (stummzeile) { stummzeile.hidden = stimmeDa() || !hinweisErlaubt; }
     if (!tonknopf) { return; }
     /* Ohne Stimme geht der Schalter weg. Ein Knopf, der bloss schweigt,
      * waere schlimmer als kein Knopf -- und die Zeile darueber sagt dann,
      * woran man ist. */
-    tonknopf.hidden = !stimme;
+    tonknopf.hidden = !stimmeDa();
     tonknopf.setAttribute("aria-pressed", vorlesenAn ? "true" : "false");
     tonknopf.classList.toggle("ist-an", vorlesenAn);
     if (tonwort) { tonwort.textContent = vorlesenAn ? "Vorlesen an" : "Vorlesen aus"; }
@@ -547,9 +581,140 @@
   function vorlesenAbbrechen() {
     sprechNummer++;
     vorgelesen = "";
+    vorgelesenZug = "";
     leseDanach = null;
+    serverTonAnhalten();
     if (!window.speechSynthesis) { return; }
     try { window.speechSynthesis.cancel(); } catch (e) { /* nichts zu stoppen */ }
+  }
+
+  /* Haelt den Ton vom Server an und merkt ihn sich fuer ein Weiterlesen
+   * nach einem Echo (vorlesenFortsetzen). Ein neuer Satz verwirft ihn. */
+  function serverTonAnhalten() {
+    if (!serverTon) { return; }
+    var ton = serverTon;
+    serverTon = null;
+    ton.onended = null;
+    ton.onerror = null;
+    ton.ontimeupdate = null;
+    try { ton.pause(); } catch (e) { /* schon aus */ }
+    serverTonPausiert = ton;
+  }
+
+  /* --- Die Stimme vom Server --------------------------------------------- */
+
+  /* Der Ton eines Satzes als Blob-Adresse, einmal geholt, dann gemerkt:
+   * "nochmal hoeren" kostet keinen zweiten Aufruf. Leer heisst: Diesen Satz
+   * gibt es nicht (der Zug ist zu Ende) oder der Server liefert nicht. */
+  function tonHolen(kennung, nummer) {
+    var schluessel = kennung + ":" + nummer;
+    if (Object.prototype.hasOwnProperty.call(serverToene, schluessel)) {
+      return window.Promise.resolve(serverToene[schluessel]);
+    }
+    var daten = new window.FormData();
+    daten.append("zug", kennung);
+    daten.append("satz", String(nummer));
+    return window.fetch(STIMME_URL, {
+      method: "POST",
+      headers: { "X-CSRFToken": csrfWert() },
+      credentials: "same-origin",
+      body: daten
+    }).then(function (antwort) {
+      var art = antwort.headers.get("Content-Type") || "";
+      if (antwort.status === 204) {
+        serverToene[schluessel] = "";   // das Ende des Zuges, gemerkt
+        return "";
+      }
+      if (!antwort.ok || art.indexOf("audio/") !== 0) { return ""; }
+      return antwort.blob().then(function (blob) {
+        var adresse = window.URL.createObjectURL(blob);
+        serverToene[schluessel] = adresse;
+        return adresse;
+      });
+    });
+  }
+
+  /* Spielt Satz `nummer` eines Zuges und danach den naechsten, bis keiner
+   * mehr kommt. Satz fuer Satz, weil die Stimme am Spark rund die dreifache
+   * Echtzeit braucht: Der erste Satz laeuft, waehrend der zweite entsteht.
+   * `meine` ist die Nummer dieses Sprechvorgangs; hat inzwischen ein neuer
+   * Satz uebernommen, wird nichts mehr gespielt. Scheitert der ERSTE Satz,
+   * greift der Rueckfall (Browserstimme); scheitert ein spaeterer, endet der
+   * Zug still -- halb mit der einen, halb mit der anderen Stimme waere
+   * schlimmer als ein fehlender Schluss. */
+  function satzSpielen(kennung, nummer, meine, einmal, rueckfall) {
+    var ersatz = nummer === 0 ? rueckfall : einmal;
+    tonHolen(kennung, nummer).then(function (adresse) {
+      if (meine !== sprechNummer) { return; }
+      if (!adresse) {
+        if (nummer === 0) { rueckfall(); } else { einmal(); }
+        return;
+      }
+      var ton = new window.Audio(adresse);
+      ton.preload = "auto";
+      ton.kennung = kennung;
+      ton.nummer = nummer;
+      serverTon = ton;
+      ton.onended = function () {
+        if (serverTon === ton) { serverTon = null; }
+        if (meine !== sprechNummer) { return; }
+        satzSpielen(kennung, nummer + 1, meine, einmal, einmal);
+      };
+      ton.onerror = function () {
+        if (serverTon === ton) { serverTon = null; }
+        if (meine !== sprechNummer) { return; }
+        ersatz();
+      };
+      var abspielen = ton.play();
+      if (abspielen && abspielen.catch) {
+        abspielen.catch(function () {
+          if (serverTon === ton) { serverTon = null; }
+          if (meine !== sprechNummer) { return; }
+          ersatz();
+        });
+      }
+      /* Den naechsten Satz schon holen, waehrend dieser laeuft. */
+      tonHolen(kennung, nummer + 1).catch(function () { /* dann eben spaeter */ });
+    }).catch(function () {
+      if (meine !== sprechNummer) { return; }
+      ersatz();
+    });
+  }
+
+  /* Nach einem Echo: Der angehaltene Satz laeuft weiter, wo er war, und
+   * danach der Rest des Zuges. Siehe vorlesenFortsetzen. */
+  function serverWeiterlesen(satz, danach) {
+    leseFortgesetzt = true;
+    var ton = serverTonPausiert;
+    serverTonPausiert = null;
+    vorlesenAbbrechen();
+    var meine = sprechNummer;
+
+    function einmal() {
+      if (meine !== sprechNummer) { return; }
+      sprechNummer++;
+      vorgelesen = "";
+      vorgelesenZug = "";
+      leseDanach = null;
+      if (danach) { danach(); }
+    }
+
+    vorgelesen = satz || "";
+    vorgelesenZug = ton.kennung || "";
+    leseDanach = danach || null;
+    lageSetzen("spricht");
+    serverTon = ton;
+    ton.onended = function () {
+      if (serverTon === ton) { serverTon = null; }
+      if (meine !== sprechNummer) { return; }
+      satzSpielen(ton.kennung, ton.nummer + 1, meine, einmal, einmal);
+    };
+    ton.onerror = function () {
+      if (serverTon === ton) { serverTon = null; }
+      einmal();
+    };
+    var abspielen = ton.play();
+    if (abspielen && abspielen.catch) { abspielen.catch(einmal); }
   }
 
   /* Lange Texte werden in Stuecke zerlegt und der Reihe nach gesprochen.
@@ -587,8 +752,9 @@
    * erzwingen = true kommt von "nochmal hoeren" und vom Beispielsatz: Diese
    * Knoepfe sprechen auch dann, wenn der Schalter aus ist -- ein Tippen
    * darauf ist eine ausdrueckliche Bitte. */
-  function sprechen(text, erzwingen, danach) {
+  function sprechen(text, erzwingen, danach, kennung) {
     vorlesenAbbrechen();
+    serverTonPausiert = null;   // ein neuer Satz: nichts mehr weiterzulesen
     var meine = sprechNummer;
     var satz = getrimmt(text);
 
@@ -596,12 +762,35 @@
       if (meine !== sprechNummer) { return; }   // ein neuer Satz hat uebernommen
       sprechNummer++;
       vorgelesen = "";
+      vorgelesenZug = "";
       leseDanach = null;
       if (danach) { danach(); }
     }
 
-    if (!stimme || !window.SpeechSynthesisUtterance || !satz ||
-        (!vorlesenAn && !erzwingen)) {
+    if (!satz || (!vorlesenAn && !erzwingen)) {
+      einmal();
+      return;
+    }
+
+    /* Die Stimme vom Server, wenn es sie gibt und der Satz eine Kennung hat
+     * (ein Zug des Coaches; der Beispielsatz des Auswegs hat keine). Liefert
+     * der Server nicht, liest der Browser -- und wer gar keine Stimme hat,
+     * liest eben den Text. */
+    if (serverStimmeAn() && kennung) {
+      vorgelesen = satz;
+      vorgelesenZug = String(kennung);
+      leseStelle = 0;
+      leseFortgesetzt = false;
+      leseDanach = danach || null;
+      satzSpielen(String(kennung), 0, meine, einmal, function () {
+        if (meine !== sprechNummer) { return; }
+        if (!stimme || !window.SpeechSynthesisUtterance) { einmal(); return; }
+        sprechenAb(satz, 0, meine, einmal);
+      });
+      return;
+    }
+
+    if (!stimme || !window.SpeechSynthesisUtterance) {
       einmal();
       return;
     }
@@ -658,6 +847,11 @@
    * sich sonst in einer Schleife, und dann ist Weiterhoeren das kleinere
    * Uebel. */
   function vorlesenFortsetzen(satz, stelle, danach) {
+    if (serverTonPausiert && !leseFortgesetzt && vorlesenAn && hoertZu()) {
+      serverWeiterlesen(satz, danach);
+      return;
+    }
+    serverTonPausiert = null;
     if (!satz || leseFortgesetzt || !stimme || !window.SpeechSynthesisUtterance ||
         !vorlesenAn || !hoertZu()) {
       if (danach) { danach(); }
@@ -727,7 +921,7 @@
    * seine Beschriftung an genau einer Stelle statt an zwei, die auseinander
    * laufen koennen. */
   function hoerenKnopfSetzen(eintrag) {
-    if (!stimme || !eintrag) { return; }
+    if (!stimmeDa() || !eintrag) { return; }
     if (eintrag.querySelector(".zug-hoeren")) { return; }
     var fuss = eintrag.querySelector(".zug-fuss");
     if (!fuss) {
@@ -748,14 +942,14 @@
     knopf.setAttribute("aria-label", "Diesen Satz nochmal hören");
     knopf.addEventListener("click", function () {
       var text = eintrag.querySelector(".zug-text");
-      coachSpricht(text ? text.textContent : "", true);
+      coachSpricht(text ? text.textContent : "", true, eintrag.getAttribute("data-zug") || "");
     });
     fuss.insertBefore(knopf, fuss.firstChild);
     return knopf;
   }
 
   function hoerenKnoepfeSetzen() {
-    if (!verlauf || !stimme) { return; }
+    if (!verlauf || !stimmeDa()) { return; }
     var liste = verlauf.querySelectorAll("li.zug-coach");
     for (var i = 0; i < liste.length; i++) { hoerenKnopfSetzen(liste[i]); }
   }
@@ -771,6 +965,13 @@
     return text ? text.textContent : null;
   }
 
+  function letzterCoachZug() {
+    if (!verlauf) { return ""; }
+    var liste = verlauf.querySelectorAll("li.zug-coach");
+    if (!liste.length) { return ""; }
+    return liste[liste.length - 1].getAttribute("data-zug") || "";
+  }
+
   function letzterZugIstVomCoach() {
     var zug = letzterZug();
     return !!(zug && zug.classList && zug.classList.contains("zug-coach"));
@@ -782,11 +983,11 @@
    * Hinweiszeile kommt, und der Text genuegt. */
   function stimmeSuchen() {
     stimme = zielStimme();
-    if (stimme && !wunschGeklaert) {
+    if (stimmeDa() && !wunschGeklaert) {
       wunschGeklaert = true;
       vorlesenAn = wunschLesen();
     }
-    if (stimme) { hoerenKnoepfeSetzen(); } else { vorlesenAn = false; }
+    if (stimmeDa()) { hoerenKnoepfeSetzen(); } else { vorlesenAn = false; }
     tonknopfZeichnen();
     stimmenlisteFuellen();
   }
@@ -810,9 +1011,17 @@
       window.setTimeout(stimmensucheAbschliessen, 2000);
     }
   } else {
+    /* Kein speechSynthesis im Browser. Mit der Stimme vom Server geht es
+     * trotzdem; ohne sie bleibt es beim Text. */
     stimme = null;
-    vorlesenAn = false;
     hinweisErlaubt = true;
+    if (serverStimmeAn()) {
+      wunschGeklaert = true;
+      vorlesenAn = wunschLesen();
+      hoerenKnoepfeSetzen();
+    } else {
+      vorlesenAn = false;
+    }
     tonknopfZeichnen();
   }
 
@@ -833,6 +1042,11 @@
 
   if (stimmenfeld) {
     stimmenfeld.addEventListener("change", function () {
+      if (stimmenfeld.value === SERVERSTIMME) {
+        merkenSchreiben(SCHLUESSEL_STIMME, SERVERSTIMME);
+        coachSpricht(letzterCoachsatz(), true, letzterCoachZug());
+        return;
+      }
       var liste = stimmenDerSprache();
       for (var i = 0; i < liste.length; i++) {
         var kennung = liste[i].voiceURI || liste[i].name;
@@ -845,7 +1059,7 @@
       /* Gleich vorlesen: Man waehlt eine Stimme, um sie zu hoeren. Ohne
        * diese Probe muesste man erst einen Zug abwarten, um zu merken, dass
        * die neue auch nicht besser klingt. */
-      coachSpricht(letzterCoachsatz(), true);
+      coachSpricht(letzterCoachsatz(), true, letzterCoachZug());
     });
   }
 
@@ -864,20 +1078,20 @@
        * Sprechen verlangen. Also wird gleich der offene Satz gelesen: So
        * hoert man sofort etwas und nicht erst beim naechsten Zug. */
       ansagen("Vorlesen ist an.", "");
-      coachSpricht(letzterCoachsatz(), false);
+      coachSpricht(letzterCoachsatz(), false, letzterCoachZug());
     });
   }
 
   /* Der eine Weg, auf dem der Coach spricht: Lage setzen, sprechen, danach
    * wieder zuhoeren. Waehrenddessen bleibt das Mikrofon offen -- das Kind
    * darf unterbrechen. */
-  function coachSpricht(text, erzwingen) {
+  function coachSpricht(text, erzwingen, kennung) {
     if (lage === "fertig" || lage === "tippt" || abschlussLaeuft) {
-      sprechen(text, erzwingen, null);
+      sprechen(text, erzwingen, null, kennung);
       return;
     }
     if (hoertZu()) { lageSetzen("spricht"); }
-    sprechen(text, erzwingen, weiterHoeren);
+    sprechen(text, erzwingen, weiterHoeren, kennung);
   }
 
   /* --- Der Verlauf ------------------------------------------------------- */
@@ -888,12 +1102,13 @@
    *
    * Durchweg textContent, nie innerHTML: Was aus dem Netz kommt, wird hier
    * nie als Auszeichnung gelesen. */
-  function zugAnhaengen(istCoach, text, uebersetzung, korrektur, nichtVerstanden) {
+  function zugAnhaengen(istCoach, text, uebersetzung, korrektur, nichtVerstanden, kennung) {
     if (!verlauf) { return null; }
 
     var eintrag = document.createElement("li");
     eintrag.className = "zug " + (istCoach ? "zug-coach" : "zug-lernend")
       + (nichtVerstanden ? " zug-nachfrage" : "");
+    if (kennung) { eintrag.setAttribute("data-zug", String(kennung)); }
 
     var kopf = document.createElement("p");
     kopf.className = "zug-kopf";
@@ -1329,8 +1544,8 @@
     hinweisZeigen("Ich höre zu. Sag einfach, was dir einfällt – oder tipp auf " +
       "„Ich komme nicht weiter“.");
     var satz = letzterCoachsatz();
-    if (satz && letzterZugIstVomCoach() && vorlesenAn && stimme) {
-      coachSpricht(satz, false);
+    if (satz && letzterZugIstVomCoach() && vorlesenAn && stimmeDa()) {
+      coachSpricht(satz, false, letzterCoachZug());
     }
   }
 
@@ -1586,8 +1801,10 @@
     if (ungelesen) {
       /* Die Antwort kam, als das Fenster weg war. Jetzt wird sie gelesen. */
       var satz = ungelesen;
+      var kennung = ungelesenZug;
       ungelesen = "";
-      coachSpricht(satz, false);
+      ungelesenZug = "";
+      coachSpricht(satz, false, kennung);
       return;
     }
     fortsetzen();
@@ -1845,7 +2062,7 @@
     if (senden) { senden.disabled = false; }
     var eintrag = zugAnhaengen(true, ergebnis.coach || "",
       ergebnis.uebersetzung || "", ergebnis.korrektur || "",
-      !!ergebnis.nicht_verstanden);
+      !!ergebnis.nicht_verstanden, ergebnis.zug);
     standSchreiben(ergebnis.zuege);
     phaseZeigen(ergebnis);
 
@@ -1875,7 +2092,7 @@
         if (ergebnis.neu_laden) { window.location.reload(); }
       };
       if (hoertZu()) { lageSetzen("spricht"); }
-      sprechen(ergebnis.coach || "", false, abschlussDanach);
+      sprechen(ergebnis.coach || "", false, abschlussDanach, ergebnis.zug);
       return;
     }
 
@@ -1883,9 +2100,10 @@
       /* Im Hintergrund wird nicht vorgelesen. Der Satz steht im Verlauf
        * und wird nachgelesen, sobald das Fenster wieder da ist. */
       ungelesen = ergebnis.coach || "";
+      ungelesenZug = ergebnis.zug ? String(ergebnis.zug) : "";
       return;
     }
-    coachSpricht(ergebnis.coach || "", false);
+    coachSpricht(ergebnis.coach || "", false, ergebnis.zug);
   }
 
   /* Ein Beitrag geht an die Ansicht. `erkannt` ist der Sprachcode, den
@@ -2152,7 +2370,7 @@
         /* Was gerade vorgelesen wurde, wird nachgelesen, wenn das Fenster
          * wieder da ist. Erst die Lage setzen, dann anhalten: lageSetzen
          * schaltet die Spuren mit. */
-        if (lage === "spricht" && vorgelesen) { ungelesen = vorgelesen; }
+        if (lage === "spricht" && vorgelesen) { ungelesen = vorgelesen; ungelesenZug = vorgelesenZug; }
         lageSetzen("weg");
         zuhoerenAnhalten();
       }

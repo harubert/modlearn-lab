@@ -1644,6 +1644,11 @@ class ChatZug(models.Model):
     # Blieb der Weg zu (Filter, Budget, Netz), steht hier warum; der Text
     # des Zuges ist dann der Hinweis an das Kind.
     aussen_gesperrt = models.CharField("Nicht hinausgegangen, weil", max_length=120, blank=True)
+    # Die Antwort des Spark trug die Form einer politischen Verweigerung
+    # (fachgrenze.ausweichen_erkannt, 7.11.2026): Das Kind hat den festen
+    # Satz gelesen, der Wortlaut des Modells steht nur im Forschungsprotokoll.
+    # Hier der Grund in Worten, leer, wenn die Antwort durchging.
+    ausweichen = models.CharField("Antwort zurückgehalten, weil", max_length=120, blank=True)
     # Das Urteil der Gegenstelle, mit Begruendung in ihren Worten.
     urteil = models.CharField("Urteil der Gegenstelle", max_length=8, choices=URTEILE, blank=True)
     urteil_grund = models.CharField("Begründung des Urteils", max_length=240, blank=True)

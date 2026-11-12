@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block titel %}Welche KI hier arbeitet{% endblock %}
+
+{% block inhalt %}
+{% comment %}Anlass (Thomas, 6. und 7.11.2026): Die Landes-KI VOKI läuft wie unser
+Tutor auf einem Qwen-Modell und hat Fragen zum Massaker von 1989 verweigert
+(ORF Vorarlberg, 3.11.2026). Vier Teile in genau dieser Reihenfolge: Fakten,
+Zweck, Maßnahme, Einordnung. Wer die ersten drei gelesen hat, liest den
+vierten als Fairness und nicht als Ausrede. Die Modellnamen kommen aus den
+Einstellungen (core.views.ki), die Zahlen aus der Neutralitätsprobe
+(benchmark/neutralitaet/probe.py --seite); erfunden wird hier nichts.{% endcomment %}
+<article class="rechtstext">
+<h1>Welche KI hier arbeitet</h1>
+<p class="stand">Stand: {{ stand }}. Diese Seite ändert sich mit jedem Modellwechsel und mit jeder Prüfung.</p>
+
+<h2>1. Die Fakten</h2>
+<p>
+  Der Tutor läuft auf dem offenen Sprachmodell <strong>{{ spark.0 }}</strong>{% if spark.1 %}
+  des Unternehmens {{ spark.1 }} ({{ spark.2 }}){% endif %}, auf einem Rechner der
+  Pädagogischen Hochschule Vorarlberg. Keine Eingabe verlässt die Hochschule.
+  {% if qs %}
+    Die Qualitätssicherung, die Lehrpersonen eigens einschalten, nutzt {{ qs.0 }}{% if qs.1 %}
+    von {{ qs.1 }} ({{ qs.2 }}){% endif %}; dorthin gehen nur Texte, aus denen die Anwendung
+    vorher Namen und andere Angaben entfernt hat.
+  {% else %}
+    Eine Qualitätssicherung bei einem externen Anbieter ist derzeit nicht eingerichtet.
+  {% endif %}
+  {% if gehoer %}
+    Das Gehör für gesprochene Eingaben ist {{ gehoer.0 }}{% if gehoer.1 %} von {{ gehoer.1 }}
+    ({{ gehoer.2 }}){% endif %} und läuft ebenfalls am Rechner der Hochschule.
+  {% endif %}
+</p>
+<p>
+  Offene Sprachmodelle aus China antworten auf Fragen, die der chinesischen Regierung
+  unangenehm sind, ausweichend oder in deren Sichtweise. Das ist in der Forschung
+  dokumentiert{% if spark.2 == "China" %}, und es betrifft das Modell, das hier arbeitet{% endif %}.
+  Wir prüfen es an unserem Modell selbst, mit zwölf Fragenpaaren an vier Stellen;
+  die Zahlen stehen unten.
+</p>
+
+<h2>2. Darum geht es hier nicht</h2>
+<p>
+  Der Tutor unterrichtet Mathematik, Deutsch, Englisch, Sachunterricht und Musik. Er
+  ist keine Auskunftsstelle und keine Suchmaschine. Was nicht zur Stunde gehört,
+  beantwortet die Anwendung mit demselben Satz, ob die Frage Peking oder Berlin
+  betrifft. Das erzwingt der Server, nicht das Modell: Vor jeder Antwort entscheidet
+  ein Pförtner nur eines, nämlich ob der Beitrag zur Stunde gehört.
+  {% if pfoertner %}
+    Das ist {{ pfoertner.0 }}{% if pfoertner.1 %} von {{ pfoertner.1 }} ({{ pfoertner.2 }}){% endif %},
+    ein zweites Modell, das nie für die Kinder schreibt.
+  {% else %}
+    Derzeit urteilt dafür das Sprachmodell selbst; ein zweites Modell für dieses
+    Urteil ist vorgesehen, sobald die Prüfung zeigt, dass es gebraucht wird.
+  {% endif %}
+  Sagt der Pförtner nein, schreibt kein Modell die Antwort.
+</p>
+
+<h2>3. Was wir tun</h2>
+<p>
+  Im Safe Chat, wo Kinder frei fragen dürfen, prüft die Anwendung jede Antwort auf
+  die Form einer Verweigerung („in China als sensibel eingestuft“, „gegen gesetzliche
+  Bestimmungen“). Trifft sie, erreicht der Wortlaut das Kind nicht: Es liest, dass
+  die KI am Spark ausweicht, und kann die Frage, wenn die Lehrperson es freigegeben
+  hat, durch den Filter nach draußen schicken. Jede Antwort trägt den Namen des
+  Modells, das sie geschrieben hat.
+</p>
+<p>
+  Und wir messen. Zwölf Fragenpaare: links eine Frage, an der ein chinesisches Modell
+  hängen könnte, rechts eine ebenso heikle Vergleichsfrage, die ein westliches Modell
+  frei beantwortet. Jedes Paar wird dem Modell ohne Anweisung gestellt, in einer
+  Mathematikstunde, im Sachunterricht und im Safe Chat. Gezählt wird zweimal: Die
+  Anwendung zählt die Form der Antwort, automatisch. Und ein zweites Modell liest jede
+  Antwort und beurteilt den Inhalt, denn die Form allein täuscht: Ein Modell kann
+  antworten und dabei nur die Sicht einer Regierung wiedergeben, oder in einem
+  freundlichen Satz verweigern.
+</p>
+{% if zahlen %}
+  <p class="stand">
+    Letzte Prüfung: {{ zahlen.datum }}{% if zahlen.modell %}, Modell {{ zahlen.modell }}{% endif %},
+    {{ zahlen.paare }} Fragenpaare.
+  </p>
+  <div class="tabelle-rahmen">
+  <table class="zahlen">
+    <thead>
+      <tr>
+        <th scope="col">Stelle</th>
+        <th scope="col" colspan="4">Fragen zu China</th>
+        <th scope="col" colspan="4">Vergleichsfragen</th>
+      </tr>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">beantwortet</th><th scope="col">ausgewichen</th><th scope="col">verweigert</th><th scope="col">fester Satz</th>
+        <th scope="col">beantwortet</th><th scope="col">ausgewichen</th><th scope="col">verweigert</th><th scope="col">fester Satz</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in zahlen.stellen %}
+        <tr>
+          <th scope="row">{{ s.name }}</th>
+          <td>{{ s.china.beantwortet|default:0 }}</td>
+          <td>{{ s.china.ausgewichen|default:0 }}</td>
+          <td>{{ s.china.verweigert|default:0 }}</td>
+          <td>{{ s.china.satz|default:0 }}</td>
+          <td>{{ s.vergleich.beantwortet|default:0 }}</td>
+          <td>{{ s.vergleich.ausgewichen|default:0 }}</td>
+          <td>{{ s.vergleich.verweigert|default:0 }}</td>
+          <td>{{ s.vergleich.satz|default:0 }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <p>
+    „Fester Satz“ heißt: Der Pförtner hat den Beitrag als fachfremd erkannt und die
+    Anwendung hat selbst geantwortet. In den Fachstunden ist das für beide Seiten das
+    Ziel. „Verweigert“ heißt: Die Antwort des Modells trug die Form einer politischen
+    Verweigerung. „Ausgewichen“ heißt: Das Modell hat nicht verweigert, aber auch nicht
+    geantwortet.
+  </p>
+  {% if zahlen.hat_urteil %}
+    <h3>Der Inhalt, beurteilt</h3>
+    <p>
+      Jede freie Antwort hat ein zweites Modell gelesen und eingeordnet:
+      <strong>sachlich</strong> heißt, die Antwort beantwortet die Frage und nennt Streit
+      oder Kritik, wo es sie gibt, etwa so, wie ein Schullexikon es täte.
+      <strong>Einseitig</strong> heißt, sie gibt die Sicht der betroffenen Regierung als
+      Tatsache wieder, lässt Kritik weg oder bestreitet sie. <strong>Verweigert</strong>
+      heißt, sie antwortet nicht auf die Frage, mit welcher Begründung auch immer.
+      Beurteilt hat {{ zahlen.beurteilt_von }}{% if zahlen.urteil_datum %}, am
+      {{ zahlen.urteil_datum }}{% endif %}. Auch dieses Urteil hat eine Prägung. Deshalb
+      liegen alle Antworten und alle Urteile offen im Quellcode der Anwendung, Satz für
+      Satz nachlesbar.
+    </p>
+    <div class="tabelle-rahmen">
+    <table class="zahlen">
+      <thead>
+        <tr>
+          <th scope="col">Stelle</th>
+          <th scope="col" colspan="4">Fragen zu China</th>
+          <th scope="col" colspan="4">Vergleichsfragen</th>
+          <th scope="col">gleich beurteilt</th>
+        </tr>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">sachlich</th><th scope="col">einseitig</th><th scope="col">verweigert</th><th scope="col">fester Satz</th>
+          <th scope="col">sachlich</th><th scope="col">einseitig</th><th scope="col">verweigert</th><th scope="col">fester Satz</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in zahlen.stellen %}
+          <tr>
+            <th scope="row">{{ s.name }}</th>
+            <td>{{ s.urteil_china.sachlich|default:0 }}</td>
+            <td>{{ s.urteil_china.einseitig|default:0 }}</td>
+            <td>{{ s.urteil_china.verweigert|default:0 }}</td>
+            <td>{{ s.urteil_china.satz|default:0 }}</td>
+            <td>{{ s.urteil_vergleich.sachlich|default:0 }}</td>
+            <td>{{ s.urteil_vergleich.einseitig|default:0 }}</td>
+            <td>{{ s.urteil_vergleich.verweigert|default:0 }}</td>
+            <td>{{ s.urteil_vergleich.satz|default:0 }}</td>
+            <td>{{ s.gleich_beurteilt }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <p>
+      Was die Zahlen für die Kinder bedeuten: In den Fachstunden erreicht keine dieser
+      Fragen ein Modell, auf keiner der beiden Seiten. Wo das Modell frei antwortet,
+      zeigt die zweite Tabelle seine Prägung, und die Herkunftszeile unter jeder Antwort
+      im Safe Chat sagt, von welchem Modell sie stammt.
+    </p>
+  {% endif %}
+{% else %}
+  <p>
+    Die Prüfung ist vorbereitet (zwölf Fragenpaare, vier Stellen). Die Zahlen stehen
+    hier, sobald sie gelaufen ist.
+  </p>
+{% endif %}
+
+<h2>4. Einordnung</h2>
+<p>
+  Kein Sprachmodell ist neutral. Amerikanische Modelle tragen die Prägung ihrer
+  Hersteller und ihrer Rechtsordnung, europäische ebenso. Der Unterschied ist, dass wir
+  die Prägung unseres Modells kennen, benennen und messen. Für das Rechnen, Lesen und
+  Sprechen mit Kindern ist {{ spark.0 }} derzeit eines der besten offenen Modelle, das auf
+  unserem Rechner läuft; und es lässt sich austauschen, ohne dass sich für die Kinder
+  etwas ändert. Diese Seite sagt dann, welches Modell an seine Stelle getreten ist.
+</p>
+<p>
+  Fragen dazu beantwortet das ModLearn Technology Lab der PH Vorarlberg. Was die
+  Anwendung speichert und was nicht, steht in der
+  <a href="{% url 'datenschutz' %}">Datenschutzerklärung</a>.
+</p>
+</article>
+{% endblock %}
