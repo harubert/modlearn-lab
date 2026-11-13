@@ -375,6 +375,8 @@ def test_eine_fachfremde_rueckfrage_bekommt_den_satz_der_anwendung(client, stund
     frage = Question.objects.get(pk=antwort.json()["id"])
     assert frage.flag == pruefung.GELB and frage.flag_reason == fachgrenze.GRUND
     assert Interaction.objects.filter(outcome="pfoertner:nein").count() == 1
+    zeile = Interaction.objects.get(outcome="pfoertner:nein")
+    assert zeile.diagnosis["pfoertner"]["lesbar"] is True, "Kategorien in jeder Protokollstufe"
 
     async def _kein_modell(*a, **k):
         raise AssertionError("Das Modell darf nicht antworten.")
@@ -512,3 +514,63 @@ def test_der_hinweis_der_anwendung_hat_keine_herkunft():
     assert safechat.herkunft(kind) == ""
     draussen = ChatZug(role=ChatZug.KI, weg=ChatZug.WEG_AUSSEN, text="x", aussen_modell="gpt-6.1-sol")
     assert safechat.herkunft(draussen).startswith("gpt-6.1-sol von OpenAI (USA), läuft außerhalb der PH")
+
+
+# --- Rohtext und Ende der Antwort (13.11.2026) ---------------------------------------------
+#
+# Thomas: "wir sollten den Rohtext aus Evaluationsgruenden jedenfalls auch
+# speichern ... sonst lernen wir nichts aus Abbruechen". Bei N2 blieb ein
+# unlesbares Qwen-Urteil ungeklaert, weil nur das Ergebnis "unklar" stand.
+
+def _roh(monkeypatch, inhalt, ende=None):
+    """Der Pfoertner antwortet mit genau diesem Text, so wie er ist."""
+    def _anfragen(rumpf, adresse):
+        wahl = {"message": {"content": inhalt}}
+        if ende is not None:
+            wahl["finish_reason"] = ende
+        return {"model": rumpf["model"], "usage": {"prompt_tokens": 80, "completion_tokens": 12},
+                "choices": [wahl]}
+    monkeypatch.setattr(fachgrenze, "_anfragen", _anfragen)
+
+
+def test_die_messung_traegt_rohtext_ende_und_lesbarkeit(monkeypatch):
+    _roh(monkeypatch, '{"zur_stunde": "nein", "grund": "anderes Wissensgebiet"}', ende="stop")
+    urteil = fachgrenze.pruefen(PEKING, "mathematik")
+    assert urteil.fremd
+    assert urteil.messung["lesbar"] is True and urteil.messung["ende"] == "stop"
+    assert json.loads(urteil.messung["roh"])["zur_stunde"] == "nein"
+    text, diagnose = fachgrenze.protokollfelder(urteil)
+    assert text == "anderes Wissensgebiet", "lesbar: der Grund geht ins Protokoll wie bisher"
+    assert diagnose == {"pfoertner": {"lesbar": True, "ende": "stop", "zeichen": len(urteil.messung["roh"])}}
+
+
+def test_ein_unlesbares_urteil_behaelt_den_rohtext_fuer_die_auswertung(monkeypatch):
+    prosa = "Gerne! Der Beitrag gehört meiner Einschätzung nach nicht zur Stunde, weil"
+    _roh(monkeypatch, prosa, ende="stop")
+    urteil = fachgrenze.pruefen(PEKING, "mathematik")
+    assert urteil.zur_stunde == fachgrenze.UNKLAR and not urteil.fremd
+    assert urteil.messung["lesbar"] is False and urteil.messung["roh"] == prosa
+    text, diagnose = fachgrenze.protokollfelder(urteil)
+    assert text == prosa, "ohne den Rohtext liesse sich der Abbruch nicht untersuchen"
+    assert diagnose["pfoertner"] == {"lesbar": False, "ende": "stop", "zeichen": len(prosa)}
+
+
+def test_ein_abgeschnittenes_urteil_nennt_length_als_ende(monkeypatch):
+    _roh(monkeypatch, '{"zur_stunde": "ja", "grund": "Rückfrage zur Aufg', ende="length")
+    urteil = fachgrenze.pruefen(PEKING, "mathematik")
+    assert urteil.zur_stunde == fachgrenze.UNKLAR
+    assert urteil.messung["lesbar"] is False and urteil.messung["ende"] == "length"
+
+
+def test_der_rohtext_wird_begrenzt(monkeypatch):
+    _roh(monkeypatch, "x" * 2000)
+    urteil = fachgrenze.pruefen(PEKING, "mathematik")
+    assert len(urteil.messung["roh"]) == fachgrenze.ROH_ZEICHEN == 400
+    assert urteil.messung["ende"] == "", "ohne finish_reason bleibt das Feld leer"
+
+
+def test_ohne_antwort_gibt_es_weder_text_noch_kategorien(monkeypatch):
+    _pfoertner(monkeypatch, ConnectionError("weg"))
+    urteil = fachgrenze.pruefen(PEKING, "mathematik")
+    assert "lesbar" not in urteil.messung
+    assert fachgrenze.protokollfelder(urteil) == ("", {})

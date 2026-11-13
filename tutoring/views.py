@@ -2065,6 +2065,7 @@ def _frage_anlegen(request, sitzung, teilnahme, aufgabe, text, foto):
     )
     teilnahme.einstufung_merken(stufe)
     if urteil.modell_gefragt:
+        text_aus, diagnose = fachgrenze.protokollfelder(urteil)
         Interaction.aufzeichnen(
             sitzung=sitzung, teilnahme=teilnahme, weg=Interaction.LOKAL,
             modell=urteil.messung.get("modell", ""),
@@ -2074,7 +2075,7 @@ def _frage_anlegen(request, sitzung, teilnahme, aufgabe, text, foto):
             leak_check=Interaction.ENTFAELLT,
             ergebnis=f"pfoertner:{urteil.zur_stunde}",
             fehlerart=urteil.messung.get("fehlerart", ""),
-            text_ein=text, text_aus=urteil.grund,
+            text_ein=text, text_aus=text_aus, diagnose=diagnose,
         )
     sitzung.beruehren()
     return frage

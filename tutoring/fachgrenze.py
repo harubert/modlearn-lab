@@ -60,6 +60,10 @@ JA = "ja"
 NEIN = "nein"
 UNKLAR = "unklar"
 URTEILE = (JA, NEIN, UNKLAR)
+# So viel vom Rohtext einer Pfoertner-Antwort bleibt in der Messung. Die
+# Antwort ist ein JSON-Objekt von hoechstens 60 Token; 400 Zeichen fassen
+# sie ganz, auch wenn das Modell Prosa davor setzt.
+ROH_ZEICHEN = 400
 
 # Steht als Begruendung an der Ampel des Beitrags (flag_reason, hoechstens
 # 120 Zeichen) und markiert damit den Beitrag, den die Anwendung selbst
@@ -346,21 +350,31 @@ def pruefen(text, fach, thema="", aufgabe="", altersklasse=None, zusatz=""):
     begonnen = time.monotonic()
     try:
         daten = _anfragen(rumpf, adresse)
-        roh = daten["choices"][0]["message"]["content"] or ""
+        wahl = daten["choices"][0]
+        roh = wahl["message"]["content"] or ""
     except Exception as fehler:  # noqa: BLE001 - der Unterricht laeuft weiter
         logger.warning("Pfoertner ohne Urteil: %s", type(fehler).__name__)
         return Urteil(UNKLAR, "", {"modell": modell, "dauer_ms": int((time.monotonic() - begonnen) * 1000),
                                    "fehlerart": type(fehler).__name__}, modell_gefragt=True)
     verbrauch = daten.get("usage") or {}
+    gelesen = _lesen(roh)
     messung = {
         "modell": daten.get("model") or modell,
         "tokens_ein": verbrauch.get("prompt_tokens", 0),
         "tokens_aus": verbrauch.get("completion_tokens", 0),
         "dauer_ms": int((time.monotonic() - begonnen) * 1000),
+        # Der Rohtext und wie die Antwort endete ("stop": fertig, "length":
+        # an max_tokens abgeschnitten), damit sich ein unlesbares Urteil
+        # spaeter erklaeren laesst. Bei N2 fehlte beides, das eine unlesbare
+        # Qwen-Urteil blieb deshalb ungeklaert (Thomas, 13.11.2026: "sonst
+        # lernen wir nichts aus Abbruechen").
+        "roh": roh[:ROH_ZEICHEN],
+        "ende": str(wahl.get("finish_reason") or ""),
+        "lesbar": gelesen is not None,
     }
-    gelesen = _lesen(roh)
     if gelesen is None:
-        logger.warning("Pfoertner unverstaendlich, gilt als unklar.")
+        logger.warning("Pfoertner unverstaendlich, gilt als unklar (ende=%s, %d Zeichen).",
+                       messung["ende"], len(roh))
         return Urteil(UNKLAR, "", messung, modell_gefragt=True)
     urteil, grund = gelesen
     return Urteil(urteil, grund, messung, modell_gefragt=True)
@@ -392,6 +406,25 @@ def ampel_mit_grenze(ampel, grund, urteil):
     return pruefung.GELB, GRUND
 
 
+def protokollfelder(urteil):
+    """Text und Kategorien, die vom Urteil ins Forschungsprotokoll gehen.
+
+    Der Text ist der Grund des Pfoertners. War die Antwort nicht lesbar, ist
+    er der Rohtext selbst; sonst stuende dort nichts, und niemand koennte den
+    Abbruch untersuchen. Der Text unterliegt der Protokollstufe wie jede
+    Modellausgabe (Betrieb: kein Text). Die Kategorien gehen in jeder Stufe
+    mit, ohne Text: lesbar, wie die Antwort endete, wie lang der Rohtext war.
+    Ohne Antwort (Ausfall) gibt es keine Kategorien; die Fehlerart steht dann
+    schon in der Zeile.
+    """
+    m = urteil.messung
+    if "lesbar" not in m:
+        return urteil.grund, {}
+    text = urteil.grund if m["lesbar"] else m.get("roh", "")
+    return text, {"pfoertner": {"lesbar": m["lesbar"], "ende": m.get("ende", ""),
+                                "zeichen": len(m.get("roh", ""))}}
+
+
 def aufzeichnen(sitzung, teilnahme, urteil, text, ergebnis="pfoertner"):
     """Die Protokollzeile des Pfoertners, wenn er ein Modell gefragt hat.
 
@@ -405,6 +438,7 @@ def aufzeichnen(sitzung, teilnahme, urteil, text, ergebnis="pfoertner"):
         return
     from .models import Interaction  # hier, nicht oben: models importiert pruefung
 
+    text_aus, diagnose = protokollfelder(urteil)
     Interaction.aufzeichnen(
         sitzung=sitzung, teilnahme=teilnahme, weg=Interaction.LOKAL,
         modell=urteil.messung.get("modell", ""),
@@ -414,7 +448,7 @@ def aufzeichnen(sitzung, teilnahme, urteil, text, ergebnis="pfoertner"):
         leak_check=Interaction.ENTFAELLT,
         ergebnis=f"{ergebnis}:{urteil.zur_stunde}",
         fehlerart=urteil.messung.get("fehlerart", ""),
-        text_ein=text, text_aus=urteil.grund,
+        text_ein=text, text_aus=text_aus, diagnose=diagnose,
     )
 
 

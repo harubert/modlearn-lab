@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "core",
     "tutoring",
     "plan",
+    "modellwaechter",
 ]
 
 MIDDLEWARE = [
@@ -285,6 +286,36 @@ BUDGET_JE_TAG_EURO = float(env("BUDGET_JE_TAG_EURO", "3.00"))
 # Preisen greift, ist bei unbekannten Preisen gar keiner.
 CLOUD_AUFRUFE_JE_SITZUNG = int(env("CLOUD_AUFRUFE_JE_SITZUNG", "60"))
 CLOUD_AUFRUFE_JE_TAG = int(env("CLOUD_AUFRUFE_JE_TAG", "300"))
+
+# --- Der Modellwaechter (12.11.2026, modellwaechter/README.md) --------------
+# Fragt einmal am Tag die Register nach neuen Modellen (manage.py
+# modelle_pruefen, systemd-Timer am Server). Kein Scraping: Hugging Face je
+# Hersteller, OpenRouter als Sammelquelle, die vLLM-Releases, das eigene
+# OpenAI-Konto. Die Herstellerliste kommt aus dem Modellmarkt vom 7.11.2026.
+MODELLWAECHTER_HF_AUTOREN = env_list(
+    "MODELLWAECHTER_HF_AUTOREN",
+    "Qwen,google,mistralai,openai,nvidia,meta-llama,deepseek-ai,swiss-ai,"
+    "utter-project,openGPT-X,CohereLabs,microsoft,allenai,zai-org",
+)
+MODELLWAECHTER_GITHUB_REPOS = env_list("MODELLWAECHTER_GITHUB_REPOS", "vllm-project/vllm")
+MODELLWAECHTER_OPENROUTER = env_bool("MODELLWAECHTER_OPENROUTER", True)
+MODELLWAECHTER_OPENAI_KONTO = env_bool("MODELLWAECHTER_OPENAI_KONTO", True)
+MODELLWAECHTER_TIMEOUT_SECONDS = float(env("MODELLWAECHTER_TIMEOUT_SECONDS", "30"))
+# Wie viele neue Funde der Spark je Lauf einordnet (Modellkarte lesen, drei Saetze).
+MODELLWAECHTER_EINORDNUNGEN_JE_LAUF = int(env("MODELLWAECHTER_EINORDNUNGEN_JE_LAUF", "10"))
+MODELLWAECHTER_EMPFAENGER = env_list("MODELLWAECHTER_EMPFAENGER", "")
+
+# --- E-Mail (offen, 12.11.2026) --------------------------------------------
+# Ohne EMAIL_HOST verschickt die Anwendung nichts; die Meldungen des
+# Modellwaechters stehen dann nur auf der Seite. Djangos Vorgabe waere
+# "localhost", und ein Mailserver, den niemand eingetragen hat, ist keiner.
+EMAIL_HOST = env("EMAIL_HOST", "")
+EMAIL_PORT = int(env("EMAIL_PORT", "587"))
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = env_bool("EMAIL_USE_TLS", True)
+EMAIL_TIMEOUT = 20
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", "")
 
 # --- Protokollierung -------------------------------------------------------
 # Keine Inhalte in Protokollen. Der Zugriffs-Protokollant von uvicorn ist

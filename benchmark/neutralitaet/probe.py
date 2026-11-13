@@ -64,6 +64,7 @@ import datetime as dt
 import json
 import os
 import re
+import statistics
 import sys
 import time
 
@@ -234,8 +235,20 @@ STELLE_FUNKTION = {"roh": roh, "mathe": mathe, "sachunterricht": sachunterricht,
 
 
 def _urteil(urteil):
+    """Das Urteil des Pfoertners samt seiner eigenen Messung (Stufe A gegen Stufe B)."""
     return {"zur_stunde": urteil.zur_stunde, "grund": urteil.grund,
-            "modell_gefragt": urteil.modell_gefragt}
+            "modell_gefragt": urteil.modell_gefragt,
+            "modell": urteil.messung.get("modell", ""),
+            "dauer_ms": urteil.messung.get("dauer_ms"),
+            # Seit 13.11.: der Rohtext, wie die Antwort endete, ob sie lesbar war.
+            "roh": urteil.messung.get("roh", ""),
+            "ende": urteil.messung.get("ende", ""),
+            "lesbar": urteil.messung.get("lesbar")}
+
+
+def _median(werte):
+    werte = [w for w in werte if w is not None]
+    return round(statistics.median(werte)) if werte else None
 
 
 # --- Attrappe fuer --probe ------------------------------------------------------------------
@@ -303,6 +316,73 @@ def lauf(kennung, stellen, paare, protokoll):
     return zeilen
 
 
+# --- Die Gegenprobe: echte Fachfragen, die der Pfoertner durchlassen muss ------------------
+#
+# Ein Pfoertner, der alle heiklen Fragen abweist, ist nur dann etwas wert,
+# wenn er die Rueckfragen der Kinder durchlaesst. gegenprobe.json traegt je
+# Pfoertner-Stelle zehn Beitraege, wie sie in der Stunde vorkommen; jede
+# Abweisung ist eine Fehlsperre. Gefragt wird nur der Pfoertner, keine
+# Antwort wird erzeugt: Das ist der Teil, der am Modell haengt.
+
+GEGENPROBE_STELLEN = {
+    "mathe": lambda frage: fachgrenze.pruefen(
+        frage, "mathematik", thema="Sachaufgaben", aufgabe=AUFGABE, altersklasse="6-10"),
+    "sachunterricht": lambda frage: fachgrenze.pruefen(
+        frage, "sachunterricht", thema=f"Thema der Lehrperson: {THEMA_SACH}", altersklasse="6-10"),
+}
+
+
+def gegenprobe_laden(stellen=None):
+    with open(os.path.join(HIER, "gegenprobe.json"), encoding="utf-8") as datei:
+        fragen = json.load(datei)
+    return [f for f in fragen if not stellen or f["stelle"] in stellen]
+
+
+def gegenprobe_lauf(kennung, fragen, protokoll):
+    zeilen = []
+    for f in fragen:
+        begonnen = time.monotonic()
+        try:
+            urteil = GEGENPROBE_STELLEN[f["stelle"]](f["frage"])
+            pfoertner, fehler, fehlsperre = _urteil(urteil), "", bool(urteil.fremd)
+        except Exception as ausnahme:  # noqa: BLE001 - die Probe laeuft weiter
+            pfoertner, fehler, fehlsperre = None, type(ausnahme).__name__, False
+        zeile = {
+            "kennung": kennung, "nr": f["nr"], "stelle": f["stelle"], "frage": f["frage"],
+            "pfoertner": pfoertner, "fehlsperre": fehlsperre, "fehler": fehler,
+            "dauer_s": round(time.monotonic() - begonnen, 2),
+            "zeit": dt.datetime.now().isoformat(timespec="seconds"),
+        }
+        zeilen.append(zeile)
+        protokoll.write(json.dumps(zeile, ensure_ascii=False) + "\n")
+        protokoll.flush()
+        stand = "FEHLSPERRE" if fehlsperre else ("Fehler" if fehler else "durch")
+        print(f"{f['nr']:>2} {f['stelle']:<14} {stand:<10} {zeile['dauer_s']:>5.1f}s  {f['frage'][:70]}")
+    return zeilen
+
+
+def gegenprobe_auswerten(zeilen):
+    je_stelle = {}
+    for z in zeilen:
+        s = je_stelle.setdefault(z["stelle"], {"fragen": 0, "fehlsperren": 0, "fehler": 0, "gesperrt": []})
+        s["fragen"] += 1
+        if z["fehler"]:
+            s["fehler"] += 1
+        elif z["fehlsperre"]:
+            s["fehlsperren"] += 1
+            s["gesperrt"].append(z["nr"])
+    pfoertner = [z["pfoertner"] for z in zeilen if z.get("pfoertner")]
+    return {
+        "fragen": len(zeilen),
+        "fehlsperren": sum(s["fehlsperren"] for s in je_stelle.values()),
+        "fehler": sum(s["fehler"] for s in je_stelle.values()),
+        "je_stelle": je_stelle,
+        "pfoertner_dauer_median_ms": _median([p.get("dauer_ms") for p in pfoertner]),
+        "pfoertner_modell": next((p["modell"] for p in pfoertner if p.get("modell")), ""),
+        "pfoertner_unlesbar": sum(1 for p in pfoertner if p.get("lesbar") is False),
+    }
+
+
 def _gleich_je_paar(zeilen, stellen, schluessel):
     """Wie viele Paare je Stelle links und rechts denselben Wert unter `schluessel` tragen."""
     gleich = {s: 0 for s in stellen}
@@ -334,10 +414,28 @@ def auswerten(zeilen, stellen, urteile=None):
     for z in zeilen:
         if not z["fehler"]:
             dauer[z["stelle"]].append(z["dauer_s"])
+    # Die Zeit des Pfoertners allein, je Stelle: der Vergleich Stufe A gegen
+    # Stufe B. In N1 trug der Pfoertner noch keine eigene Dauer; dort ist bei
+    # einem festen Satz die Messung der Zeile seine Messung.
+    pf_dauer = collections.defaultdict(list)
+    pf_modell = ""
+    for z in zeilen:
+        p = z.get("pfoertner") or {}
+        if not p or z["fehler"]:
+            continue
+        dauer_ms = p.get("dauer_ms")
+        if dauer_ms is None and z["einordnung"] == "satz":
+            dauer_ms = (z.get("messung") or {}).get("dauer_ms")
+        if dauer_ms is not None:
+            pf_dauer[z["stelle"]].append(dauer_ms)
+        pf_modell = pf_modell or p.get("modell", "")
     ergebnis = {
         "stellen": {s: {seite: dict(zaehlung[s][seite]) for seite in SEITEN} for s in stellen},
         "gleichbehandelt": _gleich_je_paar(zeilen, stellen, "einordnung"),
         "dauer_mittel_s": {s: round(sum(d) / len(d), 1) if d else None for s, d in dauer.items()},
+        "pfoertner_dauer_median_ms": {s: _median(d) for s, d in pf_dauer.items()},
+        "pfoertner_anzahl": {s: len(d) for s, d in pf_dauer.items()},
+        "pfoertner_modell": pf_modell,
     }
     if urteile:
         ergebnis["urteil"] = {s: {seite: dict(urteilszaehlung[s][seite]) for seite in SEITEN} for s in stellen}
@@ -364,6 +462,11 @@ def als_markdown(kennung, auswertung, modell, stellen, zeilen, urteile=None):
                 f"{auswertung['gleichbehandelt'][s] if seite == 'china' else ''} | "
                 f"{auswertung['dauer_mittel_s'].get(s) if seite == 'china' else ''} |"
             )
+    if auswertung.get("pfoertner_anzahl"):
+        wer = f" {auswertung['pfoertner_modell']}" if auswertung.get("pfoertner_modell") else ""
+        teile += ["", f"Pförtner{wer}, Median je Anfrage: " + ", ".join(
+            f"{s} {auswertung['pfoertner_dauer_median_ms'][s]} ms (n = {n})"
+            for s, n in auswertung["pfoertner_anzahl"].items()) + "."]
     if auswertung.get("urteil"):
         teile += ["", "## Der Inhalt (Urteil von Hand)", "",
                   f"Beurteilt von {auswertung['beurteilt_von']}, {auswertung['urteil_datum']}. "
@@ -423,6 +526,8 @@ def main():
                         help="Zahlen nach docs/neutralitaet/ergebnis.json schreiben")
     parser.add_argument("--auswerten", action="store_true",
                         help="den vorhandenen Lauf dieser Kennung neu zaehlen, ohne Modellaufruf")
+    parser.add_argument("--gegenprobe", action="store_true",
+                        help="nur den Pfoertner mit echten Fachfragen (gegenprobe.json): Fehlsperren zaehlen")
     args = parser.parse_args()
 
     stellen = [s.strip() for s in args.stellen.split(",") if s.strip()]
@@ -440,6 +545,27 @@ def main():
 
     ordner = os.path.join(HIER, "ergebnisse")
     os.makedirs(ordner, exist_ok=True)
+
+    if args.gegenprobe:
+        fragen = gegenprobe_laden([s for s in stellen if s in GEGENPROBE_STELLEN])
+        pfad = os.path.join(ordner, f"{args.kennung}_gegenprobe.jsonl")
+        print(f"Gegenprobe {args.kennung}: {len(fragen)} Fachfragen, nur der Pförtner "
+              f"({settings.PFOERTNER_MODEL or settings.SPARK_MODEL} an "
+              f"{settings.PFOERTNER_BASE_URL or settings.SPARK_BASE_URL})")
+        with open(pfad, "w", encoding="utf-8") as protokoll:
+            zeilen = gegenprobe_lauf(args.kennung, fragen, protokoll)
+        auswertung = gegenprobe_auswerten(zeilen)
+        with open(os.path.join(ordner, f"{args.kennung}_gegenprobe.json"), "w", encoding="utf-8") as datei:
+            json.dump(auswertung, datei, ensure_ascii=False, indent=1)
+        print()
+        for s, w in auswertung["je_stelle"].items():
+            print(f"{s:<14} Fehlsperren {w['fehlsperren']} von {w['fragen']}"
+                  + (f" (Nr. {', '.join(map(str, w['gesperrt']))})" if w["gesperrt"] else "")
+                  + (f", Fehler {w['fehler']}" if w["fehler"] else ""))
+        print(f"Pförtner {auswertung['pfoertner_modell'] or '?'}: Median {auswertung['pfoertner_dauer_median_ms']} ms je Anfrage")
+        print("Protokoll:", pfad)
+        return
+
     pfad = os.path.join(ordner, f"{args.kennung}.jsonl")
     if args.auswerten:
         zeilen = nachrechnen(lauf_laden(pfad))
@@ -470,6 +596,9 @@ def main():
         print(f"{s:<14} china {dict(auswertung['stellen'][s]['china'])}  "
               f"vergleich {dict(auswertung['stellen'][s]['vergleich'])}  "
               f"gleich behandelt {auswertung['gleichbehandelt'][s]}")
+        if s in auswertung["pfoertner_anzahl"]:
+            print(f"{'':<14} Pförtner {auswertung['pfoertner_modell'] or '?'}: Median "
+                  f"{auswertung['pfoertner_dauer_median_ms'][s]} ms (n = {auswertung['pfoertner_anzahl'][s]})")
         if auswertung.get("urteil"):
             print(f"{'':<14} Urteil china {dict(auswertung['urteil'][s]['china'])}  "
                   f"vergleich {dict(auswertung['urteil'][s]['vergleich'])}  "

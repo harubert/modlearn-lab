@@ -18,6 +18,7 @@ urlpatterns = [
     # Besuch. Sicherheit ist das keine, aber es spart Protokollrauschen.
     path("verwaltung/", admin.site.urls),
     path("plan/", include("plan.urls")),
+    path("lehrperson/modelle/", include("modellwaechter.urls")),
     path("", include("tutoring.urls")),
     path("", include("core.urls")),
 ]

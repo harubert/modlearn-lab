@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titel %}Neue Modelle{% endblock %}
+
+{% block kopf_extra %}<link rel="stylesheet" href="{% static 'css/modelle.css' %}">{% endblock %}
+
+{% block inhalt %}
+{% comment %}Der Modellwaechter (Thomas, 12.11.2026: „regelmaessig prueft, was
+fuer neue Modelle es gibt, und uns darauf hinweist ... am Server automatisch“).
+Was die Register seit dem Grundbestand neu zeigen, je Anbieter eine Karte;
+darunter die Quellen mit ihrem letzten Lauf. Die Einordnung in drei Saetzen
+hat das Modell am Spark aus der Modellkarte geschrieben und steht als solche
+da. E-Mail kommt dazu, sobald ein Mailserver eingetragen ist; bis dahin ist
+diese Seite die Meldung.{% endcomment %}
+<div class="lehrseite modelle">
+
+  <div class="seitenkopf">
+    <h1>Neue Modelle</h1>
+    <p class="seitenkopf-zusatz">
+      {% if letzter_lauf %}
+        Zuletzt geprüft am {{ letzter_lauf.begonnen|date:"d.m.Y" }} um {{ letzter_lauf.begonnen|time:"H:i" }}.
+      {% else %}
+        Noch kein Lauf.
+      {% endif %}
+      Was Hugging Face, OpenRouter, die vLLM-Releases und das eigene OpenAI-Konto seit dem Grundbestand neu zeigen.
+      {% if not mail_moeglich %}E-Mail ist nicht eingerichtet; die Meldung steht nur hier.{% endif %}
+    </p>
+  </div>
+
+  <div class="modelle-wege">
+    {% if alle %}
+      <a href="{% url 'modellwaechter:uebersicht' %}">Nur Neues zeigen</a>
+    {% else %}
+      <a href="{% url 'modellwaechter:uebersicht' %}?alle=1">Alles zeigen, auch Gelesenes und den Grundbestand</a>
+    {% endif %}
+    {% if ungelesen %}
+      <form method="post" action="{% url 'modellwaechter:alle_gelesen' %}">
+        {% csrf_token %}
+        <button type="submit" class="knopf-als-weg">Alle {{ ungelesen }} als gelesen markieren</button>
+      </form>
+    {% endif %}
+  </div>
+
+  {% for g in gruppen %}
+    <section class="karte modelle-gruppe" aria-labelledby="gruppe-{{ forloop.counter }}">
+      <h2 id="gruppe-{{ forloop.counter }}">{{ g.titel }} <span class="karten-leise">{{ g.quelle_titel }}</span></h2>
+      <ul class="fundliste">
+        {% for f in g.funde %}
+          <li class="fund{% if f.gelesen %} ist-gelesen{% endif %}">
+            <div class="fund-kopf">
+              {% if f.adresse %}
+                <a class="fund-kennung" href="{{ f.adresse }}" rel="noopener noreferrer">{{ f.kennung }}</a>
+              {% else %}
+                <span class="fund-kennung">{{ f.kennung }}</span>
+              {% endif %}
+              <span class="karten-leise">
+                {{ f.datum|date:"d.m.Y" }}{% if f.lizenz %} &middot; {{ f.lizenz }}{% endif %}{% if f.aufgabe %} &middot; {{ f.aufgabe }}{% endif %}{% if f.grundbestand %} &middot; Grundbestand{% endif %}{% if f.gemeldet_am %} &middot; per E-Mail gemeldet{% endif %}
+              </span>
+              {% if not f.gelesen %}
+                <form method="post" action="{% url 'modellwaechter:gelesen' f.pk %}">
+                  {% csrf_token %}
+                  <button type="submit" class="knopf-als-weg">Gelesen</button>
+                </form>
+              {% endif %}
+            </div>
+            {% if f.name and f.name != f.kennung %}<p class="fund-name">{{ f.name }}</p>{% endif %}
+            {% if f.einordnung %}
+              <p class="fund-einordnung">{{ f.einordnung }}
+                <span class="karten-leise">Zusammengefasst von {{ f.einordnung_modell|default:"einem Modell am Spark" }} aus der Modellkarte, kein Urteil.</span>
+              </p>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% empty %}
+    <p class="leerhinweis">
+      {% if alle %}Noch nichts gesehen. Der erste Lauf legt den Grundbestand an.{% else %}Nichts Neues seit dem letzten Blick.{% endif %}
+    </p>
+  {% endfor %}
+
+  <section class="modelle-quellen" aria-labelledby="quellen-titel">
+    <h2 id="quellen-titel">Die Quellen</h2>
+    {% if quellen %}
+      <table class="modelle-tabelle">
+        <thead>
+          <tr><th>Quelle</th><th>Zuletzt</th><th>Ergebnis</th><th>Gesehen</th><th>Neu</th></tr>
+        </thead>
+        <tbody>
+          {% for l in quellen %}
+            <tr>
+              <td>{{ l.quelle_titel }}, {{ l.anbieter }}</td>
+              <td>{{ l.begonnen|date:"d.m.Y" }}, {{ l.begonnen|time:"H:i" }}</td>
+              <td>{% if l.ergebnis == "ok" %}{% if l.grundbestand %}Grundbestand angelegt{% else %}in Ordnung{% endif %}{% else %}ohne Antwort ({{ l.fehlerart }}){% endif %}</td>
+              <td>{{ l.gesehen }}</td>
+              <td>{{ l.neu }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="leerhinweis">Noch keine Quelle gefragt. Am Server läuft <code>manage.py modelle_pruefen</code> einmal am Tag.</p>
+    {% endif %}
+  </section>
+
+</div>
+{% endblock %}

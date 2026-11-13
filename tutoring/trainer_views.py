@@ -164,8 +164,9 @@ def trainer_zug(request):
         if urteil_grenze.modell_gefragt:
             # Der Pfoertner ist ein Modellaufruf wie jeder andere: eine Zeile
             # im Forschungsprotokoll, mit Urteil und Grund statt Antwort.
+            text_aus, diagnose = fachgrenze.protokollfelder(urteil_grenze)
             _aufzeichnen(sitzung, teilnahme, "pfoertner", urteil_grenze.messung,
-                         text, f"{urteil_grenze.zur_stunde}: {urteil_grenze.grund}")
+                         text, f"{urteil_grenze.zur_stunde}: {text_aus}", diagnose=diagnose)
 
     sitzung.beruehren()
     vorheriger_zustand = lauf.state
@@ -339,7 +340,7 @@ def _offene_frage(lauf):
     return letzter.question if letzter else ""
 
 
-def _aufzeichnen(sitzung, teilnahme, zustand, messung, frage, antwort):
+def _aufzeichnen(sitzung, teilnahme, zustand, messung, frage, antwort, diagnose=None):
     """Eine Anfragezeile je Zug, nach denselben drei Protokollstufen."""
     from .models import Interaction
 
@@ -354,6 +355,7 @@ def _aufzeichnen(sitzung, teilnahme, zustand, messung, frage, antwort):
         ergebnis=f"trainer:{zustand}",
         text_ein=frage,
         text_aus=antwort,
+        diagnose=diagnose,
     )
 
 

@@ -92,15 +92,15 @@ def test_die_auskunft_wird_zwischengespeichert(mit_geheimnis, monkeypatch):
 
 def test_waehrend_des_wechsels_zaehlt_das_zielprofil(mit_geheimnis, monkeypatch):
     monkeypatch.setattr(broker, "_holen", lambda *a, **k: (
-        200, {"profil": "gptoss", "zustand": "wechselt", "dienste": []}
+        200, {"profil": "kreativ", "zustand": "wechselt", "dienste": []}
     ))
-    assert broker.aktuelles_profil() == "gptoss"
+    assert broker.aktuelles_profil() == "kreativ"
 
 
 def test_im_fehlerzustand_gilt_die_umgebung(mit_geheimnis, monkeypatch, settings):
     settings.SPARK_PROFIL = "qwen"
     monkeypatch.setattr(broker, "_holen", lambda *a, **k: (
-        200, {"profil": "gptoss", "zustand": "fehler", "fehler": "kaputt", "dienste": []}
+        200, {"profil": "kreativ", "zustand": "fehler", "fehler": "kaputt", "dienste": []}
     ))
     assert broker.aktuelles_profil() == "qwen"
 
@@ -142,11 +142,11 @@ def test_aktivieren_reicht_den_409_durch(mit_geheimnis, monkeypatch):
                      "schaltet_ab": ["gehoer"]}
     monkeypatch.setattr(broker, "_holen", attrappe)
 
-    angenommen, antwort = broker.aktivieren("gptoss", "2026-10-12T10:00:00+02:00")
+    angenommen, antwort = broker.aktivieren("kreativ", "2026-10-12T10:00:00+02:00")
 
     assert angenommen is False
     assert antwort["schaltet_ab"] == ["gehoer"]
-    assert gesehen == {"profil": "gptoss", "bis": "2026-10-12T10:00:00+02:00",
+    assert gesehen == {"profil": "kreativ", "bis": "2026-10-12T10:00:00+02:00",
                        "erzwingen": False}
 
 

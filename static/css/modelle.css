@@ -1,0 +1,68 @@
+/* Die Seite „Neue Modelle“ (Modellwaechter, 12.11.2026). Nur hier geladen. */
+
+.modelle-wege {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem 1.2rem;
+  align-items: center;
+  margin: 0 0 1rem;
+  font-size: .88rem;
+}
+.modelle-wege form { margin: 0; }
+.modelle-wege a { color: var(--akzent); }
+
+.modelle-gruppe { margin-bottom: 1rem; }
+.modelle-gruppe h2 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .3rem .6rem;
+  align-items: baseline;
+  font-size: 1.05rem;
+}
+
+.fundliste { list-style: none; margin: 0; padding: 0; }
+.fund {
+  padding: .6rem 0;
+  border-top: 1px solid var(--rand);
+}
+.fund:first-child { border-top: 0; }
+.fund.ist-gelesen { opacity: .7; }
+
+.fund-kopf {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem .8rem;
+  align-items: baseline;
+}
+.fund-kopf form { margin: 0 0 0 auto; }
+.fund-kennung { font-weight: 600; overflow-wrap: anywhere; }
+.fund-name { margin: .15rem 0 0; font-size: .88rem; color: var(--schrift-leise); }
+.fund-einordnung {
+  margin: .4rem 0 0;
+  max-width: 60rem;
+  font-size: .92rem;
+  line-height: 1.5;
+}
+
+.modelle-quellen { margin-top: 1.5rem; }
+.modelle-tabelle {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .85rem;
+}
+.modelle-tabelle th, .modelle-tabelle td {
+  text-align: left;
+  padding: .4rem .6rem;
+  border-bottom: 1px solid var(--rand);
+  vertical-align: top;
+}
+.modelle-tabelle th { color: var(--schrift-leise); font-weight: 600; }
+.modelle-tabelle td:nth-child(4), .modelle-tabelle td:nth-child(5) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 600px) {
+  .fund-kopf form { margin-left: 0; }
+  .modelle-tabelle th:nth-child(2), .modelle-tabelle td:nth-child(2) { display: none; }
+}

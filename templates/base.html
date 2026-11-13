@@ -36,6 +36,9 @@
           <a class="kopfweg" href="{% url 'tutoring:lehrperson_uebersicht' %}">Sitzungen</a>
           <a class="kopfweg" href="{% url 'tutoring:lehrperson_protokolle' %}">Protokolle</a>
           <a class="kopfweg" href="{% url 'plan:tag' %}">Platz buchen</a>
+          {% if user.is_staff %}
+            <a class="kopfweg" href="{% url 'modellwaechter:uebersicht' %}">Modelle</a>
+          {% endif %}
           <form class="abmelden" method="post" action="{% url 'abmelden' %}">
             {% csrf_token %}
             <button type="submit" class="kopfweg knopf-als-weg">Abmelden</button>

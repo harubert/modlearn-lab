@@ -7,7 +7,8 @@ genügt, solange alle dasselbe tun. Es genügt nicht mehr, sobald eine Buchung
 den Rechner UMBAUT.
 
 Der Spark hat Speicher für begrenzt viele Modelle. Die Regel im Projekt heißt
-seit dem ersten Tag „ein Modell": Qwen und gpt-oss laufen nie gleichzeitig.
+seit dem ersten Tag „ein Antwortmodell": Qwen schreibt; ein zweites Sprachmodell
+läuft nur als Pförtner nebenher (Stufe B, :8004) und ersetzt es nie.
 Daraus folgt der Satz, auf dem diese Datei steht:
 
     PLÄTZE ADDIEREN SICH, MODELLE NICHT.
@@ -51,11 +52,12 @@ SCHULUNG = "schulung"          # Feinschliff eines Modells, belegt die GPU
 # laden kann; der Wechsel dauert ein bis vier Minuten und passiert nur an
 # Slotgrenzen. Stand 11.10.2026 laut Spark-Betreuung:
 #   qwen     text (:8000) + gehoer (:8002)     ~120 s
-#   gptoss   text (:8001), schaltet gehoer ab  ~240 s
 #   kreativ  gehoer (:8002), schaltet text ab  ~60 s  - voller Speicher fuer
 #            ComfyUI (Bild, Video, Musik)
 PROFIL_QWEN = "qwen"
-PROFIL_GPTOSS = "gptoss"
+# Das Profil gptoss (gpt-oss-120b allein, ~240 s) gibt es seit 13.11.2026 nicht
+# mehr: 103 GB passten neben dem Pfoertner nicht mehr in den Speicher, und ein
+# Wechsel haette den Pfoertner gestoppt. Kein Konzept hat es je gewaehlt.
 PROFIL_KREATIV = "kreativ"
 
 
