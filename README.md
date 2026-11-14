@@ -1,5 +1,7 @@
 # ModLearn Lab
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24210365.svg)](https://doi.org/10.5281/zenodo.24210365)
+
 Web platform of the ModLearn Technology Lab at the University College of
 Teacher Education Vorarlberg (Pädagogische Hochschule Vorarlberg, Austria).
 School classes get stepwise help with mathematics tasks from a language
@@ -263,9 +265,13 @@ configuration.
 
 ## Citation
 
-See `CITATION.cff`. Source: https://github.com/harubert/modlearn-lab. Once
-the repository is archived on Zenodo, the DOI will be listed here and in
-`CITATION.cff`.
+Release v0.1.0 (14 November 2026) is archived on Zenodo. The concept DOI
+10.5281/zenodo.24210365 always resolves to the latest version; the DOI of this
+version is 10.5281/zenodo.24210366. `CITATION.cff` carries the metadata that GitHub
+and Zenodo read. Cite as:
+
+Schroffenegger, T. (2026). *ModLearn Lab: stepwise mathematics tutoring with a
+locally hosted language model* (v0.1.0). Zenodo. https://doi.org/10.5281/zenodo.24210366
 
 ## Licence
 
