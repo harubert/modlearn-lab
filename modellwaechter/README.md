@@ -80,6 +80,15 @@ im laufenden Web-Container, der die `.env` und den Schlüssel schon hat.
 Dann `systemctl daemon-reload && systemctl enable --now modlearn-modelle.timer`;
 Probe mit `systemctl start modlearn-modelle.service && journalctl -u modlearn-modelle -n 30`.
 
+Ohne Root-Rechte am Server (so am PH-Server: der Nutzer der Anwendung hat kein
+sudo) tut es ein Cron-Eintrag desselben Nutzers (`crontab -e`), eine Zeile:
+
+    30 6 * * * cd /pfad/zur/anwendung && /usr/bin/docker compose exec -T web python manage.py modelle_pruefen >> $HOME/modelle.log 2>&1
+
+Am PH-Server ist genau diese Zeile vorgesehen (06:30 Serverzeit, Protokoll in
+`~/modelle.log`); die Funde stehen auf der Seite der Lehrperson. Der erste
+Lauf (Grundbestand) war am 14.11.2026, der Eintrag folgt auf Thomas' Wort.
+
 ## E-Mail
 
 Django schickt mit `send_mail`, sobald in der `.env` ein Mailserver steht:

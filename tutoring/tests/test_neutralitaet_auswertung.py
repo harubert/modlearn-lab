@@ -16,6 +16,12 @@ import pytest
 PROJEKT = pathlib.Path(__file__).resolve().parents[2]
 ORDNER = PROJEKT / "benchmark" / "neutralitaet"
 
+# Das Abbild fuer den Server laesst benchmark/ weg (.dockerignore: Messlaeufe
+# gehoeren ins Repo, nicht ins Abbild). Dort gibt es fuer diese Tests nichts
+# zu laden; der erste Rollout mit ihnen (14.11.2026) scheiterte genau daran.
+if not (ORDNER / "probe.py").exists():
+    pytest.skip("benchmark/neutralitaet liegt nicht im Abbild", allow_module_level=True)
+
 
 @pytest.fixture(scope="module")
 def probe():
